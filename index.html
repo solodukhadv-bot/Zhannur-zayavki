@@ -166,44 +166,60 @@
       padding: 12px 14px 0;
     }
 
-    /* === НАВИГАЦИЯ === */
+    /* === НАВИГАЦИЯ (КРУПНЫЕ КНОПКИ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК) === */
     .top-nav {
       display: flex;
       background: var(--surface);
-      padding: 4px;
-      border-radius: 15px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
-      border: 1px solid var(--border);
-      gap: 3px;
-      overflow-x: auto;
+      padding: 6px;
+      border-radius: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      border: 1.5px solid var(--border);
+      gap: 6px;
     }
+    #adminNav {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+    }
+    #adminNav .nav-btn:nth-child(1) { grid-column: span 3; }
+    #adminNav .nav-btn:nth-child(2) { grid-column: span 3; }
+    #adminNav .nav-btn:nth-child(3) { grid-column: span 2; }
+    #adminNav .nav-btn:nth-child(4) { grid-column: span 2; }
+    #adminNav .nav-btn:nth-child(5) { grid-column: span 2; }
+
     .nav-btn {
       flex: 1;
-      padding: 9px 4px;
+      min-height: 46px;
+      padding: 12px 10px;
       border: none;
-      background: transparent;
-      color: var(--graphite);
+      background: var(--bg);
+      color: var(--charcoal);
       font-family: 'Raleway', sans-serif;
-      font-weight: 700;
-      font-size: 11px;
-      border-radius: 11px;
+      font-weight: 800;
+      font-size: 14px;
+      border-radius: 13px;
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.18s;
     }
     .nav-btn.active {
       background: var(--black);
       color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(13, 13, 15, 0.22);
     }
     .nav-badge {
       background: var(--red);
       color: #fff;
       font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      padding: 1px 5px;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 2px 7px;
       border-radius: 10px;
-      margin-left: 2px;
     }
 
     /* === ЭКРАН ЗАКРЫТОГО ПРИЕМА ЗАЯВОК === */
@@ -647,14 +663,15 @@
     }
     .sub-tab-btn {
       flex: 1;
-      padding: 10px 8px;
-      border-radius: 12px;
+      min-height: 44px;
+      padding: 12px 10px;
+      border-radius: 13px;
       border: 1.5px solid var(--border);
       background: var(--surface);
-      color: var(--graphite);
+      color: var(--charcoal);
       font-family: 'Raleway', sans-serif;
-      font-weight: 700;
-      font-size: 12.5px;
+      font-weight: 800;
+      font-size: 13.5px;
       cursor: pointer;
     }
     .sub-tab-btn.active {
@@ -1552,6 +1569,12 @@
 
       <!-- Блок фиксации решения охраны в отдельный Журнал КПП -->
       <div id="kppDecisionControls" class="hidden" style="margin-top:12px;">
+        <div id="kppCarEditBlock" style="margin-bottom:10px; background:var(--bg); padding:10px 12px; border-radius:12px; border:1px solid var(--border);">
+          <label class="field-label" style="margin-top:0; margin-bottom:4px;">🚗 Фактический госномер авто (можно изменить):</label>
+          <input type="text" id="kppActualCarInput" placeholder="Например: 123 ABC 01" style="text-transform:uppercase; font-weight:700;">
+          <div id="kppCarChangedHint" style="font-size:11px; color:var(--graphite); margin-top:4px;">Если приехала другая машина — впишите её номер перед нажатием «Пропустить».</div>
+        </div>
+
         <div id="kppRejectReasonBlock" class="hidden" style="margin-bottom:10px;">
           <label class="field-label" style="margin-top:0;">Причина недопуска на КПП:</label>
           <div style="margin-bottom:6px;">
@@ -2152,6 +2175,11 @@
         const res = await fetch(`${SCRIPT_URL}?action=verify_qr&qr=${encodeURIComponent(qrText)}&initData=${encodeURIComponent(initDataRaw)}`);
         const data = await res.json();
         lastScannedPass = Object.assign({ qrText: qrText }, data);
+        const actualCarEl = document.getElementById('kppActualCarInput');
+        if (actualCarEl) {
+          const origCar = (data.carNumber && data.carNumber !== "-") ? data.carNumber : "";
+          actualCarEl.value = origCar;
+        }
 
         if (data.valid) {
           haptic('heavy');
@@ -2231,6 +2259,7 @@
       denyBtn.disabled = true;
 
       const reason = document.getElementById('kppRejectInput').value.trim();
+      const actualCar = (document.getElementById('kppActualCarInput')?.value || "").trim().toUpperCase();
       const p = lastScannedPass;
 
       try {
@@ -2247,6 +2276,7 @@
             workTime: p.workTime || "",
             datesRange: (p.startDate && p.endDate) ? `${p.startDate} — ${p.endDate}` : "",
             carNumber: p.carNumber || "",
+            actualCarNumber: actualCar,
             nightDetails: p.nightDetails || "",
             timeNote: p.timeNote || "",
             initData: initDataRaw
@@ -2429,11 +2459,11 @@
       myRequests.forEach(r => {
         const st = String(r.status || "На согласовании");
         let pillClass = "status-pending";
-        if (st.includes("Согласовано (Директор")) pillClass = "status-approved";
+        if (st.includes("Согласовано (Директор") || st.includes("Согласовано напрямую Директором")) pillClass = "status-approved";
         else if (st.includes("Отклонено")) pillClass = "status-rejected";
         else if (st.includes("Ожидает")) pillClass = "status-step";
 
-        const isFinalValid = st.includes("Согласовано (Директор");
+        const isFinalValid = st.includes("Согласовано (Директор") || st.includes("Согласовано напрямую Директором");
         const isRejected = st.includes("Отклонено");
 
         const card = document.createElement('div');
