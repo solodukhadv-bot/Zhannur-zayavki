@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>JANNUR Shopping Mall — Заявки арендаторов</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Raleway:wght@600;700;800&display=swap" rel="stylesheet">
@@ -740,6 +741,168 @@
 
     .hidden { display: none !important; }
 
+    
+    
+    /* === QR-ПРОПУСК И СКАНЕР ОХРАНЫ === */
+    .qr-btn {
+      margin-top: 10px;
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: none;
+      background: var(--black);
+      color: #FFFFFF;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .guard-scan-btn {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 14px;
+      border: none;
+      background: var(--red);
+      color: #FFFFFF;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 12px;
+      box-shadow: 0 6px 16px rgba(201, 34, 63, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .qr-box-wrap {
+      background: #FFFFFF;
+      padding: 16px;
+      border-radius: 18px;
+      border: 2px solid var(--black);
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 12px auto;
+    }
+    .scan-verdict-card {
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 10px;
+      border: 2px solid;
+      text-align: left;
+    }
+    .scan-verdict-card.valid {
+      background: var(--green-bg);
+      border-color: var(--green);
+      color: var(--black);
+    }
+    .scan-verdict-card.invalid {
+      background: #FDECEF;
+      border-color: var(--red);
+      color: var(--black);
+    }
+
+    /* === ПОСТ ОХРАНЫ (ОБЪЕДИНЕННЫЕ ПРОПУСКА) === */
+    .guard-top-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .day-toggle-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--graphite);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 12.5px;
+      cursor: pointer;
+    }
+    .day-toggle-btn.active {
+      background: var(--black);
+      color: #FFFFFF;
+      border-color: var(--black);
+    }
+    .guard-filter-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+    .guard-chip {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--charcoal);
+      font-size: 11.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .guard-chip.active {
+      background: var(--red);
+      color: #FFFFFF;
+      border-color: var(--red);
+    }
+    .guard-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 15px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(209, 186, 166, 0.7);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+    .guard-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .guard-floor-pill {
+      background: var(--black);
+      color: #FFFFFF;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+    .guard-count-pill {
+      background: var(--red-soft);
+      color: var(--red);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 8px;
+    }
+    .guard-permit-item {
+      background: var(--bg);
+      border-left: 3px solid var(--red);
+      border-radius: 10px;
+      padding: 9px 11px;
+      margin-top: 7px;
+      font-size: 12.5px;
+    }
+    .guard-meta-box {
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px dashed var(--border);
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: var(--charcoal);
+    }
+
     /* === СВАЙПЫ РУКОВОДСТВА === */
     .swipe-arena {
       position: relative;
@@ -856,10 +1019,19 @@
       <button class="nav-btn active" onclick="switchView('approval')">
         Подпись <span class="nav-badge" id="pendingBadge">0</span>
       </button>
+      <button class="nav-btn" onclick="switchView('guard')">
+        Охрана <span class="nav-badge" id="guardNavBadge" style="background:var(--green);">0</span>
+      </button>
       <button class="nav-btn" onclick="switchView('wizard')">Подать</button>
-      <button class="nav-btn" onclick="switchView('myRequests')">Мои</button>
-      <button class="nav-btn" onclick="switchView('limits')">ИП и Лимиты</button>
+      <button class="nav-btn" onclick="switchView('limits')">Лимиты</button>
       <button class="nav-btn" onclick="switchView('access')">Доступы</button>
+    </div>
+
+    <!-- НАВИГАЦИЯ ДЛЯ ПОСТА ОХРАНЫ -->
+    <div class="top-nav hidden" id="guardOnlyNav">
+      <button class="nav-btn active" onclick="switchView('guard')">
+        🛡 Пост охраны • Пропуска <span class="nav-badge" id="guardOnlyBadge" style="background:var(--green);">0</span>
+      </button>
     </div>
 
     <!-- ==================== ЭКРАН 1: МАСТЕР ПОДАЧИ ЗАЯВКИ ==================== -->
@@ -1236,6 +1408,52 @@
       </div>
     </div>
 
+        <!-- ==================== ЭКРАН: ПОСТ ОХРАНЫ (ОБЪЕДИНЕННЫЕ ПРОПУСКА) ==================== -->
+    <div id="guardView" class="hidden">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div>
+          <h2 class="card-title" style="margin:0;">Сводка пропусков (Охрана)</h2>
+          <div style="font-size:11.5px; color:var(--graphite);" id="guardDateSubtitle">Все заявки одного арендатора объединены</div>
+        </div>
+        <button type="button" onclick="loadUserData(true)" style="background:var(--surface); border:1px solid var(--border); padding:7px 11px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer;">
+          ↻ Обновить
+        </button>
+      </div>
+
+      <button type="button" class="guard-scan-btn" onclick="openGuardQrScanner()">
+        📷 Сканировать QR-пропуск арендатора
+      </button>
+
+      <div class="guard-top-bar">
+        <button type="button" class="day-toggle-btn active" id="guardDayTodayBtn" onclick="setGuardDay('today')">
+          Сегодня (<span id="guardTodayCount">0</span>)
+        </button>
+        <button type="button" class="day-toggle-btn" id="guardDayTomorrowBtn" onclick="setGuardDay('tomorrow')">
+          Завтра (<span id="guardTomorrowCount">0</span>)
+        </button>
+      </div>
+
+      <div class="search-box" style="margin-bottom:8px;">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="guardSearchInput" placeholder="Поиск по ИП, госномеру авто или ФИО..." oninput="renderGuardList()">
+      </div>
+
+      <div class="guard-filter-row" id="guardFilterChips">
+        <button type="button" class="guard-chip active" onclick="setGuardFilter('all', this)">Все</button>
+        <button type="button" class="guard-chip" onclick="setGuardFilter('9:00-11:00', this)">09:00–11:00</button>
+        <button type="button" class="guard-chip" onclick="setGuardFilter('После 21:00', this)">После 21:00</button>
+        <button type="button" class="guard-chip" onclick="setGuardFilter('После 22:00', this)">После 22:00</button>
+        <button type="button" class="guard-chip" onclick="setGuardFilter('floor_1', this)">1 этаж</button>
+        <button type="button" class="guard-chip" onclick="setGuardFilter('floor_2', this)">2 этаж</button>
+        <button type="button" class="guard-chip" onclick="setGuardFilter('floor_3', this)">3 этаж</button>
+        <button type="button" class="guard-chip" onclick="setGuardFilter('floor_4', this)">4 этаж</button>
+      </div>
+
+      <div id="guardConsolidatedList">
+        <div class="card" style="text-align:center; color:var(--graphite); font-size:13.5px;">Загружаем утвержденные пропуска...</div>
+      </div>
+    </div>
+
     <!-- ==================== ЭКРАН 5: УПРАВЛЕНИЕ ДОСТУПАМИ ==================== -->
     <div id="accessView" class="hidden">
       <div class="card">
@@ -1250,8 +1468,27 @@
           <option value="Администратор">Администратор (1-й этап согласования)</option>
           <option value="Инженер">Инженер (2-й обязательный этап согласования)</option>
           <option value="Директор">Директор (3-й финальный этап утверждения)</option>
+          <option value="Охрана">Охрана (просмотр сводки пропусков и авто-отчеты)</option>
         </select>
         <button class="btn-primary" style="width:100%; margin-top:14px;" id="addAccBtn" onclick="addApprover()">Выдать доступ</button>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Отдельная Google Таблица «Журнал КПП»</h3>
+        <p class="card-desc">В эту таблицу автоматически записываются все кого охрана пропустила и кого не пустила после сканирования QR-кода.</p>
+        <div id="kppSheetLinkBox" style="margin-bottom:10px; font-size:12.5px; color:var(--graphite);"></div>
+        <button type="button" class="btn-primary" style="width:100%;" id="createKppSheetBtn" onclick="createSeparateKppSheet()">
+          📊 Создать / Подключить таблицу «Журнал КПП»
+        </button>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Чат охраны для авто-сводки (18:05 и 08:45)</h3>
+        <p class="card-desc">Укажите ID Telegram-группы охраны (например, -1001234567890), чтобы бот присылал туда сводный отчет. Личные аккаунты с ролью «Охрана» получают отчет автоматически.</p>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="securityChatIdInput" placeholder="Chat ID группы охраны (необязательно)">
+          <button type="button" class="btn-primary" style="flex:0 0 auto; padding:12px 14px;" id="saveSecChatBtn" onclick="saveSecurityChatId()">Сохранить</button>
+        </div>
       </div>
 
       <div class="card">
@@ -1282,6 +1519,59 @@
       <div style="display:flex; gap:10px; margin-top:12px;">
         <button type="button" class="btn-secondary" onclick="closeRejectModal()">Отмена</button>
         <button type="button" class="btn-primary" onclick="confirmReject()">Отклонить и уведомить</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- МОДАЛЬНОЕ ОКНО: QR-ПРОПУСК АРЕНДАТОРА -->
+  <div class="modal-backdrop hidden" id="qrPassModal">
+    <div class="modal-sheet" style="text-align:center;">
+      <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:13px; letter-spacing:0.15em; color:var(--red);">JANNUR PASS • QR</div>
+      <h3 class="card-title" id="qrModalOrgTitle" style="margin-top:4px; font-size:18px;">Организация</h3>
+      <p class="card-desc" id="qrModalSub" style="margin-bottom:6px;">Покажите этот QR-код сотруднику охраны на КПП</p>
+
+      <div class="qr-box-wrap">
+        <canvas id="qrPassCanvas"></canvas>
+        <div id="qrCodeIdLabel" style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; color:var(--black); margin-top:8px;"></div>
+      </div>
+
+      <div id="qrModalDetails" style="background:var(--bg); border-radius:12px; padding:10px 12px; font-size:12.5px; text-align:left; margin-bottom:12px; line-height:1.45;"></div>
+
+      <button type="button" class="btn-primary" style="width:100%;" onclick="closeQrPassModal()">Закрыть</button>
+    </div>
+  </div>
+
+  <!-- МОДАЛЬНОЕ ОКНО: РЕЗУЛЬТАТ ПРОВЕРКИ QR И РЕШЕНИЕ ОХРАНЫ (ПРОПУСТИТЬ / ОТКЛОНИТЬ) -->
+  <div class="modal-backdrop hidden" id="qrVerifyModal">
+    <div class="modal-sheet" style="max-height:90dvh; overflow-y:auto;">
+      <h3 class="card-title" style="margin-bottom:4px;">Проверка QR-пропуска (КПП)</h3>
+      <div id="qrVerifyBody">
+        <div style="padding:20px; text-align:center; color:var(--graphite);">Проверяем разрешение в базе ТРЦ...</div>
+      </div>
+
+      <!-- Блок фиксации решения охраны в отдельный Журнал КПП -->
+      <div id="kppDecisionControls" class="hidden" style="margin-top:12px;">
+        <div id="kppRejectReasonBlock" class="hidden" style="margin-bottom:10px;">
+          <label class="field-label" style="margin-top:0;">Причина недопуска на КПП:</label>
+          <div style="margin-bottom:6px;">
+            <span class="reason-chip" onclick="document.getElementById('kppRejectInput').value='Прибытие вне разрешенного времени'">Несоответствие времени</span>
+            <span class="reason-chip" onclick="document.getElementById('kppRejectInput').value='Нет утверждения Директора'">Нет подписи Директора</span>
+            <span class="reason-chip" onclick="document.getElementById('kppRejectInput').value='Госномер авто или ФИО не совпадают'">Не совпадает авто/ФИО</span>
+            <span class="reason-chip" onclick="document.getElementById('kppRejectInput').value='Пропуск просрочен'">Просрочен</span>
+          </div>
+          <input type="text" id="kppRejectInput" placeholder="Укажите причину отказа...">
+        </div>
+
+        <div style="display:flex; gap:10px;" id="kppActionBtnsRow">
+          <button type="button" class="ctrl-btn ctrl-reject" id="kppDenyBtn" onclick="handleKppDenyClick()">❌ Отклонить</button>
+          <button type="button" class="ctrl-btn" style="background:var(--green); color:#fff;" id="kppAllowBtn" onclick="submitKppDecision('allow')">✅ Пропустить</button>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <button type="button" class="btn-secondary" style="flex:1;" onclick="openGuardQrScanner()">📷 Сканировать еще</button>
+        <button type="button" class="btn-secondary" style="flex:1;" onclick="closeQrVerifyModal()">Закрыть</button>
       </div>
     </div>
   </div>
@@ -1389,6 +1679,13 @@
     let pendingRequests = [];
     let approversList = [];
     let tenantRules = {};
+    let securityToday = [];
+    let securityTomorrow = [];
+    let kppLogUrl = "";
+    let lastScannedPass = null;
+    let securityDates = { today: "", tomorrow: "" };
+    let guardDayMode = "today";
+    let guardFilterMode = "all";
     let isApprover = false;
     let userRole = "";
     let pendingRejectCard = null;
@@ -1659,26 +1956,50 @@
           userRole = data.role;
           pendingRequests = data.requests || [];
           approversList = data.approvers || [];
+          securityToday = data.securityToday || [];
+          securityTomorrow = data.securityTomorrow || [];
+          securityDates = data.securityDates || { today: "", tomorrow: "" };
+
+          document.getElementById('guardTodayCount').textContent = securityToday.length;
+          document.getElementById('guardTomorrowCount').textContent = securityTomorrow.length;
+          document.getElementById('guardNavBadge').textContent = securityToday.length;
+          document.getElementById('guardOnlyBadge').textContent = securityToday.length;
+
+          if (data.securityChatId && document.getElementById('securityChatIdInput')) {
+            document.getElementById('securityChatIdInput').value = data.securityChatId;
+          }
+          kppLogUrl = data.kppLogUrl || "";
+          updateKppSheetLinkUI();
 
           document.getElementById('tenantNav').classList.add('hidden');
-          document.getElementById('adminNav').classList.remove('hidden');
-          document.getElementById('roleInfoBar').textContent = `Роль: ${userRole} ${data.userName ? '(' + data.userName + ')' : ''}`;
 
-          if (userRole === "Директор") {
-            document.getElementById('directorAllBtn').classList.remove('hidden');
-            document.getElementById('approveBtnLabel').textContent = "Утвердить (Директор)";
-          } else if (userRole === "Инженер") {
-            document.getElementById('approveBtnLabel').textContent = "Согласовать (Инженер)";
+          if (userRole === "Охрана") {
+            document.getElementById('adminNav').classList.add('hidden');
+            document.getElementById('guardOnlyNav').classList.remove('hidden');
+            if (!showToast) switchView('guard');
+            renderGuardList();
           } else {
-            document.getElementById('approveBtnLabel').textContent = "Согласовать (Администратор)";
-          }
+            document.getElementById('guardOnlyNav').classList.add('hidden');
+            document.getElementById('adminNav').classList.remove('hidden');
+            document.getElementById('roleInfoBar').textContent = `Роль: ${userRole} ${data.userName ? '(' + data.userName + ')' : ''}`;
 
-          updateHeaderAndSubmissionLock();
-          if (!showToast) switchView('approval');
-          renderSwipeCards();
-          renderApprovers();
-          renderCustomRulesList();
-          syncAdminLimitForm();
+            if (userRole === "Директор") {
+              document.getElementById('directorAllBtn').classList.remove('hidden');
+              document.getElementById('approveBtnLabel').textContent = "Утвердить (Директор)";
+            } else if (userRole === "Инженер") {
+              document.getElementById('approveBtnLabel').textContent = "Согласовать (Инженер)";
+            } else {
+              document.getElementById('approveBtnLabel').textContent = "Согласовать (Администратор)";
+            }
+
+            updateHeaderAndSubmissionLock();
+            if (!showToast) switchView('approval');
+            renderSwipeCards();
+            renderApprovers();
+            renderCustomRulesList();
+            syncAdminLimitForm();
+            renderGuardList();
+          }
         }
         if (showToast) haptic('light');
       } catch (e) {
@@ -1689,7 +2010,9 @@
     function switchView(view) {
       currentViewName = view;
       haptic('light');
-      const navContainer = isApprover ? document.getElementById('adminNav') : document.getElementById('tenantNav');
+      const navContainer = (isApprover && userRole !== "Охрана")
+        ? document.getElementById('adminNav')
+        : (userRole === "Охрана" ? document.getElementById('guardOnlyNav') : document.getElementById('tenantNav'));
       navContainer.querySelectorAll('.nav-btn').forEach(btn => {
         const onclickAttr = btn.getAttribute('onclick') || '';
         btn.classList.toggle('active', onclickAttr.includes(`'${view}'`));
@@ -1698,16 +2021,381 @@
       document.getElementById('wizardView').classList.toggle('hidden', view !== 'wizard');
       document.getElementById('myRequestsView').classList.toggle('hidden', view !== 'myRequests');
       document.getElementById('approvalView').classList.toggle('hidden', view !== 'approval');
+      document.getElementById('guardView').classList.toggle('hidden', view !== 'guard');
       document.getElementById('limitsView').classList.toggle('hidden', view !== 'limits');
       document.getElementById('accessView').classList.toggle('hidden', view !== 'access');
 
       updateHeaderAndSubmissionLock();
 
       if (view === 'myRequests') renderMyRequests();
+      if (view === 'guard') renderGuardList();
       if (view === 'limits') {
         renderCustomRulesList();
         syncAdminLimitForm();
         renderAdminTenantsManager();
+      }
+    }
+
+    
+    // === ГЕНЕРАЦИЯ QR-ПРОПУСКА ДЛЯ АРЕНДАТОРА И СКАНЕР ДЛЯ ОХРАНЫ ===
+    function openQrPassModal(rowIndex) {
+      const req = myRequests.find(x => Number(x.rowIndex) === Number(rowIndex));
+      if (!req) return;
+      haptic('medium');
+
+      const qrPayload = req.qrToken || `JANNUR-${req.rowIndex}`;
+      document.getElementById('qrModalOrgTitle').textContent = req.organization;
+      document.getElementById('qrCodeIdLabel').textContent = `Пропуск №${req.rowIndex} • Код: ${qrPayload}`;
+      document.getElementById('qrModalDetails').innerHTML = `
+        <div>🏢 <b>Этаж:</b> ${req.floor}</div>
+        <div>🛠 <b>Вид работ:</b> ${req.workType}</div>
+        <div>📅 <b>Срок действия:</b> с ${req.startDate} по ${req.endDate}</div>
+        <div>⏰ <b>Разрешенное время:</b> ${req.workTime}</div>
+        <div>🚗 <b>Авто:</b> ${req.carNumber}</div>
+      `;
+
+      const canvas = document.getElementById('qrPassCanvas');
+      if (window.QRious && canvas) {
+        new QRious({
+          element: canvas,
+          value: qrPayload,
+          size: 210,
+          level: 'M',
+          foreground: '#0D0D0F',
+          background: '#FFFFFF'
+        });
+      }
+
+      document.getElementById('qrPassModal').classList.remove('hidden');
+    }
+
+    function closeQrPassModal() {
+      document.getElementById('qrPassModal').classList.add('hidden');
+    }
+
+    function closeQrVerifyModal() {
+      document.getElementById('qrVerifyModal').classList.add('hidden');
+    }
+
+    function openGuardQrScanner() {
+      haptic('medium');
+      if (typeof tg.showScanQrPopup === 'function') {
+        tg.showScanQrPopup({
+          text: "Наведите камеру на QR-пропуск арендатора или водителя"
+        }, function(scannedText) {
+          if (scannedText) {
+            if (typeof tg.closeScanQrPopup === 'function') tg.closeScanQrPopup();
+            verifyScannedQrCode(scannedText);
+            return true;
+          }
+          return false;
+        });
+      } else {
+        const manualCode = prompt("Введите код с пропуска (например: JANNUR-12-XXXX):");
+        if (manualCode) verifyScannedQrCode(manualCode.trim());
+      }
+    }
+
+    function updateKppSheetLinkUI() {
+      const box = document.getElementById('kppSheetLinkBox');
+      if (!box) return;
+      if (kppLogUrl) {
+        box.innerHTML = `✅ Таблица подключена: <a href="${kppLogUrl}" target="_blank" style="color:var(--red); font-weight:700;">Открыть «Журнал КПП» в Google Sheets ↗</a>`;
+      } else {
+        box.textContent = "Таблица еще не создана (создастся автоматически при первом сканировании или по кнопке ниже).";
+      }
+    }
+
+    async function createSeparateKppSheet() {
+      const btn = document.getElementById('createKppSheetBtn');
+      btn.disabled = true;
+      btn.textContent = "Создаем отдельную таблицу...";
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'create_kpp_sheet', initData: initDataRaw })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          kppLogUrl = data.kppLogUrl;
+          updateKppSheetLinkUI();
+          haptic('medium');
+          tg.showAlert("✅ Отдельная Google Таблица «Журнал КПП» создана и привязана к охране!");
+        } else {
+          tg.showAlert(data.message || "Ошибка создания таблицы");
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "📊 Создать / Подключить таблицу «Журнал КПП»";
+      }
+    }
+
+    async function verifyScannedQrCode(qrText) {
+      const modal = document.getElementById('qrVerifyModal');
+      const bodyEl = document.getElementById('qrVerifyBody');
+      const controlsEl = document.getElementById('kppDecisionControls');
+      const rejectBlock = document.getElementById('kppRejectReasonBlock');
+      const allowBtn = document.getElementById('kppAllowBtn');
+      const denyBtn = document.getElementById('kppDenyBtn');
+
+      controlsEl.classList.add('hidden');
+      rejectBlock.classList.add('hidden');
+      document.getElementById('kppRejectInput').value = "";
+      allowBtn.disabled = false;
+      denyBtn.disabled = false;
+      denyBtn.textContent = "❌ Отклонить";
+
+      bodyEl.innerHTML = `<div style="padding:24px; text-align:center; color:var(--graphite);">⏳ Проверяем QR-код <b>${qrText}</b>...</div>`;
+      modal.classList.remove('hidden');
+
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=verify_qr&qr=${encodeURIComponent(qrText)}&initData=${encodeURIComponent(initDataRaw)}`);
+        const data = await res.json();
+        lastScannedPass = Object.assign({ qrText: qrText }, data);
+
+        if (data.valid) {
+          haptic('heavy');
+          const timeBadge = data.timeMatches
+            ? `<div style="background:#15803D; color:#fff; padding:6px 10px; border-radius:8px; font-size:12px; font-weight:700; margin-bottom:8px;">🕒 ${data.timeNote}</div>`
+            : `<div style="background:#B45309; color:#fff; padding:6px 10px; border-radius:8px; font-size:12px; font-weight:700; margin-bottom:8px;">⚠️ ${data.timeNote}</div>`;
+
+          const otherHtml = (data.otherTodayPermits && data.otherTodayPermits.length > 0)
+            ? `<div style="margin-top:8px; padding-top:8px; border-top:1px dashed rgba(0,0,0,0.2); font-size:12px;">
+                 <b>Также у этого ИП на сегодня разрешено:</b><br>
+                 ${data.otherTodayPermits.map(p => `• ${p.workType} (${p.workTime}, до ${p.endDate})`).join('<br>')}
+               </div>`
+            : '';
+
+          bodyEl.innerHTML = `
+            <div class="scan-verdict-card valid">
+              <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:17px; color:var(--green); margin-bottom:6px;">
+                ✅ РАЗРЕШЕНИЕ ДЕЙСТВИТЕЛЬНО
+              </div>
+              ${timeBadge}
+              <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:16px; color:var(--black); margin-bottom:6px;">
+                ${data.organization} (${data.floor} этаж)
+              </div>
+              <div style="font-size:13px; line-height:1.45;">
+                <div>🛠 <b>Работы:</b> ${data.workType}</div>
+                <div>📅 <b>Срок:</b> с ${data.startDate} по ${data.endDate}</div>
+                <div>⏰ <b>Окно в заявке:</b> ${data.workTime}</div>
+                <div>🚗 <b>Авто:</b> ${data.carNumber}</div>
+                <div>👷 <b>Сотрудники:</b> ${data.nightDetails}</div>
+                <div>📞 <b>Ответственный:</b> ${data.responsible}</div>
+              </div>
+              ${otherHtml}
+            </div>
+          `;
+          if (!data.timeMatches) {
+            document.getElementById('kppRejectInput').value = data.timeNote;
+          }
+          controlsEl.classList.remove('hidden');
+        } else {
+          haptic('heavy');
+          bodyEl.innerHTML = `
+            <div class="scan-verdict-card invalid">
+              <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:17px; color:var(--red); margin-bottom:6px;">
+                ❌ РАЗРЕШЕНИЕ НЕДЕЙСТВИТЕЛЬНО
+              </div>
+              <div style="font-size:13.5px; font-weight:600; color:var(--black); margin-bottom:6px;">
+                ${data.reason || "Пропуск недействителен или просрочен."}
+              </div>
+              ${data.organization ? `<div style="font-size:12.5px; color:var(--charcoal);">Организация: <b>${data.organization}</b> (${data.floor} эт.) • Статус: <b>${data.status}</b></div>` : ''}
+            </div>
+          `;
+          document.getElementById('kppRejectInput').value = data.reason || "Недействительный пропуск";
+          rejectBlock.classList.remove('hidden');
+          controlsEl.classList.remove('hidden');
+        }
+      } catch (err) {
+        bodyEl.innerHTML = `<div class="scan-verdict-card invalid"><b>Ошибка связи с сервером.</b> Попробуйте отсканировать еще раз.</div>`;
+      }
+    }
+
+    function handleKppDenyClick() {
+      const rejectBlock = document.getElementById('kppRejectReasonBlock');
+      const denyBtn = document.getElementById('kppDenyBtn');
+      if (rejectBlock.classList.contains('hidden')) {
+        rejectBlock.classList.remove('hidden');
+        denyBtn.textContent = "Подтвердить отказ";
+        return;
+      }
+      submitKppDecision('deny');
+    }
+
+    async function submitKppDecision(decision) {
+      if (!lastScannedPass) return;
+      const allowBtn = document.getElementById('kppAllowBtn');
+      const denyBtn = document.getElementById('kppDenyBtn');
+      allowBtn.disabled = true;
+      denyBtn.disabled = true;
+
+      const reason = document.getElementById('kppRejectInput').value.trim();
+      const p = lastScannedPass;
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'log_kpp_decision',
+            decision: decision,
+            reason: reason,
+            rowIndex: p.rowIndex || "",
+            floor: p.floor || "",
+            organization: p.organization || "Неизвестно",
+            workType: p.workType || "",
+            workTime: p.workTime || "",
+            datesRange: (p.startDate && p.endDate) ? `${p.startDate} — ${p.endDate}` : "",
+            carNumber: p.carNumber || "",
+            nightDetails: p.nightDetails || "",
+            timeNote: p.timeNote || "",
+            initData: initDataRaw
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          if (data.kppLogUrl) {
+            kppLogUrl = data.kppLogUrl;
+            updateKppSheetLinkUI();
+          }
+          haptic('medium');
+          document.getElementById('kppDecisionControls').innerHTML = `
+            <div style="padding:12px; border-radius:12px; text-align:center; font-weight:700; font-size:13px; background:${decision === 'allow' ? 'var(--green-bg)' : '#FDECEF'}; color:${decision === 'allow' ? 'var(--green)' : 'var(--red)'};">
+              ${decision === 'allow' ? '✅ Записано в Журнал КПП: ПРОПУЩЕН' : '❌ Записано в Журнал КПП: ОТКЛОНЕН'} (${data.loggedAt})
+            </div>
+          `;
+        } else {
+          tg.showAlert(data.message || "Ошибка записи в Журнал КПП");
+          allowBtn.disabled = false;
+          denyBtn.disabled = false;
+        }
+      } catch (e) {
+        tg.showAlert("Ошибка сети при записи в Журнал КПП");
+        allowBtn.disabled = false;
+        denyBtn.disabled = false;
+      }
+    }
+
+    // === ЛОГИКА ПОСТА ОХРАНЫ (ОБЪЕДИНЕННЫЕ ПО АРЕНДАТОРУ ПРОПУСКА) ===
+    function setGuardDay(day) {
+      guardDayMode = day;
+      haptic('light');
+      document.getElementById('guardDayTodayBtn').classList.toggle('active', day === 'today');
+      document.getElementById('guardDayTomorrowBtn').classList.toggle('active', day === 'tomorrow');
+      renderGuardList();
+    }
+
+    function setGuardFilter(filter, btn) {
+      guardFilterMode = filter;
+      haptic('light');
+      document.querySelectorAll('#guardFilterChips .guard-chip').forEach(c => c.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderGuardList();
+    }
+
+    function renderGuardList() {
+      const container = document.getElementById('guardConsolidatedList');
+      if (!container) return;
+
+      const dateStr = guardDayMode === 'today' ? securityDates.today : securityDates.tomorrow;
+      const subEl = document.getElementById('guardDateSubtitle');
+      if (subEl && dateStr) {
+        subEl.textContent = `${guardDayMode === 'today' ? 'Сегодня' : 'Завтра'}, ${dateStr} • Заявки одного ИП объединены`;
+      }
+
+      const sourceList = guardDayMode === 'today' ? securityToday : securityTomorrow;
+      const q = (document.getElementById('guardSearchInput')?.value || "").toLowerCase().trim();
+
+      const filtered = sourceList.filter(group => {
+        if (guardFilterMode.startsWith('floor_')) {
+          const targetFl = guardFilterMode.replace('floor_', '');
+          if (String(group.floor) !== targetFl) return false;
+        } else if (guardFilterMode !== 'all') {
+          const hasSlot = group.permits.some(p => String(p.workTime).includes(guardFilterMode));
+          if (!hasSlot) return false;
+        }
+
+        if (!q) return true;
+        const hay = [
+          group.organization,
+          group.floor,
+          group.cars.join(' '),
+          group.workers.join(' '),
+          group.responsibles.join(' '),
+          group.permits.map(p => `${p.workType} ${p.workTime}`).join(' ')
+        ].join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align:center; padding:28px 16px;">
+            <div style="font-size:28px; margin-bottom:8px;">🛡</div>
+            <div style="font-family:'Raleway',sans-serif; font-weight:700; font-size:15px; color:var(--black);">На выбранную дату активных пропусков не найдено</div>
+            <div style="font-size:12.5px; color:var(--graphite); margin-top:4px;">Отображаются только заявки, утвержденные Директором.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = "";
+      filtered.forEach(group => {
+        const card = document.createElement('div');
+        card.className = 'guard-card';
+
+        const permitsHtml = group.permits.map(p => `
+          <div class="guard-permit-item">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+              <b style="color:var(--black);">${p.workType}</b>
+              <span style="font-size:11px; font-weight:700; color:var(--red); white-space:nowrap;">${p.workTime}</span>
+            </div>
+            <div style="font-size:11.5px; color:var(--graphite); margin-top:3px;">
+              Срок действия: <b>с ${p.startDate} по ${p.endDate}</b> • Заявка №${p.rowIndex}
+            </div>
+          </div>
+        `).join('');
+
+        card.innerHTML = `
+          <div class="guard-card-head">
+            <span class="guard-floor-pill">Этаж: ${group.floor}</span>
+            <span class="guard-count-pill">${group.permits.length > 1 ? `Объединено заявок: ${group.permits.length}` : '1 разрешение'}</span>
+          </div>
+          <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:16.5px; color:var(--black);">
+            ${group.organization}
+          </div>
+          ${permitsHtml}
+          <div class="guard-meta-box">
+            <div>🚗 <b>Авто:</b> ${group.cars.length ? group.cars.join(', ') : 'не указано'}</div>
+            <div>👷 <b>Сотрудники:</b> ${group.workers.length ? group.workers.join('; ') : 'не указаны'}</div>
+            <div>📞 <b>Ответственный:</b> ${group.responsibles.join('; ')}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    async function saveSecurityChatId() {
+      const chatId = document.getElementById('securityChatIdInput').value.trim();
+      const btn = document.getElementById('saveSecChatBtn');
+      btn.disabled = true;
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'set_security_chat',
+            chatId: chatId,
+            initData: initDataRaw
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          haptic('medium');
+          tg.showAlert("✅ Чат охраны сохранен! Отчеты будут приходить ежедневно в 18:05 и 08:45.");
+        } else {
+          tg.showAlert(data.message || "Ошибка сохранения");
+        }
+      } finally {
+        btn.disabled = false;
       }
     }
 
@@ -1764,7 +2452,8 @@
           <div style="font-size:12.5px; color:var(--graphite);">
             Этаж: <b>${r.floor}</b> • Срок: <b>с ${r.startDate} по ${r.endDate}</b> (${r.workTime})
           </div>
-          ${!isFinalValid && !isRejected ? `<div style="margin-top:8px; font-size:11.5px; color:var(--blue); font-weight:600;">ℹ️ Заявка станет действительной только после согласования Администратором, Инженером и финального утверждения Директором.</div>` : ''}
+          ${isFinalValid ? `<button type="button" class="qr-btn" onclick="openQrPassModal(${r.rowIndex})">🎫 Открыть QR-пропуск для охраны</button>` : ''}
+          ${!isFinalValid && !isRejected ? `<div style="margin-top:8px; font-size:11.5px; color:var(--blue); font-weight:600;">ℹ️ QR-пропуск сформируется автоматически после финального утверждения Директором.</div>` : ''}
           ${r.rejectReason ? `<div class="reject-reason-box"><b>Комментарий:</b> ${r.rejectReason}</div>` : ''}
         `;
         container.appendChild(card);
