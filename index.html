@@ -179,14 +179,9 @@
     }
     #adminNav {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 6px;
     }
-    #adminNav .nav-btn:nth-child(1) { grid-column: span 3; }
-    #adminNav .nav-btn:nth-child(2) { grid-column: span 3; }
-    #adminNav .nav-btn:nth-child(3) { grid-column: span 2; }
-    #adminNav .nav-btn:nth-child(4) { grid-column: span 2; }
-    #adminNav .nav-btn:nth-child(5) { grid-column: span 2; }
 
     .nav-btn {
       flex: 1;
@@ -760,6 +755,72 @@
 
     
     
+    
+    /* === ЛИЧНЫЙ КАБИНЕТ АРЕНДАТОРА (ОПЦИОНАЛЬНЫЙ ФИНАНСОВЫЙ РАЗДЕЛ) === */
+    .cabinet-hero-card {
+      background: linear-gradient(145deg, #111114 0%, #262830 100%);
+      color: #FFFFFF;
+      border-radius: 22px;
+      padding: 20px 18px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(209, 186, 166, 0.45);
+      box-shadow: 0 12px 28px rgba(13, 13, 15, 0.16);
+      position: relative;
+      overflow: hidden;
+    }
+    .cabinet-hero-card::after {
+      content: "";
+      position: absolute;
+      right: -25px; bottom: -25px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(209, 186, 166, 0.25) 0%, rgba(209, 186, 166, 0) 70%);
+      pointer-events: none;
+    }
+    .cabinet-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(209, 186, 166, 0.16);
+      border: 1px solid rgba(209, 186, 166, 0.4);
+      color: var(--nude);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+    .rent-bill-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 17px;
+      margin-bottom: 13px;
+      border: 1.5px solid rgba(209, 186, 166, 0.75);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.045);
+    }
+    .rent-amount-box {
+      background: var(--nude-bg);
+      border: 1px solid var(--nude);
+      border-radius: 14px;
+      padding: 13px 14px;
+      margin: 12px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .rent-amount-val {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 21px;
+      color: var(--black);
+    }
+    .pay-pill-paid { background: var(--green-bg); color: var(--green); }
+    .pay-pill-wait { background: var(--amber-bg); color: var(--amber); }
+    .pay-pill-late { background: #FDECEF; color: var(--red); }
+
     /* === QR-ПРОПУСК И СКАНЕР ОХРАНЫ === */
     .qr-btn {
       margin-top: 10px;
@@ -1025,9 +1086,12 @@
   <div class="container">
     <!-- НАВИГАЦИЯ ДЛЯ АРЕНДАТОРОВ -->
     <div class="top-nav" id="tenantNav">
-      <button class="nav-btn active" id="tNavWizard" onclick="switchView('wizard')">Новая заявка</button>
+      <button class="nav-btn active" id="tNavWizard" onclick="switchView('wizard')">Заявка</button>
       <button class="nav-btn" id="tNavMy" onclick="switchView('myRequests')">
-        <span id="tNavMyLabel">Мои заявки</span> <span class="nav-badge" id="myReqBadge">0</span>
+        <span id="tNavMyLabel">Мои</span> <span class="nav-badge" id="myReqBadge">0</span>
+      </button>
+      <button class="nav-btn" id="tNavCab" onclick="switchView('cabinet')">
+        <span id="tNavCabLabel">Личный кабинет</span>
       </button>
     </div>
 
@@ -1040,6 +1104,7 @@
         Охрана <span class="nav-badge" id="guardNavBadge" style="background:var(--green);">0</span>
       </button>
       <button class="nav-btn" onclick="switchView('wizard')">Подать</button>
+      <button class="nav-btn" onclick="switchView('myRequests')">Мои</button>
       <button class="nav-btn" onclick="switchView('limits')">Лимиты</button>
       <button class="nav-btn" onclick="switchView('access')">Доступы</button>
     </div>
@@ -1310,6 +1375,63 @@
       </div>
     </div>
 
+
+    <!-- ==================== ЭКРАН: ЛИЧНЫЙ КАБИНЕТ АРЕНДАТОРА (ОПЦИОНАЛЬНЫЙ) ==================== -->
+    <div id="cabinetView" class="hidden">
+      <!-- Состояние 1: Телефон еще не подтвержден -->
+      <div id="cabinetUnverifiedState">
+        <div class="cabinet-hero-card">
+          <div class="cabinet-badge">🔐 JANNUR • ЛИЧНЫЙ КАБИНЕТ</div>
+          <h2 style="font-family:'Raleway',sans-serif; font-weight:800; font-size:20px; margin:10px 0 6px; color:#FFFFFF;">
+            Финансы и счета бутика
+          </h2>
+          <p style="font-size:12.5px; color:rgba(255,255,255,0.82); line-height:1.45; margin:0;">
+            Необязательный раздел для руководителей и бухгалтеров ИП/ТОО. Сотрудники бутика могут подавать заявки на ввоз и вывоз товара без входа в кабинет.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Быстрый вход по номеру телефона</h3>
+          <p class="card-desc">
+            Нажмите кнопку ниже — Telegram безопасно подтвердит ваш номер телефона и откроет данные только по вашему бутику, указанному в договоре аренды.
+          </p>
+
+          <div style="background:var(--bg); border-radius:12px; padding:11px 12px; font-size:12px; color:var(--charcoal); margin-bottom:14px; line-height:1.45;">
+            🛡 <b>Конфиденциальность:</b> продавцы и сотрудники других бутиков не имеют доступа к суммам аренды и уведомлениям об оплате.<br>
+            🔄 <b>Сменили номер?</b> Обратитесь к Администратору ТРЦ — он обновит номер за 10 секунд.
+          </div>
+
+          <button type="button" class="btn-primary" style="width:100%;" id="verifyPhoneBtn" onclick="requestTenantPhoneVerification()">
+            📱 Подтвердить номер телефона
+          </button>
+
+          <div id="cabinetVerifyErrorBox" class="hidden reject-reason-box" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <!-- Состояние 2: Телефон подтвержден — показываем счета и статус аренды -->
+      <div id="cabinetVerifiedState" class="hidden">
+        <div class="cabinet-hero-card" style="padding:16px 18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+            <span class="cabinet-badge">✓ ДОСТУП ПОДТВЕРЖДЕН</span>
+            <button type="button" onclick="loadUserData(true)" style="background:rgba(255,255,255,0.12); border:1px solid rgba(209,186,166,0.35); color:#fff; padding:5px 10px; border-radius:10px; font-size:11.5px; font-weight:700; cursor:pointer;">
+              ↻ Обновить
+            </button>
+          </div>
+          <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:17px; margin-top:8px;" id="cabVerifiedPhoneText">+7 (700) 000-00-00</div>
+          <div style="font-size:11.5px; color:var(--nude); margin-top:2px;">Сюда поступают уведомления о счетах за аренду</div>
+        </div>
+
+        <div id="cabinetAccountsList"></div>
+
+        <div style="text-align:center; margin-top:8px;">
+          <button type="button" class="btn-secondary" style="font-size:12.5px; padding:10px 14px;" onclick="unlinkMyCabinetDevice()">
+            Выйти / Отвязать это устройство
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- ==================== ЭКРАН 3: СОГЛАСОВАНИЕ СВАЙПАМИ ==================== -->
     <div id="approvalView" class="hidden">
       <div id="timeLockAlert" class="card hidden" style="background:var(--nude-bg); border-color:var(--nude); padding:14px;">
@@ -1340,8 +1462,9 @@
     <!-- ==================== ЭКРАН 4: УПРАВЛЕНИЕ СПИСКОМ ИП И ИСКЛЮЧЕНИЯМИ ==================== -->
     <div id="limitsView" class="hidden">
       <div class="sub-tabs">
-        <button class="sub-tab-btn active" id="subTabRulesBtn" onclick="switchAdminSubTab('rules')">Исключения и Время</button>
-        <button class="sub-tab-btn" id="subTabTenantsBtn" onclick="switchAdminSubTab('tenants')">Список ИП по этажам</button>
+        <button class="sub-tab-btn active" id="subTabRulesBtn" onclick="switchAdminSubTab('rules')">Исключения</button>
+        <button class="sub-tab-btn" id="subTabTenantsBtn" onclick="switchAdminSubTab('tenants')">Список ИП</button>
+        <button class="sub-tab-btn" id="subTabCabinetBtn" onclick="switchAdminSubTab('cabinet')">Кабинет / Аренда</button>
       </div>
 
       <div id="adminRulesSubView">
@@ -1425,7 +1548,118 @@
       </div>
     </div>
 
-        <!-- ==================== ЭКРАН: ПОСТ ОХРАНЫ (ОБЪЕДИНЕННЫЕ ПРОПУСКА) ==================== -->
+    
+      <div id="adminCabinetSubView" class="hidden">
+        <!-- Сводка авторизаций и массовая рассылка -->
+        <div class="card" style="background:linear-gradient(145deg, #111114 0%, #24262E 100%); color:#FFFFFF; border:1px solid rgba(209,186,166,0.45);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span class="cabinet-badge">📊 МОНИТОРИНГ АВТОРИЗАЦИЙ</span>
+            <button type="button" onclick="syncAllTenantsToCabSheet()" style="background:rgba(255,255,255,0.12); border:1px solid rgba(209,186,166,0.35); color:#fff; padding:5px 9px; border-radius:9px; font-size:11px; font-weight:700; cursor:pointer;">
+              + Все ИП в таблицу
+            </button>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+            <div style="background:rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px;">
+              <div style="font-size:10.5px; color:var(--nude);">АВТОРИЗОВАНЫ В КАБИНЕТЕ</div>
+              <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:20px; color:#4ADE80; margin-top:2px;" id="cabStatAuthorizedCount">0</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px;">
+              <div style="font-size:10.5px; color:var(--nude);">НЕ АВТОРИЗОВАНЫ</div>
+              <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:20px; color:#FFFFFF; margin-top:2px;" id="cabStatUnauthCount">0</div>
+            </div>
+          </div>
+
+          <input type="text" id="broadcastRentNoteInput" placeholder="Доп. текст для рассылки (необязательно)..." style="background:rgba(255,255,255,0.1); border-color:rgba(209,186,166,0.35); color:#fff; font-size:13px; margin-bottom:9px;">
+
+          <button type="button" class="btn-primary" style="width:100%;" id="broadcastRentBtn" onclick="broadcastAuthorizedRentReminders()">
+            📢 Разослать уведомление об оплате всем авторизованным
+          </button>
+          <div style="font-size:11px; color:rgba(255,255,255,0.7); margin-top:6px; text-align:center;">
+            Отправится всем авторизованным ИП со статусом «Ожидает оплаты» или «Просрочено».
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Привязка номера и счет за аренду</h3>
+          <p class="card-desc">Укажите номер телефона директора/бухгалтера ИП (или впишите сразу списком в лист <b>«Аренда_и_Кабинет»</b> Google Таблицы).</p>
+
+          <label class="field-label">1. Этаж арендатора</label>
+          <select id="adminCabFloor" onchange="populateAdminCabOrgSelect()">
+            <option value="1">1 этаж</option>
+            <option value="2">2 этаж</option>
+            <option value="3">3 этаж</option>
+            <option value="4">4 этаж</option>
+            <option value="Улица и Банкоматы">Улица и Банкоматы</option>
+          </select>
+
+          <label class="field-label">2. Выберите ИП / ТОО</label>
+          <select id="adminCabOrg" onchange="syncAdminCabForm()"></select>
+
+          <label class="field-label">3. Номер телефона из договора (для входа в кабинет)</label>
+          <input type="text" id="adminCabPhone" placeholder="Например: +7 701 555 44 33">
+          <div id="adminCabBoundInfo" style="font-size:11.5px; color:var(--graphite); margin-top:4px;"></div>
+
+          <div class="date-row">
+            <div>
+              <label class="field-label">Период аренды</label>
+              <input type="text" id="adminCabPeriod" placeholder="Декабрь 2026">
+            </div>
+            <div>
+              <label class="field-label">Сумма к оплате</label>
+              <input type="text" id="adminCabAmount" placeholder="450 000 ₸">
+            </div>
+          </div>
+
+          <div class="date-row">
+            <div>
+              <label class="field-label">Оплатить до</label>
+              <input type="text" id="adminCabDueDate" placeholder="до 05.12.2026">
+            </div>
+            <div>
+              <label class="field-label">Статус оплаты</label>
+              <select id="adminCabStatus">
+                <option value="Ожидает оплаты">Ожидает оплаты</option>
+                <option value="Оплачено">Оплачено</option>
+                <option value="Просрочено">Просрочено</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="field-label">Комментарий / Реквизиты счета</label>
+          <textarea id="adminCabComment" placeholder="Например: Счет на оплату №412 направлен на почту, оплата по реквизитам ТОО «Жаннур»..."></textarea>
+
+          <label class="switch-row">
+            <div>
+              <div style="font-weight:700; font-size:13px; color:var(--black);">Отвязать текущее устройство арендатора</div>
+              <div style="font-size:11px; color:var(--graphite);">Потребует повторного подтверждения номера в Telegram</div>
+            </div>
+            <input type="checkbox" id="adminCabForceUnbind">
+          </label>
+
+          <div style="display:flex; gap:8px; margin-top:14px;">
+            <button type="button" class="btn-primary" style="flex:1;" id="saveCabRecordBtn" onclick="saveAdminCabinetRecord()">
+              💾 Сохранить
+            </button>
+            <button type="button" class="btn-secondary" style="border-color:var(--red); color:var(--red);" id="sendRentNotifyBtn" onclick="sendAdminRentReminder()">
+              🔔 Уведомить это ИП
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Статус авторизации арендаторов</h3>
+          <div class="guard-filter-row" id="cabFilterChips" style="margin-top:8px;">
+            <button type="button" class="guard-chip active" onclick="setCabListFilter('all', this)">Все</button>
+            <button type="button" class="guard-chip" onclick="setCabListFilter('authorized', this)">✅ Авторизованы</button>
+            <button type="button" class="guard-chip" onclick="setCabListFilter('unauthorized', this)">⏳ Не авторизованы</button>
+            <button type="button" class="guard-chip" onclick="setCabListFilter('unpaid', this)">💳 Ожидают оплаты</button>
+          </div>
+          <div id="adminCabinetList"></div>
+        </div>
+      </div>
+
+    <!-- ==================== ЭКРАН: ПОСТ ОХРАНЫ (ОБЪЕДИНЕННЫЕ ПРОПУСКА) ==================== -->
     <div id="guardView" class="hidden">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <div>
@@ -1567,6 +1801,9 @@
         <div style="padding:20px; text-align:center; color:var(--graphite);">Проверяем разрешение в базе ТРЦ...</div>
       </div>
 
+      <!-- Статус сохранения решения в Журнал КПП -->
+      <div id="kppSavedResultBanner" class="hidden" style="margin-top:12px;"></div>
+
       <!-- Блок фиксации решения охраны в отдельный Журнал КПП -->
       <div id="kppDecisionControls" class="hidden" style="margin-top:12px;">
         <div id="kppCarEditBlock" style="margin-bottom:10px; background:var(--bg); padding:10px 12px; border-radius:12px; border:1px solid var(--border);">
@@ -1624,8 +1861,9 @@
     const I18N = {
       ru: {
         heroSub: "Ввоз/вывоз товара и оборудования, ревизия и уборка",
-        navNew: "Новая заявка",
-        navMy: "Мои заявки",
+        navNew: "Заявка",
+        navMy: "Мои",
+        navCab: "Личный кабинет",
         statusOpen: "Прием открыт (до 17:00)",
         statusClosed: "Прием Пн–Пт 09:00–17:00",
         closedTitle: "Прием новых заявок сейчас закрыт",
@@ -1652,8 +1890,9 @@
       },
       kk: {
         heroSub: "Тауар мен жабдықты әкелу/әкету, ревизия және тазалау",
-        navNew: "Жаңа өтінім",
-        navMy: "Менің өтінімдерім",
+        navNew: "Өтінім",
+        navMy: "Менің",
+        navCab: "Жеке кабинет",
         statusOpen: "Қабылдау ашық (17:00-ге дейін)",
         statusClosed: "Дс–Жм 09:00–17:00",
         closedTitle: "Жаңа өтінімдерді қабылдау қазір жабық",
@@ -1706,6 +1945,8 @@
     let securityTomorrow = [];
     let kppLogUrl = "";
     let lastScannedPass = null;
+    let cabinetAccounts = [];
+    let cabinetAll = [];
     let securityDates = { today: "", tomorrow: "" };
     let guardDayMode = "today";
     let guardFilterMode = "all";
@@ -1732,6 +1973,7 @@
       document.getElementById('heroSubtitleText').textContent = t.heroSub;
       document.getElementById('tNavWizard').textContent = t.navNew;
       document.getElementById('tNavMyLabel').textContent = t.navMy;
+      if (document.getElementById('tNavCabLabel')) document.getElementById('tNavCabLabel').textContent = t.navCab;
 
       document.getElementById('closedTitleText').textContent = t.closedTitle;
       document.getElementById('closedDescText').innerHTML = t.closedDesc;
@@ -1965,9 +2207,12 @@
         }
         tenantRules = data.tenantRules || {};
         myRequests = data.myRequests || [];
+        cabinetAccounts = data.cabinetAccounts || [];
+        cabinetAll = data.cabinetAll || [];
 
         document.getElementById('myReqBadge').textContent = myRequests.length;
         renderMyRequests();
+        renderTenantCabinet();
         renderTenantList();
         renderTimeSlots();
         applyDateRules();
@@ -2021,6 +2266,8 @@
             renderApprovers();
             renderCustomRulesList();
             syncAdminLimitForm();
+            populateAdminCabOrgSelect();
+            renderAdminCabinetList();
             renderGuardList();
           }
         }
@@ -2043,6 +2290,7 @@
 
       document.getElementById('wizardView').classList.toggle('hidden', view !== 'wizard');
       document.getElementById('myRequestsView').classList.toggle('hidden', view !== 'myRequests');
+      document.getElementById('cabinetView').classList.toggle('hidden', view !== 'cabinet');
       document.getElementById('approvalView').classList.toggle('hidden', view !== 'approval');
       document.getElementById('guardView').classList.toggle('hidden', view !== 'guard');
       document.getElementById('limitsView').classList.toggle('hidden', view !== 'limits');
@@ -2051,11 +2299,14 @@
       updateHeaderAndSubmissionLock();
 
       if (view === 'myRequests') renderMyRequests();
+      if (view === 'cabinet') renderTenantCabinet();
       if (view === 'guard') renderGuardList();
       if (view === 'limits') {
         renderCustomRulesList();
         syncAdminLimitForm();
         renderAdminTenantsManager();
+        populateAdminCabOrgSelect();
+        renderAdminCabinetList();
       }
     }
 
@@ -2161,6 +2412,11 @@
       const allowBtn = document.getElementById('kppAllowBtn');
       const denyBtn = document.getElementById('kppDenyBtn');
 
+      const savedBanner = document.getElementById('kppSavedResultBanner');
+      if (savedBanner) {
+        savedBanner.classList.add('hidden');
+        savedBanner.innerHTML = "";
+      }
       controlsEl.classList.add('hidden');
       rejectBlock.classList.add('hidden');
       document.getElementById('kppRejectInput').value = "";
@@ -2289,7 +2545,10 @@
             updateKppSheetLinkUI();
           }
           haptic('medium');
-          document.getElementById('kppDecisionControls').innerHTML = `
+          document.getElementById('kppDecisionControls').classList.add('hidden');
+          const resBanner = document.getElementById('kppSavedResultBanner');
+          resBanner.classList.remove('hidden');
+          resBanner.innerHTML = `
             <div style="padding:12px; border-radius:12px; text-align:center; font-weight:700; font-size:13px; background:${decision === 'allow' ? 'var(--green-bg)' : '#FDECEF'}; color:${decision === 'allow' ? 'var(--green)' : 'var(--red)'};">
               ${decision === 'allow' ? '✅ Записано в Журнал КПП: ПРОПУЩЕН' : '❌ Записано в Журнал КПП: ОТКЛОНЕН'} (${data.loggedAt})
             </div>
@@ -2433,8 +2692,14 @@
       haptic('light');
       document.getElementById('subTabRulesBtn').classList.toggle('active', sub === 'rules');
       document.getElementById('subTabTenantsBtn').classList.toggle('active', sub === 'tenants');
+      document.getElementById('subTabCabinetBtn').classList.toggle('active', sub === 'cabinet');
       document.getElementById('adminRulesSubView').classList.toggle('hidden', sub !== 'rules');
       document.getElementById('adminTenantsSubView').classList.toggle('hidden', sub !== 'tenants');
+      document.getElementById('adminCabinetSubView').classList.toggle('hidden', sub !== 'cabinet');
+      if (sub === 'cabinet') {
+        populateAdminCabOrgSelect();
+        renderAdminCabinetList();
+      }
     }
 
     function getCurrentTenantRule() {
@@ -2843,6 +3108,345 @@
         btn.disabled = false;
         applyTranslations();
       }
+    }
+
+    
+    // === ЛИЧНЫЙ КАБИНЕТ АРЕНДАТОРА (ВЕРИФИКАЦИЯ ПО НОМЕРУ ТЕЛЕФОНА) ===
+    function renderTenantCabinet() {
+      const unverifiedEl = document.getElementById('cabinetUnverifiedState');
+      const verifiedEl = document.getElementById('cabinetVerifiedState');
+      if (!unverifiedEl || !verifiedEl) return;
+
+      if (!cabinetAccounts || cabinetAccounts.length === 0) {
+        unverifiedEl.classList.remove('hidden');
+        verifiedEl.classList.add('hidden');
+        return;
+      }
+
+      unverifiedEl.classList.add('hidden');
+      verifiedEl.classList.remove('hidden');
+      document.getElementById('cabVerifiedPhoneText').textContent = cabinetAccounts[0].phonePretty || "Телефон подтвержден";
+
+      const listBox = document.getElementById('cabinetAccountsList');
+      listBox.innerHTML = "";
+      cabinetAccounts.forEach(acc => {
+        const st = String(acc.payStatus || "Ожидает оплаты");
+        let pillCls = "pay-pill-wait";
+        if (st.includes("Оплачено")) pillCls = "pay-pill-paid";
+        else if (st.includes("Просрочено")) pillCls = "pay-pill-late";
+
+        const card = document.createElement('div');
+        card.className = 'rent-bill-card';
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+            <span class="guard-floor-pill">${acc.floor} этаж</span>
+            <span class="status-pill ${pillCls}">${st}</span>
+          </div>
+          <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:17px; color:var(--black);">
+            ${acc.organization}
+          </div>
+          <div style="font-size:12px; color:var(--graphite); margin-top:2px;">
+            Период: <b>${acc.period || "Текущий расчетный период"}</b>
+          </div>
+
+          <div class="rent-amount-box">
+            <div>
+              <div style="font-size:11px; color:var(--graphite); font-weight:600;">СУММА К ОПЛАТЕ</div>
+              <div class="rent-amount-val">${acc.amount || "Счет не выставлен"}</div>
+            </div>
+            ${acc.dueDate ? `<div style="text-align:right;"><div style="font-size:10.5px; color:var(--graphite);">СРОК</div><div style="font-size:12.5px; font-weight:700; color:var(--red);">${acc.dueDate}</div></div>` : ''}
+          </div>
+
+          ${acc.comment ? `<div style="background:var(--bg); border-radius:11px; padding:10px 12px; font-size:12.5px; color:var(--charcoal); line-height:1.45;"><b>Комментарий бухгалтерии:</b><br>${acc.comment}</div>` : ''}
+        `;
+        listBox.appendChild(card);
+      });
+    }
+
+    function requestTenantPhoneVerification() {
+      const errBox = document.getElementById('cabinetVerifyErrorBox');
+      errBox.classList.add('hidden');
+      haptic('medium');
+
+      if (typeof tg.requestContact !== 'function') {
+        errBox.classList.remove('hidden');
+        errBox.textContent = "Обновите приложение Telegram до последней версии, чтобы подтвердить номер телефона.";
+        return;
+      }
+
+      tg.requestContact(async function(sent, eventObj) {
+        if (!sent) return;
+        const contactPayload = eventObj && eventObj.response ? eventObj.response : "";
+        if (!contactPayload) {
+          errBox.classList.remove('hidden');
+          errBox.textContent = "Telegram не передал подпись контакта. Попробуйте еще раз.";
+          return;
+        }
+
+        const btn = document.getElementById('verifyPhoneBtn');
+        btn.disabled = true;
+        btn.textContent = "⏳ Проверяем номер в базе ТРЦ...";
+
+        try {
+          const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: 'verify_tenant_phone',
+              contactResponse: contactPayload,
+              initData: initDataRaw
+            })
+          });
+          const data = await res.json();
+          if (data.status === 'success') {
+            cabinetAccounts = data.cabinetAccounts || [];
+            renderTenantCabinet();
+            haptic('heavy');
+            tg.showAlert(`✅ Номер ${data.phonePretty} подтвержден! Личный кабинет открыт.`);
+          } else {
+            errBox.classList.remove('hidden');
+            errBox.textContent = data.message || "Номер не найден в базе договоров.";
+          }
+        } catch (e) {
+          errBox.classList.remove('hidden');
+          errBox.textContent = "Ошибка сети при проверке номера.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "📱 Подтвердить номер телефона";
+        }
+      });
+    }
+
+    async function unlinkMyCabinetDevice() {
+      haptic('light');
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'unlink_tenant_device', initData: initDataRaw })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        cabinetAccounts = [];
+        renderTenantCabinet();
+      }
+    }
+
+    // === АДМИН-ПАНЕЛЬ: УПРАВЛЕНИЕ НОМЕРАМИ И СЧЕТАМИ АРЕНДАТОРОВ ===
+    function populateAdminCabOrgSelect() {
+      const flEl = document.getElementById('adminCabFloor');
+      const sel = document.getElementById('adminCabOrg');
+      if (!flEl || !sel) return;
+      const list = TENANTS_DB[flEl.value] || [];
+      sel.innerHTML = "";
+      list.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        sel.appendChild(opt);
+      });
+      syncAdminCabForm();
+    }
+
+    let cabListFilterMode = "all";
+
+    function setCabListFilter(mode, btn) {
+      cabListFilterMode = mode;
+      haptic('light');
+      document.querySelectorAll('#cabFilterChips .guard-chip').forEach(c => c.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderAdminCabinetList();
+    }
+
+    function syncAdminCabForm() {
+      const org = document.getElementById('adminCabOrg')?.value || "";
+      const rec = cabinetAll.find(x => x.organization === org);
+      document.getElementById('adminCabPhone').value = rec ? rec.phoneRaw : "";
+      document.getElementById('adminCabPeriod').value = rec ? rec.period : "";
+      document.getElementById('adminCabAmount').value = rec ? rec.amount : "";
+      document.getElementById('adminCabDueDate').value = rec ? rec.dueDate : "";
+      document.getElementById('adminCabStatus').value = rec ? (rec.payStatus || "Ожидает оплаты") : "Ожидает оплаты";
+      document.getElementById('adminCabComment').value = rec ? rec.comment : "";
+      document.getElementById('adminCabForceUnbind').checked = false;
+
+      const infoEl = document.getElementById('adminCabBoundInfo');
+      if (infoEl) {
+        if (rec && rec.isAuthorized) {
+          infoEl.innerHTML = `🟢 <b>Авторизован:</b> ${rec.authUserInfo || rec.boundIds} ${rec.authDate ? '(' + rec.authDate + ')' : ''}`;
+        } else if (rec && rec.phoneRaw) {
+          infoEl.textContent = "🟡 Номер задан, арендатор еще не подтвердил вход в Личном кабинете";
+        } else {
+          infoEl.textContent = "⚪ Номер телефона еще не указан";
+        }
+      }
+    }
+
+    async function syncAllTenantsToCabSheet() {
+      haptic('light');
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'sync_cabinet_tenants', initData: initDataRaw })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        cabinetAll = data.cabinetAll || [];
+        renderAdminCabinetList();
+        tg.showAlert(`✅ Лист «Аренда_и_Кабинет» обновлен (добавлено новых строк: ${data.addedCount}). Теперь можно заполнять номера прямо в Google Таблице!`);
+      }
+    }
+
+    async function saveAdminCabinetRecord() {
+      const floor = document.getElementById('adminCabFloor').value;
+      const organization = document.getElementById('adminCabOrg').value;
+      const phone = document.getElementById('adminCabPhone').value.trim();
+      const period = document.getElementById('adminCabPeriod').value.trim();
+      const amount = document.getElementById('adminCabAmount').value.trim();
+      const dueDate = document.getElementById('adminCabDueDate').value.trim();
+      const payStatus = document.getElementById('adminCabStatus').value;
+      const comment = document.getElementById('adminCabComment').value.trim();
+      const forceUnbind = document.getElementById('adminCabForceUnbind').checked;
+
+      const btn = document.getElementById('saveCabRecordBtn');
+      btn.disabled = true;
+      btn.textContent = "Сохраняем...";
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'save_cabinet_record',
+            floor, organization, phone, period, amount, dueDate, payStatus, comment, forceUnbind,
+            initData: initDataRaw
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          cabinetAll = data.cabinetAll || [];
+          syncAdminCabForm();
+          renderAdminCabinetList();
+          haptic('medium');
+          tg.showAlert(data.phoneChanged
+            ? `✅ Данные сохранены! Номер телефона обновлен — старые привязки сброшены для безопасности.`
+            : `✅ Данные Личного кабинета для «${organization}» сохранены!`);
+        } else {
+          tg.showAlert(data.message || "Ошибка сохранения");
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "💾 Сохранить";
+      }
+    }
+
+    async function sendAdminRentReminder() {
+      const organization = document.getElementById('adminCabOrg').value;
+      const customNote = (document.getElementById('broadcastRentNoteInput')?.value || "").trim();
+      const btn = document.getElementById('sendRentNotifyBtn');
+      btn.disabled = true;
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'send_rent_reminder',
+            mode: 'single',
+            organization,
+            customNote,
+            initData: initDataRaw
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          cabinetAll = data.cabinetAll || cabinetAll;
+          renderAdminCabinetList();
+          haptic('heavy');
+          tg.showAlert(`✅ Уведомление об оплате аренды отправлено в Telegram (${data.sentCount} устр.)!`);
+        } else {
+          tg.showAlert(data.message || "Не удалось отправить уведомление");
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function broadcastAuthorizedRentReminders() {
+      const btn = document.getElementById('broadcastRentBtn');
+      const customNote = (document.getElementById('broadcastRentNoteInput')?.value || "").trim();
+      btn.disabled = true;
+      btn.textContent = "⏳ Отправляем рассылку...";
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'send_rent_reminder',
+            mode: 'broadcast_authorized',
+            customNote,
+            initData: initDataRaw
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          cabinetAll = data.cabinetAll || cabinetAll;
+          renderAdminCabinetList();
+          haptic('heavy');
+          tg.showAlert(`✅ Массовая рассылка выполнена! Уведомления получили ${data.sentOrgs} орг. (${data.sentCount} устр.).`);
+        } else {
+          tg.showAlert(data.message || "Нет подходящих получателей для рассылки");
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "📢 Разослать уведомление об оплате всем авторизованным";
+      }
+    }
+
+    function renderAdminCabinetList() {
+      const authCount = (cabinetAll || []).filter(x => x.isAuthorized).length;
+      const unauthCount = (cabinetAll || []).filter(x => !x.isAuthorized).length;
+      const authEl = document.getElementById('cabStatAuthorizedCount');
+      const unauthEl = document.getElementById('cabStatUnauthCount');
+      if (authEl) authEl.textContent = authCount;
+      if (unauthEl) unauthEl.textContent = unauthCount;
+
+      const box = document.getElementById('adminCabinetList');
+      if (!box) return;
+
+      const filtered = (cabinetAll || []).filter(item => {
+        if (cabListFilterMode === 'authorized') return item.isAuthorized;
+        if (cabListFilterMode === 'unauthorized') return !item.isAuthorized;
+        if (cabListFilterMode === 'unpaid') return item.payStatus !== 'Оплачено';
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        box.innerHTML = `<div style="font-size:13px; color:var(--graphite); padding:8px 0;">По выбранному фильтру записей не найдено.</div>`;
+        return;
+      }
+
+      box.innerHTML = "";
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'rule-item';
+        const authBadge = item.isAuthorized
+          ? `<span style="color:var(--green); font-weight:700;">✅ Авторизован</span> (${item.authUserInfo || item.boundIds})`
+          : `<span style="color:var(--muted); font-weight:600;">⏳ Не авторизован</span>`;
+
+        div.innerHTML = `
+          <div style="flex:1; min-width:0;">
+            <div style="font-weight:700; font-size:13.5px; color:var(--black);">${item.organization} (${item.floor} эт.)</div>
+            <div style="font-size:11.5px; color:var(--charcoal); margin-top:2px;">${authBadge}</div>
+            <div style="font-size:11.5px; color:var(--graphite); margin-top:2px;">
+              📱 ${item.phonePretty} • ${item.amount || "без суммы"} • <b>${item.payStatus}</b>
+            </div>
+            ${item.lastNotified ? `<div style="font-size:10.5px; color:var(--blue); margin-top:2px;">🔔 ${item.lastNotified}</div>` : ''}
+          </div>
+          <button type="button" class="del-pill-btn" style="background:var(--nude-bg); color:var(--black);" onclick="editCabinetFromList('${item.floor}', '${item.organization.replace(/'/g, "\'")}')">Открыть</button>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    function editCabinetFromList(fl, org) {
+      document.getElementById('adminCabFloor').value = fl;
+      populateAdminCabOrgSelect();
+      document.getElementById('adminCabOrg').value = org;
+      syncAdminCabForm();
+      document.getElementById('adminCabinetSubView').scrollIntoView({ behavior: 'smooth' });
+      haptic('light');
     }
 
     // === АДМИН-ПАНЕЛЬ: ИСКЛЮЧЕНИЯ И СПИСОК ИП ===
