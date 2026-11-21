@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>JANNUR Shopping Mall — Заявки арендаторов</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Raleway:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #C9223F;
+      --red-hover: #A91B34;
+      --red-soft: rgba(201, 34, 63, 0.08);
+      --black: #0D0D0F;
+      --charcoal: #222326;
+      --graphite: #4E555E;
+      --muted: #8C939D;
+      --nude: #D1BAA6;
+      --nude-bg: #F6F1EC;
+      --surface: #FFFFFF;
+      --bg: #F3F4F6;
+      --border: #E5E7EB;
+      --green: #15803D;
+      --green-bg: #DCFCE7;
+      --amber: #B45309;
+      --amber-bg: #FEF3C7;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--charcoal);
+      margin: 0;
+      padding: 0 0 96px;
+      overflow-x: hidden;
+    }
+
+    /* === ХЕДЕР JANNUR === */
+    .hero-header {
+      background: linear-gradient(145deg, #0D0D0F 0%, #232429 100%);
+      color: #FFFFFF;
+      padding: 18px 20px 20px;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      box-shadow: 0 10px 28px rgba(13, 13, 15, 0.16);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-header::after {
+      content: "";
+      position: absolute;
+      right: -30px; top: -30px;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,34,63,0.35) 0%, rgba(201,34,63,0) 70%);
+      pointer-events: none;
+    }
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .brand-lockup { display: flex; flex-direction: column; }
+    .brand-title {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 24px;
+      letter-spacing: 0.16em;
+      color: #FFFFFF;
+      line-height: 1;
+    }
+    .brand-title span { color: var(--red); }
+    .brand-sub {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 600;
+      font-size: 8.5px;
+      letter-spacing: 0.32em;
+      color: var(--nude);
+      margin-top: 4px;
+    }
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(209, 186, 166, 0.3);
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #22C55E;
+      box-shadow: 0 0 8px #22C55E;
+    }
+    .live-dot.warn { background: #F59E0B; box-shadow: 0 0 8px #F59E0B; }
+    .hero-subtitle {
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1.4;
+    }
+
+    .container { padding: 16px; max-width: 540px; margin: 0 auto; }
+
+    /* === НАВИГАЦИЯ === */
+    .top-nav {
+      display: flex;
+      background: var(--surface);
+      padding: 5px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+      gap: 3px;
+      overflow-x: auto;
+    }
+    .nav-btn {
+      flex: 1;
+      padding: 10px 5px;
+      border: none;
+      background: transparent;
+      color: var(--graphite);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 11.5px;
+      border-radius: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .nav-btn.active {
+      background: var(--black);
+      color: #FFFFFF;
+    }
+    .nav-badge {
+      background: var(--red);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      margin-left: 2px;
+    }
+
+    /* === ПРОГРЕСС-БАР ШАГОВ === */
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      background: var(--surface);
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+      cursor: pointer;
+    }
+    .step-circle {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--bg);
+      color: var(--muted);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid var(--border);
+      transition: all 0.25s;
+    }
+    .step-item.active .step-circle {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red);
+      box-shadow: 0 4px 10px rgba(201,34,63,0.3);
+    }
+    .step-item.done .step-circle {
+      background: var(--black);
+      color: #fff;
+      border-color: var(--black);
+    }
+    .step-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .step-item.active .step-label { color: var(--black); font-weight: 700; }
+
+    /* === КАРТОЧКИ === */
+    .card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.035);
+      border: 1px solid var(--border);
+      animation: fadeSlide 0.25s ease;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card-title {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 17px;
+      color: var(--black);
+      margin: 0 0 4px;
+    }
+    .card-desc {
+      font-size: 12.5px;
+      color: var(--graphite);
+      margin: 0 0 14px;
+      line-height: 1.4;
+    }
+
+    /* === ВЫБОР ЭТАЖА === */
+    .floor-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .floor-tile {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .floor-tile.selected {
+      background: var(--red-soft);
+      border-color: var(--red);
+      box-shadow: 0 4px 12px rgba(201, 34, 63, 0.12);
+    }
+    .floor-num {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--black);
+    }
+    .floor-tile.selected .floor-num { color: var(--red); }
+    .floor-sub { font-size: 11.5px; color: var(--graphite); }
+
+    /* === ВЫБОР ИП / ТОО === */
+    .search-box {
+      position: relative;
+      margin-bottom: 10px;
+    }
+    .search-box input {
+      padding-left: 38px;
+      background: var(--bg);
+    }
+    .search-icon {
+      position: absolute;
+      left: 13px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .tenant-list {
+      max-height: 270px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+    .tenant-option {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--bg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .tenant-option:last-child { border-bottom: none; }
+    .tenant-option:hover, .tenant-option.selected {
+      background: var(--red-soft);
+    }
+    .tenant-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--black);
+    }
+    .tenant-option.selected .tenant-name {
+      color: var(--red);
+      font-weight: 700;
+    }
+    .vip-tag {
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--nude-bg);
+      color: var(--charcoal);
+      border: 1px solid var(--nude);
+      padding: 2px 6px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .check-circle {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: transparent; flex-shrink: 0;
+    }
+    .tenant-option.selected .check-circle {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    /* === ВИДЫ РАБОТ === */
+    .work-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 9px;
+    }
+    .work-tile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .work-tile.selected {
+      background: var(--red-soft);
+      border-color: var(--red);
+    }
+    .work-icon {
+      width: 38px; height: 38px;
+      border-radius: 11px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      flex-shrink: 0;
+    }
+    .work-tile.selected .work-icon {
+      background: var(--red);
+      color: #fff;
+    }
+    .work-info-title {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--black);
+    }
+    .work-info-sub {
+      font-size: 11.5px;
+      color: var(--graphite);
+      margin-top: 2px;
+    }
+
+    /* === ВЫБОР ВРЕМЕНИ === */
+    .time-slots-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .time-slot-card {
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .time-slot-card.selected {
+      background: var(--black);
+      border-color: var(--black);
+      color: #FFFFFF;
+    }
+    .time-slot-title {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 13.5px;
+    }
+    .time-slot-sub {
+      font-size: 11.5px;
+      opacity: 0.78;
+      margin-top: 2px;
+    }
+
+    /* === БЫСТРЫЕ СРОКИ И ЧИПЫ === */
+    .preset-row {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .preset-btn {
+      padding: 7px 11px;
+      border-radius: 10px;
+      border: 1px solid var(--nude);
+      background: var(--nude-bg);
+      color: var(--charcoal);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .preset-btn.active {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red);
+    }
+
+    .date-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    label.field-label {
+      display: block;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--charcoal);
+      margin: 14px 0 6px;
+    }
+    .req { color: var(--red); }
+    input[type="text"], input[type="number"], input[type="date"], select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--black);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--red);
+    }
+    textarea { min-height: 76px; resize: vertical; }
+
+    /* === ЦИФРОВОЙ ПРОПУСК JANNUR PASS === */
+    .pass-ticket {
+      background: linear-gradient(145deg, #141417 0%, #272930 100%);
+      color: #FFFFFF;
+      border-radius: 20px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(209, 186, 166, 0.35);
+      margin-bottom: 14px;
+    }
+    .pass-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed rgba(255,255,255,0.2);
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
+    .pass-floor-badge {
+      background: var(--red);
+      color: #fff;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 5px 12px;
+      border-radius: 10px;
+    }
+    .pass-org {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 17px;
+      margin-bottom: 10px;
+      color: #FFFFFF;
+    }
+    .pass-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 12.5px;
+    }
+    .pass-lbl { color: var(--nude); font-size: 11px; }
+    .pass-val { font-weight: 600; color: #fff; margin-top: 2px; }
+
+    /* === СПИСОК "МОИ ЗАЯВКИ" АРЕНДАТОРА === */
+    .my-req-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.03);
+    }
+    .my-req-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .status-pill {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .status-pending { background: var(--amber-bg); color: var(--amber); }
+    .status-approved { background: var(--green-bg); color: var(--green); }
+    .status-rejected { background: #FDECEF; color: var(--red); }
+
+    .reject-reason-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #FDECEF;
+      border-left: 3px solid var(--red);
+      font-size: 12.5px;
+      color: var(--charcoal);
+    }
+
+    /* === АДМИН-ПАНЕЛЬ: СПИСОК ИП И ИСКЛЮЧЕНИЯ === */
+    .sub-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .sub-tab-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--graphite);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 12.5px;
+      cursor: pointer;
+    }
+    .sub-tab-btn.active {
+      background: var(--red);
+      color: #FFFFFF;
+      border-color: var(--red);
+    }
+    .switch-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: var(--bg);
+      border-radius: 12px;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+    .switch-row input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--red);
+    }
+    .rule-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .rule-item:last-child { border-bottom: none; }
+    .del-pill-btn {
+      background: #FDECEF;
+      color: var(--red);
+      border: none;
+      padding: 7px 11px;
+      border-radius: 9px;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 11.5px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* === НИЖНЯЯ ПАНЕЛЬ === */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      z-index: 60;
+    }
+    .btn-secondary {
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--charcoal);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .btn-primary {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: none;
+      background: var(--red);
+      color: #FFFFFF;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(201, 34, 63, 0.28);
+    }
+    .btn-primary:disabled { opacity: 0.5; box-shadow: none; }
+
+    .hidden { display: none !important; }
+
+    /* === СВАЙПЫ РУКОВОДСТВА === */
+    .swipe-arena {
+      position: relative;
+      height: 410px;
+      width: 100%;
+    }
+    .swipe-card {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      background: var(--surface);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.09);
+      border: 1px solid rgba(209, 186, 166, 0.6);
+      touch-action: none;
+      user-select: none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .swipe-card.dragging { transition: none; }
+    .stamp {
+      position: absolute;
+      top: 24px;
+      padding: 6px 14px;
+      border: 3px solid;
+      border-radius: 10px;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      opacity: 0;
+      background: rgba(255,255,255,0.95);
+    }
+    .stamp.approve { right: 18px; color: var(--green); border-color: var(--green); transform: rotate(10deg); }
+    .stamp.reject { left: 18px; color: var(--red); border-color: var(--red); transform: rotate(-10deg); }
+    .ctrl-row { display: flex; gap: 10px; margin-top: 10px; }
+    .ctrl-btn {
+      flex: 1; padding: 14px; border-radius: 14px; border: none;
+      font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer;
+    }
+    .ctrl-reject { background: #FDECEF; color: var(--red); }
+    .ctrl-approve { background: var(--black); color: #fff; }
+    .ctrl-director {
+      width: 100%; margin-top: 8px; padding: 14px; border-radius: 14px; border: none;
+      background: var(--red); color: #fff; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 14px;
+    }
+
+    /* Модальное окно причины отклонения */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 13, 15, 0.55);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: flex-end;
+      z-index: 100;
+    }
+    .modal-sheet {
+      background: var(--surface);
+      width: 100%;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 20px 18px 32px;
+      animation: fadeSlide 0.2s ease;
+    }
+    .reason-chip {
+      display: inline-block;
+      padding: 7px 11px;
+      margin: 0 6px 6px 0;
+      border-radius: 10px;
+      background: var(--nude-bg);
+      border: 1px solid var(--nude);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ХЕДЕР JANNUR -->
+  <header class="hero-header">
+    <div class="hero-top">
+      <div class="brand-lockup">
+        <div class="brand-title">JANNUR<span>.</span></div>
+        <div class="brand-sub">SHOPPING MALL</div>
+      </div>
+      <div class="live-pill" id="statusPill">
+        <span class="live-dot" id="statusDot"></span>
+        <span id="statusText">Прием заявок</span>
+      </div>
+    </div>
+    <div class="hero-subtitle">Ввоз/вывоз товара и оборудования, ревизия и уборка</div>
+  </header>
+
+  <div class="container">
+    <!-- НАВИГАЦИЯ ДЛЯ АРЕНДАТОРОВ -->
+    <div class="top-nav" id="tenantNav">
+      <button class="nav-btn active" onclick="switchView('wizard')">Новая заявка</button>
+      <button class="nav-btn" onclick="switchView('myRequests')">
+        Мои заявки <span class="nav-badge" id="myReqBadge">0</span>
+      </button>
+    </div>
+
+    <!-- НАВИГАЦИЯ ДЛЯ РУКОВОДСТВА -->
+    <div class="top-nav hidden" id="adminNav">
+      <button class="nav-btn active" onclick="switchView('approval')">
+        Подпись <span class="nav-badge" id="pendingBadge">0</span>
+      </button>
+      <button class="nav-btn" onclick="switchView('wizard')">Подать</button>
+      <button class="nav-btn" onclick="switchView('myRequests')">Мои</button>
+      <button class="nav-btn" onclick="switchView('limits')">ИП и Лимиты</button>
+      <button class="nav-btn" onclick="switchView('access')">Доступы</button>
+    </div>
+
+    <!-- ==================== ЭКРАН 1: МАСТЕР ПОДАЧИ ЗАЯВКИ ==================== -->
+    <div id="wizardView">
+      <div class="stepper">
+        <div class="step-item active" id="st1" onclick="goStep(1)">
+          <div class="step-circle">1</div>
+          <div class="step-label">Этаж</div>
+        </div>
+        <div class="step-item" id="st2" onclick="goStep(2)">
+          <div class="step-circle">2</div>
+          <div class="step-label">Ваше ИП</div>
+        </div>
+        <div class="step-item" id="st3" onclick="goStep(3)">
+          <div class="step-circle">3</div>
+          <div class="step-label">Работы и Срок</div>
+        </div>
+        <div class="step-item" id="st4" onclick="goStep(4)">
+          <div class="step-circle">4</div>
+          <div class="step-label">Пропуск</div>
+        </div>
+      </div>
+
+      <!-- ШАГ 1: ВЫБОР ЭТАЖА -->
+      <div class="card" id="stepCard1">
+        <h2 class="card-title">Выберите этаж</h2>
+        <p class="card-desc">Укажите этаж, на котором расположено ваше ИП или ТОО.</p>
+
+        <div class="floor-grid">
+          <div class="floor-tile" data-floor="1" onclick="selectFloor('1')">
+            <span class="floor-num">1 этаж</span>
+            <span class="floor-sub">Сектор А • Островки • Small</span>
+          </div>
+          <div class="floor-tile" data-floor="2" onclick="selectFloor('2')">
+            <span class="floor-num">2 этаж</span>
+            <span class="floor-sub">Сектор В • Одежда и ювелирные</span>
+          </div>
+          <div class="floor-tile" data-floor="3" onclick="selectFloor('3')">
+            <span class="floor-num">3 этаж</span>
+            <span class="floor-sub">Сектор С • Бутики 3 этажа</span>
+          </div>
+          <div class="floor-tile" data-floor="4" onclick="selectFloor('4')">
+            <span class="floor-num">4 этаж</span>
+            <span class="floor-sub">Фуд-корт • Салоны • Досуг</span>
+          </div>
+          <div class="floor-tile" data-floor="Улица и Банкоматы" onclick="selectFloor('Улица и Банкоматы')">
+            <span class="floor-num">Улица / Банки</span>
+            <span class="floor-sub">Банкоматы • Постаматы • Улица</span>
+          </div>
+          <div class="floor-tile" data-floor="Подрядчик/новый арендатор" onclick="selectFloor('Подрядчик/новый арендатор')">
+            <span class="floor-num">Подрядчик</span>
+            <span class="floor-sub">Новый арендатор</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ШАГ 2: ТОЛЬКО ВЫБОР ИП / ТОО -->
+      <div class="card hidden" id="stepCard2">
+        <h2 class="card-title">Выберите ваше ИП / ТОО</h2>
+        <p class="card-desc">Найдите свою организацию в списке этажа или введите вручную.</p>
+
+        <div id="tenantPickerBlock">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="tenantSearch" placeholder="Поиск по названию ИП или ТОО..." oninput="renderTenantList()">
+          </div>
+          <div class="tenant-list" id="tenantList"></div>
+
+          <div style="margin-top:10px; text-align:right;">
+            <span style="font-size:12.5px; color:var(--red); font-weight:600; cursor:pointer;" onclick="toggleManualTenant(true)">
+              + Моего ИП нет в списке (ввести вручную)
+            </span>
+          </div>
+        </div>
+
+        <div id="manualTenantBlock" class="hidden">
+          <label class="field-label">Наименование ИП / ТОО <span class="req">*</span></label>
+          <input type="text" id="manualOrgInput" placeholder="Например: ИП Смагулов / ТОО Астана" oninput="state.organization = this.value">
+          <div id="backToListLink" style="margin-top:8px; text-align:right;">
+            <span style="font-size:12.5px; color:var(--graphite); cursor:pointer;" onclick="toggleManualTenant(false)">
+              ← Вернуться к списку ИП
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ШАГ 3: ВИД РАБОТ, ВРЕМЯ И СРОК -->
+      <div class="card hidden" id="stepCard3">
+        <h2 class="card-title">Вид работ, время и срок</h2>
+        <p class="card-desc">Выберите тип заявки и разрешенное окно времени.</p>
+
+        <div id="tenantPrivilegeBanner" class="hidden" style="background:var(--nude-bg); border:1px solid var(--nude); border-radius:12px; padding:10px 12px; margin-bottom:12px; font-size:12.5px; color:var(--black); font-weight:600;"></div>
+
+        <div class="work-grid">
+          <div class="work-tile" data-work="Ввоз товара" onclick="selectWork('Ввоз товара')">
+            <div class="work-icon">📦</div>
+            <div>
+              <div class="work-info-title">Ввоз товара</div>
+              <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+            </div>
+          </div>
+          <div class="work-tile" data-work="Вывоз товара" onclick="selectWork('Вывоз товара')">
+            <div class="work-icon">🚚</div>
+            <div>
+              <div class="work-info-title">Вывоз товара</div>
+              <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+            </div>
+          </div>
+          <div class="work-tile" data-work="Ввоз и Вывоз товара" onclick="selectWork('Ввоз и Вывоз товара')">
+            <div class="work-icon">🔄</div>
+            <div>
+              <div class="work-info-title">Ввоз и вывоз товара</div>
+              <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+            </div>
+          </div>
+          <div class="work-tile" data-work="Ввоз оборудования" onclick="selectWork('Ввоз оборудования')">
+            <div class="work-icon">🖥</div>
+            <div>
+              <div class="work-info-title">Ввоз оборудования</div>
+              <div class="work-info-sub">Утром 09:00–11:00 или после закрытия ТЦ</div>
+            </div>
+          </div>
+          <div class="work-tile" data-work="Вывоз оборудования" onclick="selectWork('Вывоз оборудования')">
+            <div class="work-icon">📤</div>
+            <div>
+              <div class="work-info-title">Вывоз оборудования</div>
+              <div class="work-info-sub">Утром 09:00–11:00 или после закрытия ТЦ</div>
+            </div>
+          </div>
+          <div class="work-tile" data-work="Ночные работы(ревизия,уборка)" onclick="selectWork('Ночные работы(ревизия,уборка)')">
+            <div class="work-icon">🌙</div>
+            <div>
+              <div class="work-info-title">Ночные работы (ревизия, уборка)</div>
+              <div class="work-info-sub">После 21:00 (2–3 эт.) / После 22:00 (1, 4 эт.)</div>
+            </div>
+          </div>
+        </div>
+
+        <label class="field-label">Время проведения работ <span class="req">*</span></label>
+        <div class="time-slots-grid" id="timeSlotsGrid"></div>
+
+        <label class="field-label">Срок действия заявки:</label>
+        <div class="preset-row" id="durationPresetsRow"></div>
+
+        <div class="date-row">
+          <div>
+            <label class="field-label" style="margin-top:4px;">Дата начала <span class="req">*</span></label>
+            <input type="date" id="startDate" onchange="applyDateRules()">
+          </div>
+          <div>
+            <label class="field-label" style="margin-top:4px;">Дата окончания <span class="req">*</span></label>
+            <input type="date" id="endDate" onchange="updatePassPreview()">
+          </div>
+        </div>
+        <div id="dateRuleHint" style="font-size:11.5px; color:var(--graphite); margin-top:5px;"></div>
+      </div>
+
+      <!-- ШАГ 4: ОТВЕТСТВЕННЫЙ И ПРОПУСК -->
+      <div class="card hidden" id="stepCard4">
+        <h2 class="card-title">Подтверждение заявки</h2>
+        <p class="card-desc">Проверьте данные пропуска и укажите ответственного сотрудника.</p>
+
+        <div class="pass-ticket">
+          <div class="pass-top">
+            <div>
+              <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:13px; letter-spacing:0.15em;">JANNUR PASS</div>
+              <div style="font-size:11px; color:var(--nude);">Электронная заявка</div>
+            </div>
+            <div class="pass-floor-badge" id="passFloorBadge">Этаж —</div>
+          </div>
+          <div class="pass-org" id="passOrgText">Организация не выбрана</div>
+          <div class="pass-grid">
+            <div>
+              <div class="pass-lbl">ВИД РАБОТ</div>
+              <div class="pass-val" id="passWorkText">—</div>
+            </div>
+            <div>
+              <div class="pass-lbl">ВРЕМЯ</div>
+              <div class="pass-val" id="passTimeText">—</div>
+            </div>
+            <div>
+              <div class="pass-lbl">СРОК ДЕЙСТВИЯ</div>
+              <div class="pass-val" id="passDatesText">—</div>
+            </div>
+            <div>
+              <div class="pass-lbl">АВТОМОБИЛЬ</div>
+              <div class="pass-val" id="passCarText">Не указан</div>
+            </div>
+          </div>
+        </div>
+
+        <label class="field-label">ФИО, должность и телефон ответственного <span class="req">*</span></label>
+        <input type="text" id="responsibleInput" placeholder="Например: Ахметов Ерлан, администратор, +7 701 000 00 00">
+
+        <label class="field-label">ФИО всех сотрудников <span class="req" id="workersReq">*</span></label>
+        <textarea id="workersInput" placeholder="При ночных работах (ревизия, уборка) обязательно укажите ФИО всех задействованных сотрудников."></textarea>
+
+        <label class="field-label">Госномер автомобиля (если известен)</label>
+        <input type="text" id="carInput" placeholder="Например: 123 ABC 01" oninput="updatePassPreview()">
+      </div>
+
+      <div id="myIdTag" style="text-align:center; font-size:11.5px; color:var(--muted); margin-top:8px;"></div>
+    </div>
+
+    <!-- ==================== ЭКРАН 2: МОИ ЗАЯВКИ (ДЛЯ АРЕНДАТОРОВ) ==================== -->
+    <div id="myRequestsView" class="hidden">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h2 class="card-title" style="margin:0;">Мои заявки</h2>
+        <button type="button" onclick="loadUserData(true)" style="background:var(--surface); border:1px solid var(--border); padding:7px 12px; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer;">
+          ↻ Обновить
+        </button>
+      </div>
+      <div id="myRequestsList">
+        <div class="card" style="text-align:center; color:var(--graphite); font-size:13.5px;">Загружаем ваши заявки...</div>
+      </div>
+    </div>
+
+    <!-- ==================== ЭКРАН 3: СОГЛАСОВАНИЕ СВАЙПАМИ ==================== -->
+    <div id="approvalView" class="hidden">
+      <div id="timeLockAlert" class="card hidden" style="background:var(--nude-bg); border-color:var(--nude); padding:14px;">
+        <div style="font-family:'Raleway',sans-serif; font-weight:700; font-size:14px; color:var(--black);">⏳ Согласование откроется в 17:00</div>
+        <div style="font-size:12.5px; color:var(--charcoal); margin-top:4px;">Сейчас доступен предварительный просмотр заявок.</div>
+        <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:12.5px; font-weight:600;">
+          <input type="checkbox" id="forceUnlock" onchange="renderSwipeCards()" style="width:17px; height:17px; accent-color:var(--red);">
+          Разблокировать срочное согласование
+        </label>
+      </div>
+
+      <div id="roleInfoBar" style="font-size:12px; font-weight:600; color:var(--graphite); margin-bottom:8px;"></div>
+
+      <div class="swipe-arena" id="swipeArena">
+        <div style="text-align:center; padding-top:150px; color:var(--graphite);">Загрузка заявок...</div>
+      </div>
+
+      <div class="ctrl-row" id="swipeButtons">
+        <button class="ctrl-btn ctrl-reject" onclick="openRejectModal()">Отклонить</button>
+        <button class="ctrl-btn ctrl-approve" id="approveBtnLabel" onclick="triggerSwipe('approve')">Согласовать</button>
+      </div>
+
+      <button class="ctrl-director hidden" id="directorAllBtn" onclick="triggerSwipe('approve_all')">
+        Согласовать за всех (Директор)
+      </button>
+    </div>
+
+    <!-- ==================== ЭКРАН 4: УПРАВЛЕНИЕ СПИСКОМ ИП И ИСКЛЮЧЕНИЯМИ ==================== -->
+    <div id="limitsView" class="hidden">
+      <div class="sub-tabs">
+        <button class="sub-tab-btn active" id="subTabRulesBtn" onclick="switchAdminSubTab('rules')">Исключения и Время</button>
+        <button class="sub-tab-btn" id="subTabTenantsBtn" onclick="switchAdminSubTab('tenants')">Список ИП по этажам</button>
+      </div>
+
+      <!-- ПОДВКЛАДКА А: ГИБКИЕ ИСКЛЮЧЕНИЯ (СРОК И ВРЕМЕННОЙ ПРОМЕЖУТОК) -->
+      <div id="adminRulesSubView">
+        <div class="card">
+          <h3 class="card-title">Настроить исключение для ИП</h3>
+          <p class="card-desc">Выберите любого арендатора и задайте ему индивидуальный срок заявки и временной промежуток.</p>
+
+          <label class="field-label">1. Этаж арендатора</label>
+          <select id="adminLimitFloor" onchange="populateAdminTenantSelect()">
+            <option value="1">1 этаж</option>
+            <option value="2">2 этаж</option>
+            <option value="3">3 этаж</option>
+            <option value="4">4 этаж</option>
+            <option value="Улица и Банкоматы">Улица и Банкоматы</option>
+          </select>
+
+          <label class="field-label">2. Выберите ИП / ТОО</label>
+          <select id="adminLimitOrg" onchange="syncAdminLimitForm()"></select>
+
+          <label class="field-label">3. Максимальный срок заявки (дней)</label>
+          <div class="preset-row" style="margin-bottom:6px;">
+            <button type="button" class="preset-btn" onclick="document.getElementById('adminMaxDaysInput').value=7">7 дней (стандарт)</button>
+            <button type="button" class="preset-btn" onclick="document.getElementById('adminMaxDaysInput').value=14">14 дней</button>
+            <button type="button" class="preset-btn" onclick="document.getElementById('adminMaxDaysInput').value=30">30 дней</button>
+          </div>
+          <input type="number" id="adminMaxDaysInput" min="1" max="90" value="7" placeholder="Например: 30">
+
+          <label class="field-label">4. Индивидуальный временной промежуток</label>
+          <div class="preset-row" style="margin-bottom:6px;">
+            <button type="button" class="preset-btn" onclick="setAdminTimePreset('До 14:00 (09:00–14:00)')">До 14:00</button>
+            <button type="button" class="preset-btn" onclick="setAdminTimePreset('Круглосуточно (24/7)')">Круглосуточно</button>
+            <button type="button" class="preset-btn" onclick="setAdminTimePreset('В течение дня (10:00–22:00)')">В течение дня</button>
+            <button type="button" class="preset-btn" onclick="setAdminTimePreset('')">Стандарт (без исключений)</button>
+          </div>
+          <input type="text" id="adminCustomTimeInput" placeholder="Оставьте пустым для стандарта или впишите свой, напр.: 08:00–14:00">
+
+          <label class="switch-row" id="timeModeRow">
+            <div>
+              <div style="font-weight:700; font-size:13px; color:var(--black);">Только этот промежуток (заменить стандартные)</div>
+              <div style="font-size:11px; color:var(--graphite);">Если выключено — добавится как дополнительный вариант к стандартным окнам этажа</div>
+            </div>
+            <input type="checkbox" id="adminExclusiveTimeCheck">
+          </label>
+
+          <button class="btn-primary" style="width:100%; margin-top:14px;" id="saveLimitBtn" onclick="saveTenantRule()">
+            Сохранить исключение
+          </button>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Активные исключения</h3>
+          <p class="card-desc">Арендаторы, для которых настроены особые сроки или время.</p>
+          <div id="customRulesList"></div>
+        </div>
+      </div>
+
+      <!-- ПОДВКЛАДКА Б: ДОБАВЛЕНИЕ И УДАЛЕНИЕ ИП ПО ЭТАЖАМ -->
+      <div id="adminTenantsSubView" class="hidden">
+        <div class="card">
+          <h3 class="card-title">Управление списком ИП по этажам</h3>
+          <p class="card-desc">Добавляйте новых арендаторов или удаляйте съехавших — список обновится у всех пользователей сразу.</p>
+
+          <label class="field-label">Выберите этаж</label>
+          <select id="manageFloorSelect" onchange="renderAdminTenantsManager()">
+            <option value="1">1 этаж</option>
+            <option value="2">2 этаж</option>
+            <option value="3">3 этаж</option>
+            <option value="4">4 этаж</option>
+            <option value="Улица и Банкоматы">Улица и Банкоматы</option>
+          </select>
+
+          <label class="field-label">Добавить новое ИП / ТОО на этот этаж</label>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="newTenantNameInput" placeholder="Например: ИП Асанов А12">
+            <button type="button" class="btn-primary" style="flex:0 0 auto; padding:12px 16px;" id="addTenantBtn" onclick="addTenantToFloor()">+ Добавить</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title" id="floorTenantsCountTitle">Арендаторы этажа</h3>
+          <div id="adminFloorTenantsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ЭКРАН 5: УПРАВЛЕНИЕ ДОСТУПАМИ ==================== -->
+    <div id="accessView" class="hidden">
+      <div class="card">
+        <h3 class="card-title">Добавить сотрудника в согласование</h3>
+        <p class="card-desc">Укажите Telegram ID сотрудника (отображается внизу экрана при открытии бота).</p>
+        <label class="field-label">Telegram ID</label>
+        <input type="number" id="newAccId" placeholder="Например: 482910452">
+        <label class="field-label">Имя и фамилия</label>
+        <input type="text" id="newAccName" placeholder="Например: Гумаров А.Р.">
+        <label class="field-label">Роль</label>
+        <select id="newAccRole">
+          <option value="Администратор">Администратор (согласует в т.ч. за Инженера)</option>
+          <option value="Инженер">Инженер (Темиргалиев Н.)</option>
+          <option value="Директор">Директор (Гумаров А.Р. — право за всех)</option>
+        </select>
+        <button class="btn-primary" style="width:100%; margin-top:14px;" id="addAccBtn" onclick="addApprover()">Выдать доступ</button>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Авторизованные сотрудники</h3>
+        <div id="approversList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ МАСТЕРА -->
+  <div class="bottom-bar" id="wizardBottomBar">
+    <button type="button" class="btn-secondary hidden" id="prevBtn" onclick="prevStep()">← Назад</button>
+    <button type="button" class="btn-primary" id="nextBtn" onclick="nextStep()">Далее →</button>
+  </div>
+
+  <!-- МОДАЛЬНОЕ ОКНО ПРИЧИНЫ ОТКЛОНЕНИЯ -->
+  <div class="modal-backdrop hidden" id="rejectModal">
+    <div class="modal-sheet">
+      <h3 class="card-title" style="margin-bottom:6px;">Причина отклонения заявки</h3>
+      <p class="card-desc" style="margin-bottom:10px;">Арендатор получит это сообщение в Telegram и увидит его в разделе «Мои заявки».</p>
+      <div style="margin-bottom:10px;">
+        <span class="reason-chip" onclick="setRejectReason('Не указаны ФИО всех сотрудников')">Не указаны ФИО сотрудников</span>
+        <span class="reason-chip" onclick="setRejectReason('Неверно выбрано время проведения работ')">Неверное время работ</span>
+        <span class="reason-chip" onclick="setRejectReason('Превышен максимальный срок заявки')">Превышен максимальный срок</span>
+        <span class="reason-chip" onclick="setRejectReason('Заявка подана после 17:00')">Подано после 17:00</span>
+      </div>
+      <textarea id="rejectReasonInput" placeholder="Укажите причину отклонения (необязательно)..."></textarea>
+      <div style="display:flex; gap:10px; margin-top:12px;">
+        <button type="button" class="btn-secondary" onclick="closeRejectModal()">Отмена</button>
+        <button type="button" class="btn-primary" onclick="confirmReject()">Отклонить и уведомить</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNIb0lkUJHSGm5Wi6yzJgUM2jBZa_ORYkoNdT070gBrcrb4TnOWrURjbTdV-Er-j6r/exec";
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    tg.setHeaderColor('#0D0D0F');
+
+    // Базовый список (будет автоматически синхронизироваться с таблицей Google Sheets)
+    let TENANTS_DB = {"1": ["Даниал ИП А1", "ИП Нурсултанова Shapki А2", "ТОО Bellas Pure парфюм А2/1", "Витайм аптека А3", "AlkorKazakhstanLtd ЛЭТУАЛЬ А4", "ИП Kelo Zhanna Kosmetic А5", "РТС Cosmart А6", "Биринши Lombard А7", "ИП Sandi А7/1", "Посуда Долголетия Fissman А8", "BBCorp Asyq toys А9", "TapTatti Retail А10", "Bizdin Et А11", "ИП Мино канцелярия А13", "Химчистка А14", "Гала-Косметик и К (быт. химия) А15", "ИП Khan fish А16", "Толганай ИП (сухофрукты) А17", "ИП Ayim А18", "MISKBAR ИП А19", "B-Rent Service (ломбард) А20", "KULINAR&CA. ИП Данабаев A21", "Тулеуов ИП Royal Coffee А22", "ИП Ернур (зебра) А23", "ИП Нади (оптика) А25", "REFORMA ИП (бижутерия) А27", "ИП Пернебаева А28", "Муздубаева Ш.Н. (вояж) ИП А31", "ИП SJ GROUP островок A36", "ТОО Скиф Трейд Смол", "Иманбаев (аквафор)", "Nur DORO (парфюм на разл) островок", "Абилов Руслан Эдигизович ИП", "Кучер Е.А. островок", "БРИТИШ АМЕРИКАН ТОБАККО островок", "Бельдеубаева ИП (кофе аппарат)", "ИП Атош островок", "ИП Яковенко островок", "ИП888", "ИП Куттыходжаева Балисмаил"], "2": ["Бэст Прайс Казахстан В1", "Белкин ИП (муж. одежда) В2", "Львова Валентина Николаевна В3", "Жетписбаев О.К. (муж. одежда) В4", "Авилов А.З. ИП (Lietta) В5", "Айрапетян К.Ж. ИП В6", "ИП Бекмухамбетова В7", "ИП Дильназ В8", "ИП Бауыржанов В9", "Щербинина И.Б. ИП (одежда) В10", "Артеменко Ирина Аркадьевна ИП В11", "Торговый дом «ЗОЛОТО МОСКВЫ» В12", "Аргента ТОО (юв. изд.) В13", "ДН Казахстан ТОО (юв. изд.) В14", "Рахимов ИП (COSSMO) В15", "Хамулло В.И. ИП В16", "Дюсенов Рамил Алемханович В17", "Дарын ИП В18", "Савицкая Лилия Темирбаевна В19", "ИП Дигимбаева В20", "Жакаева ИП В21", "Respect Retail Group В22", "ИП САТЫБАЛДИЕВ B24", "Адильханова ИП В25", "Аубакирова ИП В26", "Ермакова Е. А. ИП В27", "КАРИ КЗ ТОО В28", "Куанова Алия Жакеновна Отбасы банк"], "3": ["ТОО LPP Kazakhstan С1", "ИП Турушов С3", "ИП Нур-Али С4", "ИП Safa С5", "ИП Каженова С6", "ИП Болат С7", "ИП Баймагзумов С8", "ИП Омарова С9", "ИП Бекишева С10", "ИП Заришняк С14", "ИП Маркова С15", "ИП Береке2010 С15/1", "ИП Байжанова С16", "ИП Валиева С17", "ИП Бакишева С19", "ИП Жапар С24", "ТОО Калашникова С25", "ИП Asylai С26", "ИП Какетка С27", "ИП Данеля С28", "ИП АРАПАТ С29", "ИП Ержанова С30", "ИП Дина С31", "ИП Mәсілхан", "ИП Балыкова", "ИП Темирханова"], "4": ["Толенова ИП", "Анара ИП (Donix hub)", "ИП Айтжанова (Смак)", "ИП Firdaus", "Нуралы ИП (массаж. кресла)", "ИП Назарбекова (салон красоты)", "ТОО Маргарита", "ИП Проскурякова", "ИП Айка", "Maki-Maki", "ИП Кадырова", "ИП ALTUN", "ИП Нурпеисов"], "Улица и Банкоматы": ["АЛЕКСИЯ ИП", "Soul Food ИП", "Тойчу Кызы Аймончок ИП", "Толешова ИП", "Bereke Bank АО", "ALATAU BANK", "Народный банк Казахстана АО", "Cash Invest ТОО (терминал)", "Банк ЦентрКредит ДБ АО", "Филиал АО Каспи банк", "Каспи Магазин ТОО (Жаннур, постамат)", "Freedom Telecom Operations ТОО"]};
+
+    const currentUser = tg.initDataUnsafe?.user || { id: 0 };
+    const initDataRaw = tg.initData || "";
+
+    let state = {
+      step: 1,
+      floor: "",
+      organization: "",
+      isManualOrg: false,
+      workType: "",
+      workTime: "9:00-11:00"
+    };
+
+    let myRequests = [];
+    let pendingRequests = [];
+    let approversList = [];
+    let tenantRules = {}; // { "Название ИП": { maxDays: 30, customTime: "До 14:00 (09:00–14:00)", exclusiveTime: true } }
+    let isApprover = false;
+    let userRole = "";
+    let pendingRejectCard = null;
+    let pendingRejectReq = null;
+
+    function haptic(type = 'light') {
+      if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred(type);
+    }
+
+    function updateHeaderClockStatus() {
+      const now = new Date();
+      const astana = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + 3600000 * 5);
+      const h = astana.getHours();
+      const dot = document.getElementById('statusDot');
+      const txt = document.getElementById('statusText');
+      if (h >= 10 && h < 17) {
+        dot.classList.remove('warn');
+        txt.textContent = "Прием заявок открыт";
+      } else if (h >= 17 && h < 18) {
+        dot.classList.add('warn');
+        txt.textContent = "Идет согласование (17–18)";
+      } else {
+        dot.classList.add('warn');
+        txt.textContent = "Прием Пн–Пт 10:00–17:00";
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      updateHeaderClockStatus();
+      if (currentUser.id) {
+        document.getElementById('myIdTag').textContent = `JANNUR ID: ${currentUser.id}`;
+      }
+
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('startDate').min = today;
+      document.getElementById('startDate').value = today;
+      document.getElementById('endDate').min = today;
+      document.getElementById('endDate').value = today;
+
+      const saved = JSON.parse(localStorage.getItem('jannurPassProfileV5') || '{}');
+      if (saved.responsible) document.getElementById('responsibleInput').value = saved.responsible;
+      if (saved.car) document.getElementById('carInput').value = saved.car;
+      if (saved.floor) {
+        selectFloor(saved.floor, false);
+        if (saved.organization) state.organization = saved.organization;
+        renderTenantList();
+      }
+
+      populateAdminTenantSelect();
+      renderAdminTenantsManager();
+      await loadUserData(false);
+    });
+
+    async function loadUserData(showToast = false) {
+      if (!initDataRaw) return;
+      try {
+        const res = await fetch(`${SCRIPT_URL}?initData=${encodeURIComponent(initDataRaw)}`);
+        const data = await res.json();
+
+        if (data.tenantsByFloor && Object.keys(data.tenantsByFloor).length > 0) {
+          TENANTS_DB = data.tenantsByFloor;
+        }
+        tenantRules = data.tenantRules || {};
+        myRequests = data.myRequests || [];
+
+        document.getElementById('myReqBadge').textContent = myRequests.length;
+        renderMyRequests();
+        renderTenantList();
+        renderTimeSlots();
+        applyDateRules();
+        populateAdminTenantSelect();
+        renderAdminTenantsManager();
+
+        if (data.isApprover) {
+          isApprover = true;
+          userRole = data.role;
+          pendingRequests = data.requests || [];
+          approversList = data.approvers || [];
+
+          document.getElementById('tenantNav').classList.add('hidden');
+          document.getElementById('adminNav').classList.remove('hidden');
+          document.getElementById('roleInfoBar').textContent = `Роль: ${userRole} ${data.userName ? '(' + data.userName + ')' : ''}`;
+
+          if (userRole === "Директор") document.getElementById('directorAllBtn').classList.remove('hidden');
+          if (userRole === "Администратор") document.getElementById('approveBtnLabel').textContent = "Согласовать (в т.ч. за Инженера)";
+
+          if (!showToast) switchView('approval');
+          renderSwipeCards();
+          renderApprovers();
+          renderCustomRulesList();
+          syncAdminLimitForm();
+        }
+        if (showToast) haptic('light');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function switchView(view) {
+      haptic('light');
+      const navContainer = isApprover ? document.getElementById('adminNav') : document.getElementById('tenantNav');
+      navContainer.querySelectorAll('.nav-btn').forEach(btn => {
+        const onclickAttr = btn.getAttribute('onclick') || '';
+        btn.classList.toggle('active', onclickAttr.includes(`'${view}'`));
+      });
+
+      document.getElementById('wizardView').classList.toggle('hidden', view !== 'wizard');
+      document.getElementById('myRequestsView').classList.toggle('hidden', view !== 'myRequests');
+      document.getElementById('approvalView').classList.toggle('hidden', view !== 'approval');
+      document.getElementById('limitsView').classList.toggle('hidden', view !== 'limits');
+      document.getElementById('accessView').classList.toggle('hidden', view !== 'access');
+      document.getElementById('wizardBottomBar').classList.toggle('hidden', view !== 'wizard');
+
+      if (view === 'myRequests') renderMyRequests();
+      if (view === 'limits') {
+        renderCustomRulesList();
+        syncAdminLimitForm();
+        renderAdminTenantsManager();
+      }
+    }
+
+    function switchAdminSubTab(sub) {
+      haptic('light');
+      document.getElementById('subTabRulesBtn').classList.toggle('active', sub === 'rules');
+      document.getElementById('subTabTenantsBtn').classList.toggle('active', sub === 'tenants');
+      document.getElementById('adminRulesSubView').classList.toggle('hidden', sub !== 'rules');
+      document.getElementById('adminTenantsSubView').classList.toggle('hidden', sub !== 'tenants');
+    }
+
+    function getCurrentTenantRule() {
+      const org = (state.organization || "").trim();
+      return tenantRules[org] || { maxDays: 7, customTime: "", exclusiveTime: false };
+    }
+
+    // === РЕНДЕР "МОИ ЗАЯВКИ" АРЕНДАТОРА ===
+    function renderMyRequests() {
+      const container = document.getElementById('myRequestsList');
+      if (!myRequests || myRequests.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align:center; padding:28px 18px;">
+            <div style="font-size:28px; margin-bottom:8px;">📋</div>
+            <div style="font-family:'Raleway',sans-serif; font-weight:700; font-size:15px; color:var(--black);">У вас пока нет поданных заявок</div>
+            <div style="font-size:12.5px; color:var(--graphite); margin-top:4px;">Все заявки, отправленные через этот бот, появятся здесь со статусом согласования.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = "";
+      myRequests.forEach(r => {
+        const st = String(r.status || "На согласовании");
+        let pillClass = "status-pending";
+        if (st.includes("Согласовано")) pillClass = "status-approved";
+        else if (st.includes("Отклонено")) pillClass = "status-rejected";
+
+        const card = document.createElement('div');
+        card.className = 'my-req-card';
+        card.innerHTML = `
+          <div class="my-req-top">
+            <span style="font-size:12px; font-weight:700; color:var(--graphite);">Заявка №${r.rowIndex}</span>
+            <span class="status-pill ${pillClass}">${st}</span>
+          </div>
+          <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:15.5px; color:var(--black); margin-bottom:6px;">
+            ${r.organization}
+          </div>
+          <div style="font-size:13px; color:var(--charcoal); margin-bottom:4px;">
+            <b>Вид работ:</b> ${r.workType}
+          </div>
+          <div style="font-size:12.5px; color:var(--graphite);">
+            Этаж: <b>${r.floor}</b> • Срок: <b>с ${r.startDate} по ${r.endDate}</b> (${r.workTime})
+          </div>
+          ${r.rejectReason ? `<div class="reject-reason-box"><b>Комментарий администрации:</b> ${r.rejectReason}</div>` : ''}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // === ЛОГИКА ШАГОВ МАСТЕРА ===
+    function goStep(n) {
+      if (n > 1 && !state.floor) return tg.showAlert("Сначала выберите этаж");
+      if (n > 2 && !state.organization.trim()) return tg.showAlert("Выберите или введите ваше ИП / ТОО");
+      if (n > 3 && !state.workType) return tg.showAlert("Выберите вид работ");
+
+      state.step = n;
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`stepCard${i}`).classList.toggle('hidden', i !== n);
+        const st = document.getElementById(`st${i}`);
+        st.classList.toggle('active', i === n);
+        st.classList.toggle('done', i < n);
+      }
+
+      document.getElementById('prevBtn').classList.toggle('hidden', n === 1);
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.textContent = n === 4 ? "Отправить заявку ✓" : "Далее →";
+      if (n === 3) {
+        updatePrivilegeBanner();
+        renderTimeSlots();
+        applyDateRules();
+      }
+      if (n === 4) updatePassPreview();
+      haptic('light');
+    }
+
+    function prevStep() { if (state.step > 1) goStep(state.step - 1); }
+
+    function nextStep() {
+      if (state.step === 1) {
+        if (!state.floor) return tg.showAlert("Выберите этаж");
+        goStep(2);
+      } else if (state.step === 2) {
+        if (!state.organization.trim()) return tg.showAlert("Выберите или введите наименование ИП / ТОО");
+        goStep(3);
+      } else if (state.step === 3) {
+        if (!state.workType) return tg.showAlert("Выберите вид работ");
+        if (!state.workTime) return tg.showAlert("Выберите время проведения работ");
+        goStep(4);
+      } else if (state.step === 4) {
+        submitRequest();
+      }
+    }
+
+    // ШАГ 1: ЭТАЖ
+    function selectFloor(fl, autoAdvance = true) {
+      state.floor = fl;
+      document.querySelectorAll('.floor-tile').forEach(el => {
+        el.classList.toggle('selected', el.dataset.floor === fl);
+      });
+
+      const isContractor = fl === "Подрядчик/новый арендатор";
+      state.isManualOrg = isContractor;
+      document.getElementById('tenantPickerBlock').classList.toggle('hidden', isContractor);
+      document.getElementById('manualTenantBlock').classList.toggle('hidden', !isContractor);
+      document.getElementById('backToListLink').classList.toggle('hidden', isContractor);
+
+      if (!isContractor) {
+        document.getElementById('tenantSearch').value = "";
+        renderTenantList();
+      }
+
+      renderTimeSlots();
+      if (autoAdvance) {
+        haptic('medium');
+        setTimeout(() => goStep(2), 180);
+      }
+    }
+
+    // ШАГ 2: ВЫБОР ИП / ТОО
+    function renderTenantList() {
+      const q = (document.getElementById('tenantSearch').value || "").toLowerCase();
+      const list = TENANTS_DB[state.floor] || [];
+      const container = document.getElementById('tenantList');
+      if (!container) return;
+      container.innerHTML = "";
+
+      const filtered = list.filter(name => name.toLowerCase().includes(q));
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="padding:14px; font-size:13px; color:var(--graphite); text-align:center;">Ничего не найдено. Нажмите «+ Моего ИП нет в списке» ниже.</div>`;
+        return;
+      }
+
+      filtered.forEach(name => {
+        const div = document.createElement('div');
+        const isSelected = state.organization === name;
+        const rule = tenantRules[name];
+        let badgesHtml = "";
+        if (rule) {
+          if (rule.maxDays && rule.maxDays !== 7) badgesHtml += `<span class="vip-tag">до ${rule.maxDays} дн.</span>`;
+          if (rule.customTime) badgesHtml += `<span class="vip-tag">${rule.customTime}</span>`;
+        }
+
+        div.className = 'tenant-option' + (isSelected ? ' selected' : '');
+        div.innerHTML = `
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <span class="tenant-name">${name}</span>
+            ${badgesHtml}
+          </div>
+          <span class="check-circle">✓</span>
+        `;
+        div.onclick = () => {
+          haptic('light');
+          state.organization = name;
+          renderTenantList();
+        };
+        container.appendChild(div);
+      });
+    }
+
+    function toggleManualTenant(manual = true) {
+      state.isManualOrg = manual;
+      document.getElementById('tenantPickerBlock').classList.toggle('hidden', manual);
+      document.getElementById('manualTenantBlock').classList.toggle('hidden', !manual);
+      if (manual) state.organization = document.getElementById('manualOrgInput').value;
+    }
+
+    // ШАГ 3: ВИД РАБОТ, ВРЕМЯ И СРОКИ
+    function updatePrivilegeBanner() {
+      const rule = getCurrentTenantRule();
+      const banner = document.getElementById('tenantPrivilegeBanner');
+      const parts = [];
+      if (rule.maxDays && rule.maxDays !== 7) parts.push(`срок заявок до ${rule.maxDays} дн.`);
+      if (rule.customTime) {
+        parts.push(rule.exclusiveTime ? `индивидуальное окно: ${rule.customTime}` : `доп. окно: ${rule.customTime}`);
+      }
+
+      if (parts.length > 0) {
+        banner.classList.remove('hidden');
+        banner.innerHTML = `⭐ Для <b>${state.organization}</b> действуют индивидуальные условия: <b>${parts.join(' • ')}</b>.`;
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    function selectWork(wt) {
+      haptic('light');
+      state.workType = wt;
+      document.querySelectorAll('.work-tile').forEach(el => {
+        el.classList.toggle('selected', el.dataset.work === wt);
+      });
+
+      const isNight = wt.includes("Ночные");
+      document.getElementById('workersInput').required = isNight;
+      document.getElementById('workersReq').style.display = isNight ? "inline" : "none";
+
+      renderTimeSlots();
+      applyDateRules();
+    }
+
+    function renderTimeSlots() {
+      const grid = document.getElementById('timeSlotsGrid');
+      if (!grid) return;
+
+      const rule = getCurrentTenantRule();
+      const isNightOnly = state.workType.includes("Ночные");
+      const isFloor2or3 = (state.floor === "2" || state.floor === "3");
+      const eveningSlot = isFloor2or3 ? "После 21:00" : "После 22:00";
+      const eveningDesc = isFloor2or3 ? "Вечернее окно для 2 и 3 этажа" : "Вечернее окно для 1 и 4 этажа";
+
+      const slots = [];
+
+      // Если у арендатора включен режим "Только индивидуальный промежуток" (и это не ночная ревизия/уборка)
+      if (!isNightOnly && rule.customTime && rule.exclusiveTime) {
+        slots.push({
+          value: rule.customTime,
+          title: rule.customTime,
+          sub: "Индивидуальный график для вашего ИП"
+        });
+      } else {
+        // Стандартные окна
+        if (!isNightOnly) {
+          slots.push({
+            value: "9:00-11:00",
+            title: "09:00 – 11:00",
+            sub: "Стандартное утреннее окно (ввоз / вывоз)"
+          });
+        }
+
+        slots.push({
+          value: eveningSlot,
+          title: eveningSlot,
+          sub: eveningDesc
+        });
+
+        // Дополнительное индивидуальное окно (если настроено в админке)
+        if (!isNightOnly && rule.customTime) {
+          slots.push({
+            value: rule.customTime,
+            title: rule.customTime,
+            sub: "Индивидуальное разрешение для вашего ИП"
+          });
+        }
+      }
+
+      if (!slots.some(s => s.value === state.workTime)) {
+        state.workTime = slots[0].value;
+      }
+
+      grid.innerHTML = "";
+      slots.forEach(slot => {
+        const div = document.createElement('div');
+        const isSel = state.workTime === slot.value;
+        div.className = 'time-slot-card' + (isSel ? ' selected' : '');
+        div.innerHTML = `
+          <div>
+            <div class="time-slot-title">${slot.title}</div>
+            <div class="time-slot-sub">${slot.sub}</div>
+          </div>
+          <div style="font-weight:800; font-size:15px;">${isSel ? '✓' : '○'}</div>
+        `;
+        div.onclick = () => {
+          haptic('light');
+          state.workTime = slot.value;
+          renderTimeSlots();
+          updatePassPreview();
+        };
+        grid.appendChild(div);
+      });
+    }
+
+    function applyDateRules() {
+      const startEl = document.getElementById('startDate');
+      const endEl = document.getElementById('endDate');
+      const presetsRow = document.getElementById('durationPresetsRow');
+      if (!startEl || !startEl.value) return;
+
+      const rule = getCurrentTenantRule();
+      const maxDays = Number(rule.maxDays) || 7;
+
+      // Динамически строим кнопки быстрого выбора срока под лимит арендатора
+      if (presetsRow) {
+        const presets = [1];
+        if (maxDays >= 3) presets.push(3);
+        if (maxDays >= 7) presets.push(7);
+        if (maxDays > 7 && !presets.includes(maxDays)) presets.push(maxDays);
+
+        presetsRow.innerHTML = "";
+        presets.forEach(d => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'preset-btn';
+          btn.textContent = d === 1 ? '1 день' : `${d} дн.`;
+          btn.onclick = () => setDurationPreset(d - 1, btn);
+          presetsRow.appendChild(btn);
+        });
+      }
+
+      const start = new Date(startEl.value);
+      const maxDate = new Date(start);
+      maxDate.setDate(start.getDate() + (maxDays - 1));
+      const maxStr = maxDate.toISOString().split('T')[0];
+
+      endEl.min = startEl.value;
+      endEl.max = maxStr;
+      if (!endEl.value || endEl.value < startEl.value || endEl.value > maxStr) {
+        endEl.value = startEl.value;
+      }
+      document.getElementById('dateRuleHint').textContent = `Доступный срок для вашего ИП: до ${maxDays} дн. (по ${maxStr})`;
+    }
+
+    function setDurationPreset(daysToAdd, btn) {
+      haptic('light');
+      document.querySelectorAll('#durationPresetsRow .preset-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const startEl = document.getElementById('startDate');
+      const endEl = document.getElementById('endDate');
+      const start = new Date(startEl.value);
+      const end = new Date(start);
+      end.setDate(start.getDate() + daysToAdd);
+      endEl.value = end.toISOString().split('T')[0];
+    }
+
+    // ШАГ 4: ПРОПУСК И ОТПРАВКА
+    function updatePassPreview() {
+      document.getElementById('passFloorBadge').textContent = state.floor ? `${state.floor} этаж` : "Этаж —";
+      document.getElementById('passOrgText').textContent = state.organization || "Не указано";
+      document.getElementById('passWorkText').textContent = state.workType || "—";
+      document.getElementById('passTimeText').textContent = state.workTime || "—";
+      const s = document.getElementById('startDate').value;
+      const e = document.getElementById('endDate').value;
+      document.getElementById('passDatesText').textContent = s === e ? s : `${s} — ${e}`;
+      document.getElementById('passCarText').textContent = document.getElementById('carInput').value.trim() || "Не указан";
+    }
+
+    async function submitRequest() {
+      const responsible = document.getElementById('responsibleInput').value.trim();
+      const workers = document.getElementById('workersInput').value.trim();
+      if (!responsible) return tg.showAlert("Укажите ФИО, должность и телефон ответственного");
+      if (state.workType.includes("Ночные") && !workers) {
+        return tg.showAlert("Для ночных работ (ревизия, уборка) обязательно укажите ФИО всех сотрудников");
+      }
+
+      const btn = document.getElementById('nextBtn');
+      btn.disabled = true;
+      btn.textContent = "Отправляем заявку...";
+      haptic('medium');
+
+      const car = document.getElementById('carInput').value.trim();
+      localStorage.setItem('jannurPassProfileV5', JSON.stringify({
+        floor: state.floor,
+        organization: state.organization,
+        responsible: responsible,
+        car: car
+      }));
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify({
+            floor: state.floor,
+            organization: state.organization,
+            startDate: document.getElementById('startDate').value,
+            endDate: document.getElementById('endDate').value,
+            workTime: state.workTime,
+            workType: state.workType,
+            carNumber: car,
+            nightDetails: workers,
+            responsible: responsible,
+            tgUser: currentUser.id ? `${currentUser.first_name || ''} (@${currentUser.username || currentUser.id})` : "Web",
+            tgChatId: currentUser.id || ""
+          })
+        });
+
+        await loadUserData(false);
+        btn.disabled = false;
+        btn.textContent = "Отправить заявку ✓";
+        tg.showAlert("✅ Заявка принята! Статус можно отслеживать во вкладке «Мои заявки».", () => {
+          switchView('myRequests');
+        });
+      } catch (err) {
+        tg.showAlert("Ошибка сети. Проверьте интернет и попробуйте снова.");
+        btn.disabled = false;
+        btn.textContent = "Отправить заявку ✓";
+      }
+    }
+
+    // === АДМИН-ПАНЕЛЬ: ИСКЛЮЧЕНИЯ И ВРЕМЕННЫЕ ПРОМЕЖУТКИ ===
+    function populateAdminTenantSelect() {
+      const fl = document.getElementById('adminLimitFloor').value;
+      const sel = document.getElementById('adminLimitOrg');
+      const list = TENANTS_DB[fl] || [];
+      sel.innerHTML = "";
+      list.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        sel.appendChild(opt);
+      });
+      syncAdminLimitForm();
+    }
+
+    function syncAdminLimitForm() {
+      const org = document.getElementById('adminLimitOrg').value;
+      const rule = tenantRules[org] || { maxDays: 7, customTime: "", exclusiveTime: false };
+      document.getElementById('adminMaxDaysInput').value = rule.maxDays || 7;
+      document.getElementById('adminCustomTimeInput').value = rule.customTime || "";
+      document.getElementById('adminExclusiveTimeCheck').checked = Boolean(rule.exclusiveTime);
+    }
+
+    function setAdminTimePreset(val) {
+      haptic('light');
+      document.getElementById('adminCustomTimeInput').value = val;
+    }
+
+    async function saveTenantRule() {
+      const org = document.getElementById('adminLimitOrg').value;
+      const maxDays = Math.max(1, Math.min(90, Number(document.getElementById('adminMaxDaysInput').value) || 7));
+      const customTime = document.getElementById('adminCustomTimeInput').value.trim();
+      const exclusiveTime = document.getElementById('adminExclusiveTimeCheck').checked;
+      if (!org) return;
+
+      const btn = document.getElementById('saveLimitBtn');
+      btn.disabled = true;
+      btn.textContent = "Сохраняем...";
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'manage_tenant_rule',
+            organization: org,
+            maxDays: maxDays,
+            customTime: customTime,
+            exclusiveTime: exclusiveTime,
+            initData: initDataRaw
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          tenantRules = data.tenantRules || {};
+          renderCustomRulesList();
+          renderTenantList();
+          haptic('medium');
+          tg.showAlert(`✅ Исключение для «${org}» сохранено!`);
+        } else {
+          tg.showAlert(data.message || "Ошибка сохранения");
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Сохранить исключение";
+      }
+    }
+
+    async function resetTenantRule(orgName) {
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'manage_tenant_rule',
+          organization: orgName,
+          maxDays: 7,
+          customTime: "",
+          exclusiveTime: false,
+          initData: initDataRaw
+        })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        tenantRules = data.tenantRules || {};
+        renderCustomRulesList();
+        syncAdminLimitForm();
+        renderTenantList();
+      }
+    }
+
+    function renderCustomRulesList() {
+      const box = document.getElementById('customRulesList');
+      const entries = Object.entries(tenantRules);
+      if (entries.length === 0) {
+        box.innerHTML = `<div style="font-size:13px; color:var(--graphite); padding:8px 0;">Пока не задано индивидуальных исключений.</div>`;
+        return;
+      }
+      box.innerHTML = "";
+      entries.forEach(([orgName, r]) => {
+        const tags = [];
+        if (r.maxDays && r.maxDays !== 7) tags.push(`Срок до ${r.maxDays} дн.`);
+        if (r.customTime) {
+          tags.push(`${r.customTime} (${r.exclusiveTime ? 'только это окно' : 'доп. окно'})`);
+        }
+        const div = document.createElement('div');
+        div.className = 'rule-item';
+        div.innerHTML = `
+          <div>
+            <div style="font-weight:700; font-size:13.5px; color:var(--black);">${orgName}</div>
+            <div style="font-size:11.5px; color:var(--red); font-weight:600; margin-top:2px;">${tags.join(' • ')}</div>
+          </div>
+          <button class="del-pill-btn" onclick="resetTenantRule('${orgName.replace(/'/g, "\\'")}')">Сбросить</button>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    // === АДМИН-ПАНЕЛЬ: ДОБАВЛЕНИЕ И УДАЛЕНИЕ ИП НА КАЖДОМ ЭТАЖЕ ===
+    function renderAdminTenantsManager() {
+      const fl = document.getElementById('manageFloorSelect').value;
+      const list = TENANTS_DB[fl] || [];
+      document.getElementById('floorTenantsCountTitle').textContent = `Арендаторы (${fl} этаж): ${list.length}`;
+      const container = document.getElementById('adminFloorTenantsList');
+      container.innerHTML = "";
+
+      if (list.length === 0) {
+        container.innerHTML = `<div style="font-size:13px; color:var(--graphite); padding:8px 0;">На этом этаже пока нет организаций.</div>`;
+        return;
+      }
+
+      list.forEach(name => {
+        const row = document.createElement('div');
+        row.className = 'rule-item';
+        row.innerHTML = `
+          <div style="font-size:13.5px; font-weight:600; color:var(--black);">${name}</div>
+          <button class="del-pill-btn" onclick="deleteTenantFromFloor('${fl}', '${name.replace(/'/g, "\\'")}')">Удалить</button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    async function addTenantToFloor() {
+      const fl = document.getElementById('manageFloorSelect').value;
+      const nameInput = document.getElementById('newTenantNameInput');
+      const tenantName = nameInput.value.trim();
+      if (!tenantName) return tg.showAlert("Введите наименование ИП или ТОО");
+
+      const btn = document.getElementById('addTenantBtn');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'manage_tenants_list',
+            subAction: 'add',
+            floor: fl,
+            tenantName: tenantName,
+            initData: initDataRaw
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          TENANTS_DB = data.tenantsByFloor;
+          nameInput.value = "";
+          renderAdminTenantsManager();
+          populateAdminTenantSelect();
+          if (state.floor === fl) renderTenantList();
+          haptic('medium');
+          tg.showAlert(`✅ «${tenantName}» добавлен на ${fl} этаж!`);
+        } else {
+          tg.showAlert(data.message || "Ошибка добавления");
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function deleteTenantFromFloor(fl, tenantName) {
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'manage_tenants_list',
+          subAction: 'remove',
+          floor: fl,
+          tenantName: tenantName,
+          initData: initDataRaw
+        })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        TENANTS_DB = data.tenantsByFloor;
+        renderAdminTenantsManager();
+        populateAdminTenantSelect();
+        if (state.floor === fl) renderTenantList();
+        haptic('light');
+      } else {
+        tg.showAlert(data.message || "Ошибка удаления");
+      }
+    }
+
+    // === СВАЙПЫ РУКОВОДСТВА ===
+    function isApprovalTimeAllowed() {
+      if (document.getElementById('forceUnlock').checked) return true;
+      const now = new Date();
+      const astana = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + 3600000 * 5);
+      return astana.getHours() >= 17;
+    }
+
+    function renderSwipeCards() {
+      const arena = document.getElementById('swipeArena');
+      const btns = document.getElementById('swipeButtons');
+      const dirBtn = document.getElementById('directorAllBtn');
+      const lockAlert = document.getElementById('timeLockAlert');
+      document.getElementById('pendingBadge').textContent = pendingRequests.length;
+
+      const allowed = isApprovalTimeAllowed();
+      lockAlert.classList.toggle('hidden', allowed);
+      const disabled = !allowed || pendingRequests.length === 0;
+      btns.querySelectorAll('button').forEach(b => b.disabled = disabled);
+      dirBtn.disabled = disabled;
+
+      if (pendingRequests.length === 0) {
+        arena.innerHTML = `<div style="text-align:center; padding-top:160px; font-family:'Raleway',sans-serif; font-weight:700; color:var(--graphite);">🎉 Все заявки рассмотрены</div>`;
+        return;
+      }
+
+      arena.innerHTML = "";
+      pendingRequests.slice(0, 2).reverse().forEach((req, idx, arr) => {
+        const isTop = idx === arr.length - 1;
+        const card = document.createElement('div');
+        card.className = 'swipe-card';
+        if (!isTop) card.style.transform = 'scale(0.96) translateY(10px)';
+
+        card.innerHTML = `
+          <div class="stamp approve">СОГЛАСОВАНО</div>
+          <div class="stamp reject">ОТКЛОНЕНО</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span style="background:var(--red); color:#fff; font-family:'Raleway',sans-serif; font-weight:800; font-size:12px; padding:4px 10px; border-radius:8px;">
+              Этаж: ${req.floor}
+            </span>
+            <span style="font-size:11.5px; color:var(--graphite); font-weight:600;">№${req.rowIndex} • ${req.source}</span>
+          </div>
+          <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:17px; color:var(--black); margin-bottom:8px;">${req.organization}</div>
+          <div style="font-size:13px; margin-bottom:5px;"><b>Вид работ:</b> ${req.workType}</div>
+          <div style="font-size:13px; margin-bottom:5px;"><b>Срок:</b> с ${req.startDate} по ${req.endDate}</div>
+          <div style="font-size:13px; margin-bottom:5px;"><b>Время:</b> ${req.workTime}</div>
+          <div style="font-size:13px; margin-bottom:5px;"><b>Авто:</b> ${req.carNumber}</div>
+          <div style="font-size:13px; margin-bottom:5px;"><b>Сотрудники:</b> ${req.nightDetails}</div>
+          <div style="font-size:13px;"><b>Ответственный:</b> ${req.responsible}</div>
+        `;
+
+        if (isTop && allowed) attachSwipe(card, req);
+        arena.appendChild(card);
+      });
+    }
+
+    function attachSwipe(card, req) {
+      let startX = 0, curX = 0, dragging = false;
+      const stA = card.querySelector('.stamp.approve');
+      const stR = card.querySelector('.stamp.reject');
+
+      card.addEventListener('pointerdown', e => {
+        startX = e.clientX; dragging = true;
+        card.classList.add('dragging');
+        card.setPointerCapture(e.pointerId);
+      });
+      card.addEventListener('pointermove', e => {
+        if (!dragging) return;
+        curX = e.clientX - startX;
+        card.style.transform = `translateX(${curX}px) rotate(${curX * 0.05}deg)`;
+        stA.style.opacity = curX > 30 ? Math.min((curX - 30) / 80, 1) : 0;
+        stR.style.opacity = curX < -30 ? Math.min((-curX - 30) / 80, 1) : 0;
+      });
+      card.addEventListener('pointerup', () => {
+        if (!dragging) return;
+        dragging = false; card.classList.remove('dragging');
+        if (curX > 100) completeSwipe(card, 'approve', req, "");
+        else if (curX < -100) {
+          card.style.transform = '';
+          stA.style.opacity = 0; stR.style.opacity = 0;
+          openRejectModal(card, req);
+        } else {
+          card.style.transform = '';
+          stA.style.opacity = 0; stR.style.opacity = 0;
+        }
+        curX = 0;
+      });
+    }
+
+    function openRejectModal(card = null, req = null) {
+      const cards = document.querySelectorAll('.swipe-card');
+      pendingRejectCard = card || cards[cards.length - 1];
+      pendingRejectReq = req || pendingRequests[0];
+      if (!pendingRejectReq) return;
+      document.getElementById('rejectReasonInput').value = "";
+      document.getElementById('rejectModal').classList.remove('hidden');
+    }
+
+    function closeRejectModal() {
+      document.getElementById('rejectModal').classList.add('hidden');
+    }
+
+    function setRejectReason(text) {
+      document.getElementById('rejectReasonInput').value = text;
+    }
+
+    function confirmReject() {
+      const reason = document.getElementById('rejectReasonInput').value.trim();
+      closeRejectModal();
+      if (pendingRejectCard && pendingRejectReq) {
+        completeSwipe(pendingRejectCard, 'reject', pendingRejectReq, reason);
+      }
+    }
+
+    function triggerSwipe(decision) {
+      const cards = document.querySelectorAll('.swipe-card');
+      const top = cards[cards.length - 1];
+      if (top && pendingRequests.length > 0) completeSwipe(top, decision, pendingRequests[0], "");
+    }
+
+    async function completeSwipe(card, decision, req, rejectReason = "") {
+      haptic('medium');
+      const dir = decision === 'reject' ? -1 : 1;
+      card.style.transform = `translateX(${dir * 500}px) rotate(${dir * 25}deg)`;
+      card.style.opacity = '0';
+      pendingRequests.shift();
+      setTimeout(renderSwipeCards, 220);
+
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'swipe',
+          decision: decision,
+          rowIndex: req.rowIndex,
+          rejectReason: rejectReason,
+          initData: initDataRaw
+        })
+      });
+    }
+
+    // === УПРАВЛЕНИЕ ДОСТУПАМИ ===
+    function renderApprovers() {
+      const box = document.getElementById('approversList');
+      box.innerHTML = "";
+      approversList.forEach(a => {
+        const isSelf = String(a.id) === String(currentUser.id);
+        const row = document.createElement('div');
+        row.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);";
+        row.innerHTML = `
+          <div>
+            <div style="font-weight:700; font-size:13.5px;">${a.name || 'Сотрудник'} • ${a.role}</div>
+            <div style="font-size:11.5px; color:var(--graphite);">ID: ${a.id}</div>
+          </div>
+          ${isSelf ? '<span style="font-size:11.5px; color:var(--muted);">Вы</span>'
+                   : `<button class="del-pill-btn" onclick="removeApprover('${a.id}')">Удалить</button>`}
+        `;
+        box.appendChild(row);
+      });
+    }
+
+    async function addApprover() {
+      const targetId = document.getElementById('newAccId').value.trim();
+      const targetName = document.getElementById('newAccName').value.trim();
+      const targetRole = document.getElementById('newAccRole').value;
+      if (!targetId) return tg.showAlert("Введите Telegram ID");
+
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'manage_access', subAction: 'add',
+          targetId, targetName, targetRole, initData: initDataRaw
+        })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        approversList = data.approvers;
+        renderApprovers();
+        document.getElementById('newAccId').value = "";
+        document.getElementById('newAccName').value = "";
+        tg.showAlert("Доступ выдан!");
+      } else tg.showAlert(data.message);
+    }
+
+    async function removeApprover(targetId) {
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'manage_access', subAction: 'remove', targetId, initData: initDataRaw })
+      });
+      const data = await res.json();
+      if (data.status === 'success') { approversList = data.approvers; renderApprovers(); }
+    }
+  </script>
+</body>
+</html>
