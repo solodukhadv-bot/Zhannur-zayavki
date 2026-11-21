@@ -881,25 +881,30 @@
           Посмотреть мои ранее поданные заявки →
         </button>
 
-        <!-- ЭКСТРЕННОЕ ОТКРЫТИЕ ПРИЕМА ЗАЯВОК ДЛЯ АДМИНИСТРАТОРА -->
+        <!-- ЭКСТРЕННОЕ ОТКРЫТИЕ ПРИЕМА ЗАЯВОК ДЛЯ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ (НА 15 МИНУТ) -->
         <div id="adminEmergencyBox" class="emergency-open-box hidden">
           <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:13px; color:var(--black); margin-bottom:4px;">
-            ⚡ Экстренный режим администратора
+            ⚡ Экстренный прием для всех арендаторов
           </div>
           <div style="font-size:11.5px; color:var(--graphite); margin-bottom:10px;">
-            Если необходимо срочно принять заявку вне графика, откройте форму подачи сейчас.
+            Откроет форму подачи для любого пользователя на выбранное время (по умолчанию 15 минут).
           </div>
-          <button type="button" class="btn-secondary" style="width:100%; border-color:var(--red); color:var(--red);" onclick="enableAdminEmergencyOpen()">
-            Открыть прием заявок (экстренно)
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
+            <button type="button" class="preset-btn active" id="emDur15" onclick="selectEmergencyMinutes(15, this)">15 мин</button>
+            <button type="button" class="preset-btn" id="emDur30" onclick="selectEmergencyMinutes(30, this)">30 мин</button>
+            <button type="button" class="preset-btn" id="emDur60" onclick="selectEmergencyMinutes(60, this)">60 мин</button>
+          </div>
+          <button type="button" class="btn-secondary" style="width:100%; border-color:var(--red); color:var(--red); font-weight:800;" id="openEmergencyBtn" onclick="enableAdminEmergencyOpen()">
+            Открыть прием на 15 мин для всех
           </button>
         </div>
       </div>
 
       <!-- ОСНОВНОЙ МАСТЕР -->
       <div id="wizardActiveBody">
-        <div id="emergencyActiveBanner" class="hidden" style="background:var(--amber-bg); color:var(--amber); border:1px solid #F59E0B; border-radius:12px; padding:9px 12px; margin-bottom:12px; font-size:12px; font-weight:700; display:flex; justify-content:space-between; align-items:center;">
-          <span>⚡ Включен экстренный прием заявок</span>
-          <button type="button" onclick="disableAdminEmergencyOpen()" style="background:none; border:none; color:var(--amber); font-weight:800; text-decoration:underline; cursor:pointer; font-size:11.5px;">Закрыть</button>
+        <div id="emergencyActiveBanner" class="hidden" style="background:var(--amber-bg); color:var(--amber); border:1px solid #F59E0B; border-radius:12px; padding:9px 12px; margin-bottom:12px; font-size:12px; font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <span id="emergencyCountdownText">⚡ Экстренный прием открыт (осталось 15:00)</span>
+          <button type="button" id="closeEmergencyBtn" class="hidden" onclick="disableAdminEmergencyOpen()" style="background:none; border:none; color:var(--amber); font-weight:800; text-decoration:underline; cursor:pointer; font-size:11.5px; white-space:nowrap;">Закрыть</button>
         </div>
 
         <div class="stepper">
@@ -1378,7 +1383,8 @@
     };
 
     let currentViewName = "wizard";
-    let adminEmergencyOpen = false;
+    let emergencyMinutes = 15;
+    let emergencyUntilMs = 0; // общий дедлайн экстренного окна с сервера (мс)
     let myRequests = [];
     let pendingRequests = [];
     let approversList = [];
@@ -1463,36 +1469,97 @@
       return new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + 3600000 * 5);
     }
 
-    // Прием заявок: Пн–Пт (day 1..5) с 09:00 до 17:00, либо экстренно открыто Администратором
+    function isEmergencyWindowActive() {
+      return Date.now() < emergencyUntilMs;
+    }
+
+    function formatRemainingEmergency() {
+      const remSec = Math.max(0, Math.floor((emergencyUntilMs - Date.now()) / 1000));
+      const mm = String(Math.floor(remSec / 60)).padStart(2, '0');
+      const ss = String(remSec % 60).padStart(2, '0');
+      return `${mm}:${ss}`;
+    }
+
+    // Прием заявок: Пн–Пт (day 1..5) с 09:00 до 17:00, либо экстренно открыто Администратором (на 15 мин и т.д.) для всех
     function isSubmissionWindowOpen() {
-      if (adminEmergencyOpen) return true;
+      if (isEmergencyWindowActive()) return true;
       const astana = getAstanaDate();
       const day = astana.getDay();
       const hour = astana.getHours();
       return (day >= 1 && day <= 5) && (hour >= 9 && hour < 17);
     }
 
-    function enableAdminEmergencyOpen() {
-      adminEmergencyOpen = true;
-      haptic('medium');
-      updateHeaderAndSubmissionLock();
+    function selectEmergencyMinutes(mins, btn) {
+      emergencyMinutes = mins;
+      haptic('light');
+      document.querySelectorAll('#adminEmergencyBox .preset-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const openBtn = document.getElementById('openEmergencyBtn');
+      if (openBtn) openBtn.textContent = `Открыть прием на ${mins} мин для всех`;
     }
 
-    function disableAdminEmergencyOpen() {
-      adminEmergencyOpen = false;
+    async function enableAdminEmergencyOpen() {
+      const openBtn = document.getElementById('openEmergencyBtn');
+      if (openBtn) {
+        openBtn.disabled = true;
+        openBtn.textContent = "Открываем...";
+      }
+      haptic('medium');
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'set_emergency_window',
+            enabled: true,
+            minutes: emergencyMinutes,
+            initData: initDataRaw
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          emergencyUntilMs = Number(data.emergencyUntilMs) || (Date.now() + emergencyMinutes * 60000);
+          updateHeaderAndSubmissionLock();
+          tg.showAlert(`✅ Экстренный прием открыт для всех пользователей на ${emergencyMinutes} мин.`);
+        } else {
+          tg.showAlert(data.message || "Не удалось открыть экстренный прием");
+        }
+      } finally {
+        if (openBtn) {
+          openBtn.disabled = false;
+          openBtn.textContent = `Открыть прием на ${emergencyMinutes} мин для всех`;
+        }
+      }
+    }
+
+    async function disableAdminEmergencyOpen() {
       haptic('light');
-      updateHeaderAndSubmissionLock();
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'set_emergency_window',
+            enabled: false,
+            initData: initDataRaw
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          emergencyUntilMs = 0;
+          updateHeaderAndSubmissionLock();
+        }
+      } catch (e) { console.error(e); }
     }
 
     function updateHeaderAndSubmissionLock() {
       const t = I18N[currentLang] || I18N.ru;
+      const emActive = isEmergencyWindowActive();
       const open = isSubmissionWindowOpen();
       const dot = document.getElementById('statusDot');
       const txt = document.getElementById('statusText');
 
       if (open) {
         dot.classList.remove('closed');
-        txt.textContent = adminEmergencyOpen ? "⚡ Экстренный прием" : t.statusOpen;
+        txt.textContent = emActive ? `⚡ ${formatRemainingEmergency()}` : t.statusOpen;
       } else {
         dot.classList.add('closed');
         txt.textContent = t.statusClosed;
@@ -1503,12 +1570,20 @@
       const bottomBar = document.getElementById('wizardBottomBar');
       const emergencyBox = document.getElementById('adminEmergencyBox');
       const emergencyBanner = document.getElementById('emergencyActiveBanner');
+      const emergencyText = document.getElementById('emergencyCountdownText');
+      const closeEmBtn = document.getElementById('closeEmergencyBtn');
 
       if (emergencyBox) {
         emergencyBox.classList.toggle('hidden', !(isApprover && userRole === "Администратор"));
       }
       if (emergencyBanner) {
-        emergencyBanner.classList.toggle('hidden', !adminEmergencyOpen);
+        emergencyBanner.classList.toggle('hidden', !emActive);
+        if (emActive && emergencyText) {
+          emergencyText.textContent = `⚡ Экстренный прием открыт для всех (осталось ${formatRemainingEmergency()})`;
+        }
+        if (closeEmBtn) {
+          closeEmBtn.classList.toggle('hidden', !(isApprover && userRole === "Администратор"));
+        }
       }
 
       if (open) {
@@ -1557,6 +1632,13 @@
       try {
         const res = await fetch(`${SCRIPT_URL}?initData=${encodeURIComponent(initDataRaw)}`);
         const data = await res.json();
+
+        if (data.emergencyUntilMs) {
+          emergencyUntilMs = Number(data.emergencyUntilMs) || 0;
+        } else {
+          emergencyUntilMs = 0;
+        }
+        updateHeaderAndSubmissionLock();
 
         if (data.tenantsByFloor && Object.keys(data.tenantsByFloor).length > 0) {
           TENANTS_DB = data.tenantsByFloor;
@@ -2016,6 +2098,8 @@
             carNumber: car,
             nightDetails: workers,
             responsible: responsible,
+            emergencyWindowClaim: isEmergencyWindowActive(),
+            initData: initDataRaw,
             tgUser: currentUser.id ? `${currentUser.first_name || ''} (@${currentUser.username || currentUser.id})` : "Web",
             tgChatId: currentUser.id || ""
           })
