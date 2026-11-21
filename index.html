@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>JANNUR Shopping Mall — Заявки арендаторов</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,26 +26,46 @@
       --green-bg: #DCFCE7;
       --amber: #B45309;
       --amber-bg: #FEF3C7;
+      --blue: #1D4ED8;
+      --blue-bg: #DBEAFE;
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+    }
 
-    body {
+    /* ЖЕСТКАЯ ФИКСАЦИЯ ОКНА БЕЗ МАСШТАБИРОВАНИЯ И ВЫХОДА ЗА РАМКИ */
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      overscroll-behavior: none;
+      touch-action: pan-y;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--charcoal);
-      margin: 0;
-      padding: 0 0 96px;
+    }
+
+    .app-viewport {
+      width: 100%;
+      max-width: 100vw;
+      min-height: 100dvh;
       overflow-x: hidden;
+      padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
     }
 
     /* === ХЕДЕР JANNUR === */
     .hero-header {
       background: linear-gradient(145deg, #0D0D0F 0%, #232429 100%);
       color: #FFFFFF;
-      padding: 18px 20px 20px;
-      border-bottom-left-radius: 24px;
-      border-bottom-right-radius: 24px;
+      padding: 16px 18px 18px;
+      border-bottom-left-radius: 22px;
+      border-bottom-right-radius: 22px;
       box-shadow: 0 10px 28px rgba(13, 13, 15, 0.16);
       position: relative;
       overflow: hidden;
@@ -63,13 +83,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      gap: 8px;
     }
     .brand-lockup { display: flex; flex-direction: column; }
     .brand-title {
       font-family: 'Raleway', sans-serif;
       font-weight: 800;
-      font-size: 24px;
+      font-size: 23px;
       letter-spacing: 0.16em;
       color: #FFFFFF;
       line-height: 1;
@@ -90,49 +111,55 @@
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(209, 186, 166, 0.3);
-      padding: 6px 11px;
+      padding: 5px 10px;
       border-radius: 20px;
       font-size: 11px;
       font-weight: 600;
       color: #FFFFFF;
+      white-space: nowrap;
     }
     .live-dot {
       width: 7px; height: 7px;
       border-radius: 50%;
       background: #22C55E;
       box-shadow: 0 0 8px #22C55E;
+      flex-shrink: 0;
     }
-    .live-dot.warn { background: #F59E0B; box-shadow: 0 0 8px #F59E0B; }
+    .live-dot.closed { background: #EF4444; box-shadow: 0 0 8px #EF4444; }
     .hero-subtitle {
-      font-size: 12.5px;
+      font-size: 12px;
       color: rgba(255, 255, 255, 0.78);
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
-    .container { padding: 16px; max-width: 540px; margin: 0 auto; }
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 14px 14px 0;
+    }
 
     /* === НАВИГАЦИЯ === */
     .top-nav {
       display: flex;
       background: var(--surface);
-      padding: 5px;
-      border-radius: 16px;
-      margin-bottom: 16px;
+      padding: 4px;
+      border-radius: 15px;
+      margin-bottom: 14px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.04);
       border: 1px solid var(--border);
       gap: 3px;
-      overflow-x: auto;
     }
     .nav-btn {
       flex: 1;
-      padding: 10px 5px;
+      padding: 9px 4px;
       border: none;
       background: transparent;
       color: var(--graphite);
       font-family: 'Raleway', sans-serif;
       font-weight: 700;
       font-size: 11.5px;
-      border-radius: 12px;
+      border-radius: 11px;
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.2s;
@@ -146,9 +173,38 @@
       color: #fff;
       font-family: 'Inter', sans-serif;
       font-size: 10px;
-      padding: 1px 6px;
+      padding: 1px 5px;
       border-radius: 10px;
       margin-left: 2px;
+    }
+
+    /* === ЭКРАН ЗАКРЫТОГО ПРИЕМА ЗАЯВОК (ВНЕ БУДНЕЙ 09:00–17:00) === */
+    .closed-card {
+      background: var(--surface);
+      border-radius: 22px;
+      padding: 26px 20px;
+      text-align: center;
+      border: 1px solid rgba(209, 186, 166, 0.6);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    }
+    .closed-icon {
+      width: 56px; height: 56px;
+      border-radius: 18px;
+      background: var(--red-soft);
+      color: var(--red);
+      font-size: 26px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px;
+    }
+    .closed-schedule-box {
+      background: var(--nude-bg);
+      border: 1px solid var(--nude);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin: 16px 0;
+      font-size: 13px;
+      color: var(--black);
+      line-height: 1.45;
     }
 
     /* === ПРОГРЕСС-БАР ШАГОВ === */
@@ -156,10 +212,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       background: var(--surface);
-      padding: 12px 14px;
-      border-radius: 16px;
+      padding: 10px 12px;
+      border-radius: 15px;
       border: 1px solid var(--border);
     }
     .step-item {
@@ -171,13 +227,13 @@
       cursor: pointer;
     }
     .step-circle {
-      width: 28px; height: 28px;
+      width: 26px; height: 26px;
       border-radius: 50%;
       background: var(--bg);
       color: var(--muted);
       font-family: 'Raleway', sans-serif;
       font-weight: 800;
-      font-size: 12px;
+      font-size: 11.5px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -196,7 +252,7 @@
       border-color: var(--black);
     }
     .step-label {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 600;
       color: var(--muted);
     }
@@ -206,20 +262,20 @@
     .card {
       background: var(--surface);
       border-radius: 20px;
-      padding: 18px;
+      padding: 16px;
       margin-bottom: 14px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.035);
       border: 1px solid var(--border);
-      animation: fadeSlide 0.25s ease;
+      animation: fadeSlide 0.22s ease;
     }
     @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(5px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .card-title {
       font-family: 'Raleway', sans-serif;
       font-weight: 800;
-      font-size: 17px;
+      font-size: 16.5px;
       color: var(--black);
       margin: 0 0 4px;
     }
@@ -234,19 +290,19 @@
     .floor-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 9px;
     }
     .floor-tile {
       background: var(--bg);
       border: 1.5px solid var(--border);
-      border-radius: 16px;
-      padding: 14px 12px;
+      border-radius: 15px;
+      padding: 13px 11px;
       text-align: left;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
     .floor-tile.selected {
       background: var(--red-soft);
@@ -256,11 +312,11 @@
     .floor-num {
       font-family: 'Raleway', sans-serif;
       font-weight: 800;
-      font-size: 16px;
+      font-size: 15.5px;
       color: var(--black);
     }
     .floor-tile.selected .floor-num { color: var(--red); }
-    .floor-sub { font-size: 11.5px; color: var(--graphite); }
+    .floor-sub { font-size: 11px; color: var(--graphite); }
 
     /* === ВЫБОР ИП / ТОО === */
     .search-box {
@@ -268,37 +324,34 @@
       margin-bottom: 10px;
     }
     .search-box input {
-      padding-left: 38px;
+      padding-left: 36px;
       background: var(--bg);
     }
     .search-icon {
       position: absolute;
-      left: 13px; top: 50%;
+      left: 12px; top: 50%;
       transform: translateY(-50%);
       color: var(--muted);
-      font-size: 15px;
+      font-size: 14px;
     }
     .tenant-list {
-      max-height: 270px;
+      max-height: 255px;
       overflow-y: auto;
       border: 1px solid var(--border);
       border-radius: 14px;
       background: var(--surface);
     }
     .tenant-option {
-      padding: 12px 14px;
+      padding: 11px 13px;
       border-bottom: 1px solid var(--bg);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
       cursor: pointer;
-      transition: background 0.15s;
     }
     .tenant-option:last-child { border-bottom: none; }
-    .tenant-option:hover, .tenant-option.selected {
-      background: var(--red-soft);
-    }
+    .tenant-option.selected { background: var(--red-soft); }
     .tenant-name {
       font-size: 13.5px;
       font-weight: 600;
@@ -335,32 +388,30 @@
     .work-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 9px;
+      gap: 8px;
     }
     .work-tile {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
+      gap: 11px;
+      padding: 11px 13px;
       border-radius: 14px;
       border: 1.5px solid var(--border);
       background: var(--bg);
       cursor: pointer;
-      transition: all 0.2s;
     }
     .work-tile.selected {
       background: var(--red-soft);
       border-color: var(--red);
     }
     .work-icon {
-      width: 38px; height: 38px;
-      border-radius: 11px;
+      width: 36px; height: 36px;
+      border-radius: 10px;
       background: var(--surface);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      font-size: 17px;
       flex-shrink: 0;
     }
     .work-tile.selected .work-icon {
@@ -370,11 +421,11 @@
     .work-info-title {
       font-family: 'Raleway', sans-serif;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13.5px;
       color: var(--black);
     }
     .work-info-sub {
-      font-size: 11.5px;
+      font-size: 11px;
       color: var(--graphite);
       margin-top: 2px;
     }
@@ -387,7 +438,7 @@
       margin-top: 6px;
     }
     .time-slot-card {
-      padding: 12px 14px;
+      padding: 11px 13px;
       border-radius: 12px;
       border: 1.5px solid var(--border);
       background: var(--bg);
@@ -395,7 +446,6 @@
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
-      transition: all 0.15s;
     }
     .time-slot-card.selected {
       background: var(--black);
@@ -408,7 +458,7 @@
       font-size: 13.5px;
     }
     .time-slot-sub {
-      font-size: 11.5px;
+      font-size: 11px;
       opacity: 0.78;
       margin-top: 2px;
     }
@@ -416,12 +466,12 @@
     /* === БЫСТРЫЕ СРОКИ И ЧИПЫ === */
     .preset-row {
       display: flex;
-      gap: 7px;
+      gap: 6px;
       margin-bottom: 10px;
       flex-wrap: wrap;
     }
     .preset-btn {
-      padding: 7px 11px;
+      padding: 7px 10px;
       border-radius: 10px;
       border: 1px solid var(--nude);
       background: var(--nude-bg);
@@ -439,7 +489,7 @@
     .date-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
     }
 
     label.field-label {
@@ -448,32 +498,34 @@
       font-weight: 700;
       font-size: 13px;
       color: var(--charcoal);
-      margin: 14px 0 6px;
+      margin: 13px 0 6px;
     }
     .req { color: var(--red); }
+
+    /* ВАЖНО: font-size: 16px предотвращает авто-зум на iPhone/iOS при нажатии на поле! */
     input[type="text"], input[type="number"], input[type="date"], select, textarea {
       width: 100%;
-      padding: 12px 14px;
+      padding: 11px 13px;
       border-radius: 12px;
       border: 1.5px solid var(--border);
       background: var(--surface);
       color: var(--black);
       font-family: 'Inter', sans-serif;
-      font-size: 14px;
+      font-size: 16px;
       transition: border-color 0.2s;
     }
     input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--red);
     }
-    textarea { min-height: 76px; resize: vertical; }
+    textarea { min-height: 74px; resize: vertical; }
 
     /* === ЦИФРОВОЙ ПРОПУСК JANNUR PASS === */
     .pass-ticket {
       background: linear-gradient(145deg, #141417 0%, #272930 100%);
       color: #FFFFFF;
-      border-radius: 20px;
-      padding: 18px;
+      border-radius: 18px;
+      padding: 16px;
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(209, 186, 166, 0.35);
@@ -484,22 +536,22 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px dashed rgba(255,255,255,0.2);
-      padding-bottom: 12px;
-      margin-bottom: 12px;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
     }
     .pass-floor-badge {
       background: var(--red);
       color: #fff;
       font-family: 'Raleway', sans-serif;
       font-weight: 800;
-      font-size: 13px;
-      padding: 5px 12px;
-      border-radius: 10px;
+      font-size: 12.5px;
+      padding: 4px 11px;
+      border-radius: 9px;
     }
     .pass-org {
       font-family: 'Raleway', sans-serif;
       font-weight: 800;
-      font-size: 17px;
+      font-size: 16.5px;
       margin-bottom: 10px;
       color: #FFFFFF;
     }
@@ -507,17 +559,17 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      font-size: 12.5px;
+      font-size: 12px;
     }
-    .pass-lbl { color: var(--nude); font-size: 11px; }
+    .pass-lbl { color: var(--nude); font-size: 10.5px; }
     .pass-val { font-weight: 600; color: #fff; margin-top: 2px; }
 
-    /* === СПИСОК "МОИ ЗАЯВКИ" АРЕНДАТОРА === */
+    /* === СПИСОК "МОИ ЗАЯВКИ" === */
     .my-req-card {
       background: var(--surface);
       border-radius: 18px;
-      padding: 16px;
-      margin-bottom: 12px;
+      padding: 15px;
+      margin-bottom: 11px;
       border: 1px solid var(--border);
       box-shadow: 0 3px 12px rgba(0,0,0,0.03);
     }
@@ -531,11 +583,13 @@
     .status-pill {
       font-family: 'Raleway', sans-serif;
       font-weight: 800;
-      font-size: 11.5px;
+      font-size: 11px;
       padding: 4px 10px;
       border-radius: 20px;
+      text-align: right;
     }
     .status-pending { background: var(--amber-bg); color: var(--amber); }
+    .status-director-wait { background: var(--blue-bg); color: var(--blue); }
     .status-approved { background: var(--green-bg); color: var(--green); }
     .status-rejected { background: #FDECEF; color: var(--red); }
 
@@ -549,7 +603,7 @@
       color: var(--charcoal);
     }
 
-    /* === АДМИН-ПАНЕЛЬ: СПИСОК ИП И ИСКЛЮЧЕНИЯ === */
+    /* === АДМИН-ПАНЕЛЬ === */
     .sub-tabs {
       display: flex;
       gap: 6px;
@@ -613,16 +667,18 @@
     .bottom-bar {
       position: fixed;
       bottom: 0; left: 0; right: 0;
-      background: rgba(255, 255, 255, 0.94);
+      width: 100%;
+      max-width: 100vw;
+      background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(12px);
-      padding: 12px 16px;
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
       border-top: 1px solid var(--border);
       display: flex;
       gap: 10px;
       z-index: 60;
     }
     .btn-secondary {
-      padding: 14px 16px;
+      padding: 13px 15px;
       border-radius: 14px;
       border: 1.5px solid var(--border);
       background: var(--surface);
@@ -634,14 +690,14 @@
     }
     .btn-primary {
       flex: 1;
-      padding: 14px 18px;
+      padding: 13px 16px;
       border-radius: 14px;
       border: none;
       background: var(--red);
       color: #FFFFFF;
       font-family: 'Raleway', sans-serif;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14.5px;
       cursor: pointer;
       box-shadow: 0 6px 18px rgba(201, 34, 63, 0.28);
     }
@@ -652,16 +708,17 @@
     /* === СВАЙПЫ РУКОВОДСТВА === */
     .swipe-arena {
       position: relative;
-      height: 410px;
+      height: 415px;
       width: 100%;
+      overflow: hidden;
     }
     .swipe-card {
       position: absolute;
       top: 0; left: 0; right: 0;
       background: var(--surface);
       border-radius: 22px;
-      padding: 18px;
-      box-shadow: 0 14px 32px rgba(0,0,0,0.09);
+      padding: 17px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
       border: 1px solid rgba(209, 186, 166, 0.6);
       touch-action: none;
       user-select: none;
@@ -676,7 +733,7 @@
       border-radius: 10px;
       font-family: 'Raleway', sans-serif;
       font-weight: 800;
-      font-size: 18px;
+      font-size: 17px;
       opacity: 0;
       background: rgba(255,255,255,0.95);
     }
@@ -684,14 +741,14 @@
     .stamp.reject { left: 18px; color: var(--red); border-color: var(--red); transform: rotate(-10deg); }
     .ctrl-row { display: flex; gap: 10px; margin-top: 10px; }
     .ctrl-btn {
-      flex: 1; padding: 14px; border-radius: 14px; border: none;
-      font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer;
+      flex: 1; padding: 13px; border-radius: 14px; border: none;
+      font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 13.5px; cursor: pointer;
     }
     .ctrl-reject { background: #FDECEF; color: var(--red); }
     .ctrl-approve { background: var(--black); color: #fff; }
     .ctrl-director {
-      width: 100%; margin-top: 8px; padding: 14px; border-radius: 14px; border: none;
-      background: var(--red); color: #fff; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 14px;
+      width: 100%; margin-top: 8px; padding: 13px; border-radius: 14px; border: none;
+      background: var(--red); color: #fff; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 13.5px;
     }
 
     /* Модальное окно причины отклонения */
@@ -726,6 +783,7 @@
   </style>
 </head>
 <body>
+<div class="app-viewport">
 
   <!-- ХЕДЕР JANNUR -->
   <header class="hero-header">
@@ -736,7 +794,7 @@
       </div>
       <div class="live-pill" id="statusPill">
         <span class="live-dot" id="statusDot"></span>
-        <span id="statusText">Прием заявок</span>
+        <span id="statusText">Пн–Пт 09:00–17:00</span>
       </div>
     </div>
     <div class="hero-subtitle">Ввоз/вывоз товара и оборудования, ревизия и уборка</div>
@@ -764,207 +822,228 @@
 
     <!-- ==================== ЭКРАН 1: МАСТЕР ПОДАЧИ ЗАЯВКИ ==================== -->
     <div id="wizardView">
-      <div class="stepper">
-        <div class="step-item active" id="st1" onclick="goStep(1)">
-          <div class="step-circle">1</div>
-          <div class="step-label">Этаж</div>
+      <!-- ЗАГЛУШКА, ЕСЛИ СЕЙЧАС НЕ БУДНИЙ ДЕНЬ 09:00–17:00 -->
+      <div id="closedHoursBlock" class="closed-card hidden">
+        <div class="closed-icon">🕘</div>
+        <h2 class="card-title" style="font-size:19px;">Прием новых заявок сейчас закрыт</h2>
+        <p class="card-desc" style="margin-top:6px;">
+          Подача электронных заявок доступна строго по будням с <b>09:00 до 17:00</b>.
+        </p>
+        <div class="closed-schedule-box">
+          <b>График работы сервиса:</b><br>
+          • Подача заявок: <b>Пн – Пт, с 09:00 до 17:00</b><br>
+          • Согласование администрацией: <b>с 17:00 до 18:00</b><br>
+          • Выходные (Сб, Вс): <b>прием заявок закрыт</b>
         </div>
-        <div class="step-item" id="st2" onclick="goStep(2)">
-          <div class="step-circle">2</div>
-          <div class="step-label">Ваше ИП</div>
-        </div>
-        <div class="step-item" id="st3" onclick="goStep(3)">
-          <div class="step-circle">3</div>
-          <div class="step-label">Работы и Срок</div>
-        </div>
-        <div class="step-item" id="st4" onclick="goStep(4)">
-          <div class="step-circle">4</div>
-          <div class="step-label">Пропуск</div>
-        </div>
+        <button type="button" class="btn-primary" style="width:100%;" onclick="switchView('myRequests')">
+          Посмотреть мои ранее поданные заявки →
+        </button>
       </div>
 
-      <!-- ШАГ 1: ВЫБОР ЭТАЖА -->
-      <div class="card" id="stepCard1">
-        <h2 class="card-title">Выберите этаж</h2>
-        <p class="card-desc">Укажите этаж, на котором расположено ваше ИП или ТОО.</p>
-
-        <div class="floor-grid">
-          <div class="floor-tile" data-floor="1" onclick="selectFloor('1')">
-            <span class="floor-num">1 этаж</span>
-            <span class="floor-sub">Сектор А • Островки • Small</span>
+      <!-- ОСНОВНОЙ МАСТЕР (ДОСТУПЕН ПН–ПТ 09:00–17:00) -->
+      <div id="wizardActiveBody">
+        <div class="stepper">
+          <div class="step-item active" id="st1" onclick="goStep(1)">
+            <div class="step-circle">1</div>
+            <div class="step-label">Этаж</div>
           </div>
-          <div class="floor-tile" data-floor="2" onclick="selectFloor('2')">
-            <span class="floor-num">2 этаж</span>
-            <span class="floor-sub">Сектор В • Одежда и ювелирные</span>
+          <div class="step-item" id="st2" onclick="goStep(2)">
+            <div class="step-circle">2</div>
+            <div class="step-label">Ваше ИП</div>
           </div>
-          <div class="floor-tile" data-floor="3" onclick="selectFloor('3')">
-            <span class="floor-num">3 этаж</span>
-            <span class="floor-sub">Сектор С • Бутики 3 этажа</span>
+          <div class="step-item" id="st3" onclick="goStep(3)">
+            <div class="step-circle">3</div>
+            <div class="step-label">Работы и Срок</div>
           </div>
-          <div class="floor-tile" data-floor="4" onclick="selectFloor('4')">
-            <span class="floor-num">4 этаж</span>
-            <span class="floor-sub">Фуд-корт • Салоны • Досуг</span>
-          </div>
-          <div class="floor-tile" data-floor="Улица и Банкоматы" onclick="selectFloor('Улица и Банкоматы')">
-            <span class="floor-num">Улица / Банки</span>
-            <span class="floor-sub">Банкоматы • Постаматы • Улица</span>
-          </div>
-          <div class="floor-tile" data-floor="Подрядчик/новый арендатор" onclick="selectFloor('Подрядчик/новый арендатор')">
-            <span class="floor-num">Подрядчик</span>
-            <span class="floor-sub">Новый арендатор</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ШАГ 2: ТОЛЬКО ВЫБОР ИП / ТОО -->
-      <div class="card hidden" id="stepCard2">
-        <h2 class="card-title">Выберите ваше ИП / ТОО</h2>
-        <p class="card-desc">Найдите свою организацию в списке этажа или введите вручную.</p>
-
-        <div id="tenantPickerBlock">
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="tenantSearch" placeholder="Поиск по названию ИП или ТОО..." oninput="renderTenantList()">
-          </div>
-          <div class="tenant-list" id="tenantList"></div>
-
-          <div style="margin-top:10px; text-align:right;">
-            <span style="font-size:12.5px; color:var(--red); font-weight:600; cursor:pointer;" onclick="toggleManualTenant(true)">
-              + Моего ИП нет в списке (ввести вручную)
-            </span>
+          <div class="step-item" id="st4" onclick="goStep(4)">
+            <div class="step-circle">4</div>
+            <div class="step-label">Пропуск</div>
           </div>
         </div>
 
-        <div id="manualTenantBlock" class="hidden">
-          <label class="field-label">Наименование ИП / ТОО <span class="req">*</span></label>
-          <input type="text" id="manualOrgInput" placeholder="Например: ИП Смагулов / ТОО Астана" oninput="state.organization = this.value">
-          <div id="backToListLink" style="margin-top:8px; text-align:right;">
-            <span style="font-size:12.5px; color:var(--graphite); cursor:pointer;" onclick="toggleManualTenant(false)">
-              ← Вернуться к списку ИП
-            </span>
-          </div>
-        </div>
-      </div>
+        <!-- ШАГ 1: ВЫБОР ЭТАЖА -->
+        <div class="card" id="stepCard1">
+          <h2 class="card-title">Выберите этаж</h2>
+          <p class="card-desc">Укажите этаж, на котором расположено ваше ИП или ТОО.</p>
 
-      <!-- ШАГ 3: ВИД РАБОТ, ВРЕМЯ И СРОК -->
-      <div class="card hidden" id="stepCard3">
-        <h2 class="card-title">Вид работ, время и срок</h2>
-        <p class="card-desc">Выберите тип заявки и разрешенное окно времени.</p>
-
-        <div id="tenantPrivilegeBanner" class="hidden" style="background:var(--nude-bg); border:1px solid var(--nude); border-radius:12px; padding:10px 12px; margin-bottom:12px; font-size:12.5px; color:var(--black); font-weight:600;"></div>
-
-        <div class="work-grid">
-          <div class="work-tile" data-work="Ввоз товара" onclick="selectWork('Ввоз товара')">
-            <div class="work-icon">📦</div>
-            <div>
-              <div class="work-info-title">Ввоз товара</div>
-              <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+          <div class="floor-grid">
+            <div class="floor-tile" data-floor="1" onclick="selectFloor('1')">
+              <span class="floor-num">1 этаж</span>
+              <span class="floor-sub">Сектор А • Островки • Small</span>
             </div>
-          </div>
-          <div class="work-tile" data-work="Вывоз товара" onclick="selectWork('Вывоз товара')">
-            <div class="work-icon">🚚</div>
-            <div>
-              <div class="work-info-title">Вывоз товара</div>
-              <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+            <div class="floor-tile" data-floor="2" onclick="selectFloor('2')">
+              <span class="floor-num">2 этаж</span>
+              <span class="floor-sub">Сектор В • Одежда и ювелирные</span>
             </div>
-          </div>
-          <div class="work-tile" data-work="Ввоз и Вывоз товара" onclick="selectWork('Ввоз и Вывоз товара')">
-            <div class="work-icon">🔄</div>
-            <div>
-              <div class="work-info-title">Ввоз и вывоз товара</div>
-              <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+            <div class="floor-tile" data-floor="3" onclick="selectFloor('3')">
+              <span class="floor-num">3 этаж</span>
+              <span class="floor-sub">Сектор С • Бутики 3 этажа</span>
             </div>
-          </div>
-          <div class="work-tile" data-work="Ввоз оборудования" onclick="selectWork('Ввоз оборудования')">
-            <div class="work-icon">🖥</div>
-            <div>
-              <div class="work-info-title">Ввоз оборудования</div>
-              <div class="work-info-sub">Утром 09:00–11:00 или после закрытия ТЦ</div>
+            <div class="floor-tile" data-floor="4" onclick="selectFloor('4')">
+              <span class="floor-num">4 этаж</span>
+              <span class="floor-sub">Фуд-корт • Салоны • Досуг</span>
             </div>
-          </div>
-          <div class="work-tile" data-work="Вывоз оборудования" onclick="selectWork('Вывоз оборудования')">
-            <div class="work-icon">📤</div>
-            <div>
-              <div class="work-info-title">Вывоз оборудования</div>
-              <div class="work-info-sub">Утром 09:00–11:00 или после закрытия ТЦ</div>
+            <div class="floor-tile" data-floor="Улица и Банкоматы" onclick="selectFloor('Улица и Банкоматы')">
+              <span class="floor-num">Улица / Банки</span>
+              <span class="floor-sub">Банкоматы • Постаматы • Улица</span>
             </div>
-          </div>
-          <div class="work-tile" data-work="Ночные работы(ревизия,уборка)" onclick="selectWork('Ночные работы(ревизия,уборка)')">
-            <div class="work-icon">🌙</div>
-            <div>
-              <div class="work-info-title">Ночные работы (ревизия, уборка)</div>
-              <div class="work-info-sub">После 21:00 (2–3 эт.) / После 22:00 (1, 4 эт.)</div>
+            <div class="floor-tile" data-floor="Подрядчик/новый арендатор" onclick="selectFloor('Подрядчик/новый арендатор')">
+              <span class="floor-num">Подрядчик</span>
+              <span class="floor-sub">Новый арендатор</span>
             </div>
           </div>
         </div>
 
-        <label class="field-label">Время проведения работ <span class="req">*</span></label>
-        <div class="time-slots-grid" id="timeSlotsGrid"></div>
+        <!-- ШАГ 2: ТОЛЬКО ВЫБОР ИП / ТОО -->
+        <div class="card hidden" id="stepCard2">
+          <h2 class="card-title">Выберите ваше ИП / ТОО</h2>
+          <p class="card-desc">Найдите свою организацию в списке этажа или введите вручную.</p>
 
-        <label class="field-label">Срок действия заявки:</label>
-        <div class="preset-row" id="durationPresetsRow"></div>
+          <div id="tenantPickerBlock">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="tenantSearch" placeholder="Поиск по названию ИП или ТОО..." oninput="renderTenantList()">
+            </div>
+            <div class="tenant-list" id="tenantList"></div>
 
-        <div class="date-row">
-          <div>
-            <label class="field-label" style="margin-top:4px;">Дата начала <span class="req">*</span></label>
-            <input type="date" id="startDate" onchange="applyDateRules()">
+            <div style="margin-top:10px; text-align:right;">
+              <span style="font-size:12.5px; color:var(--red); font-weight:600; cursor:pointer;" onclick="toggleManualTenant(true)">
+                + Моего ИП нет в списке (ввести вручную)
+              </span>
+            </div>
           </div>
-          <div>
-            <label class="field-label" style="margin-top:4px;">Дата окончания <span class="req">*</span></label>
-            <input type="date" id="endDate" onchange="updatePassPreview()">
-          </div>
-        </div>
-        <div id="dateRuleHint" style="font-size:11.5px; color:var(--graphite); margin-top:5px;"></div>
-      </div>
 
-      <!-- ШАГ 4: ОТВЕТСТВЕННЫЙ И ПРОПУСК -->
-      <div class="card hidden" id="stepCard4">
-        <h2 class="card-title">Подтверждение заявки</h2>
-        <p class="card-desc">Проверьте данные пропуска и укажите ответственного сотрудника.</p>
-
-        <div class="pass-ticket">
-          <div class="pass-top">
-            <div>
-              <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:13px; letter-spacing:0.15em;">JANNUR PASS</div>
-              <div style="font-size:11px; color:var(--nude);">Электронная заявка</div>
-            </div>
-            <div class="pass-floor-badge" id="passFloorBadge">Этаж —</div>
-          </div>
-          <div class="pass-org" id="passOrgText">Организация не выбрана</div>
-          <div class="pass-grid">
-            <div>
-              <div class="pass-lbl">ВИД РАБОТ</div>
-              <div class="pass-val" id="passWorkText">—</div>
-            </div>
-            <div>
-              <div class="pass-lbl">ВРЕМЯ</div>
-              <div class="pass-val" id="passTimeText">—</div>
-            </div>
-            <div>
-              <div class="pass-lbl">СРОК ДЕЙСТВИЯ</div>
-              <div class="pass-val" id="passDatesText">—</div>
-            </div>
-            <div>
-              <div class="pass-lbl">АВТОМОБИЛЬ</div>
-              <div class="pass-val" id="passCarText">Не указан</div>
+          <div id="manualTenantBlock" class="hidden">
+            <label class="field-label">Наименование ИП / ТОО <span class="req">*</span></label>
+            <input type="text" id="manualOrgInput" placeholder="Например: ИП Смагулов / ТОО Астана" oninput="state.organization = this.value">
+            <div id="backToListLink" style="margin-top:8px; text-align:right;">
+              <span style="font-size:12.5px; color:var(--graphite); cursor:pointer;" onclick="toggleManualTenant(false)">
+                ← Вернуться к списку ИП
+              </span>
             </div>
           </div>
         </div>
 
-        <label class="field-label">ФИО, должность и телефон ответственного <span class="req">*</span></label>
-        <input type="text" id="responsibleInput" placeholder="Например: Ахметов Ерлан, администратор, +7 701 000 00 00">
+        <!-- ШАГ 3: ВИД РАБОТ, ВРЕМЯ И СРОК -->
+        <div class="card hidden" id="stepCard3">
+          <h2 class="card-title">Вид работ, время и срок</h2>
+          <p class="card-desc">Выберите тип заявки и разрешенное окно времени.</p>
 
-        <label class="field-label">ФИО всех сотрудников <span class="req" id="workersReq">*</span></label>
-        <textarea id="workersInput" placeholder="При ночных работах (ревизия, уборка) обязательно укажите ФИО всех задействованных сотрудников."></textarea>
+          <div id="tenantPrivilegeBanner" class="hidden" style="background:var(--nude-bg); border:1px solid var(--nude); border-radius:12px; padding:10px 12px; margin-bottom:12px; font-size:12.5px; color:var(--black); font-weight:600;"></div>
 
-        <label class="field-label">Госномер автомобиля (если известен)</label>
-        <input type="text" id="carInput" placeholder="Например: 123 ABC 01" oninput="updatePassPreview()">
+          <div class="work-grid">
+            <div class="work-tile" data-work="Ввоз товара" onclick="selectWork('Ввоз товара')">
+              <div class="work-icon">📦</div>
+              <div>
+                <div class="work-info-title">Ввоз товара</div>
+                <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+              </div>
+            </div>
+            <div class="work-tile" data-work="Вывоз товара" onclick="selectWork('Вывоз товара')">
+              <div class="work-icon">🚚</div>
+              <div>
+                <div class="work-info-title">Вывоз товара</div>
+                <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+              </div>
+            </div>
+            <div class="work-tile" data-work="Ввоз и Вывоз товара" onclick="selectWork('Ввоз и Вывоз товара')">
+              <div class="work-icon">🔄</div>
+              <div>
+                <div class="work-info-title">Ввоз и вывоз товара</div>
+                <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+              </div>
+            </div>
+            <div class="work-tile" data-work="Ввоз оборудования" onclick="selectWork('Ввоз оборудования')">
+              <div class="work-icon">🖥</div>
+              <div>
+                <div class="work-info-title">Ввоз оборудования</div>
+                <div class="work-info-sub">Утром 09:00–11:00 или после закрытия ТЦ</div>
+              </div>
+            </div>
+            <div class="work-tile" data-work="Вывоз оборудования" onclick="selectWork('Вывоз оборудования')">
+              <div class="work-icon">📤</div>
+              <div>
+                <div class="work-info-title">Вывоз оборудования</div>
+                <div class="work-info-sub">Утром 09:00–11:00 или после закрытия ТЦ</div>
+              </div>
+            </div>
+            <div class="work-tile" data-work="Ночные работы(ревизия,уборка)" onclick="selectWork('Ночные работы(ревизия,уборка)')">
+              <div class="work-icon">🌙</div>
+              <div>
+                <div class="work-info-title">Ночные работы (ревизия, уборка)</div>
+                <div class="work-info-sub">После 21:00 (2–3 эт.) / После 22:00 (1, 4 эт.)</div>
+              </div>
+            </div>
+          </div>
+
+          <label class="field-label">Время проведения работ <span class="req">*</span></label>
+          <div class="time-slots-grid" id="timeSlotsGrid"></div>
+
+          <label class="field-label">Срок действия заявки:</label>
+          <div class="preset-row" id="durationPresetsRow"></div>
+
+          <div class="date-row">
+            <div>
+              <label class="field-label" style="margin-top:4px;">Дата начала <span class="req">*</span></label>
+              <input type="date" id="startDate" onchange="applyDateRules()">
+            </div>
+            <div>
+              <label class="field-label" style="margin-top:4px;">Дата окончания <span class="req">*</span></label>
+              <input type="date" id="endDate" onchange="updatePassPreview()">
+            </div>
+          </div>
+          <div id="dateRuleHint" style="font-size:11.5px; color:var(--graphite); margin-top:5px;"></div>
+        </div>
+
+        <!-- ШАГ 4: ОТВЕТСТВЕННЫЙ И ПРОПУСК -->
+        <div class="card hidden" id="stepCard4">
+          <h2 class="card-title">Подтверждение заявки</h2>
+          <p class="card-desc">Проверьте данные пропуска и укажите ответственного сотрудника.</p>
+
+          <div class="pass-ticket">
+            <div class="pass-top">
+              <div>
+                <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:13px; letter-spacing:0.15em;">JANNUR PASS</div>
+                <div style="font-size:11px; color:var(--nude);">Обязательна подпись Директора</div>
+              </div>
+              <div class="pass-floor-badge" id="passFloorBadge">Этаж —</div>
+            </div>
+            <div class="pass-org" id="passOrgText">Организация не выбрана</div>
+            <div class="pass-grid">
+              <div>
+                <div class="pass-lbl">ВИД РАБОТ</div>
+                <div class="pass-val" id="passWorkText">—</div>
+              </div>
+              <div>
+                <div class="pass-lbl">ВРЕМЯ</div>
+                <div class="pass-val" id="passTimeText">—</div>
+              </div>
+              <div>
+                <div class="pass-lbl">СРОК ДЕЙСТВИЯ</div>
+                <div class="pass-val" id="passDatesText">—</div>
+              </div>
+              <div>
+                <div class="pass-lbl">АВТОМОБИЛЬ</div>
+                <div class="pass-val" id="passCarText">Не указан</div>
+              </div>
+            </div>
+          </div>
+
+          <label class="field-label">ФИО, должность и телефон ответственного <span class="req">*</span></label>
+          <input type="text" id="responsibleInput" placeholder="Например: Ахметов Ерлан, администратор, +7 701 000 00 00">
+
+          <label class="field-label">ФИО всех сотрудников <span class="req" id="workersReq">*</span></label>
+          <textarea id="workersInput" placeholder="При ночных работах (ревизия, уборка) обязательно укажите ФИО всех задействованных сотрудников."></textarea>
+
+          <label class="field-label">Госномер автомобиля (если известен)</label>
+          <input type="text" id="carInput" placeholder="Например: 123 ABC 01" oninput="updatePassPreview()">
+        </div>
       </div>
 
       <div id="myIdTag" style="text-align:center; font-size:11.5px; color:var(--muted); margin-top:8px;"></div>
     </div>
 
-    <!-- ==================== ЭКРАН 2: МОИ ЗАЯВКИ (ДЛЯ АРЕНДАТОРОВ) ==================== -->
+    <!-- ==================== ЭКРАН 2: МОИ ЗАЯВКИ (ДОСТУПНЫ ВСЕГДА) ==================== -->
     <div id="myRequestsView" class="hidden">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
         <h2 class="card-title" style="margin:0;">Мои заявки</h2>
@@ -1000,7 +1079,7 @@
       </div>
 
       <button class="ctrl-director hidden" id="directorAllBtn" onclick="triggerSwipe('approve_all')">
-        Согласовать за всех (Директор)
+        Утвердить финально (Директор)
       </button>
     </div>
 
@@ -1011,7 +1090,7 @@
         <button class="sub-tab-btn" id="subTabTenantsBtn" onclick="switchAdminSubTab('tenants')">Список ИП по этажам</button>
       </div>
 
-      <!-- ПОДВКЛАДКА А: ГИБКИЕ ИСКЛЮЧЕНИЯ (СРОК И ВРЕМЕННОЙ ПРОМЕЖУТОК) -->
+      <!-- ПОДВКЛАДКА А: ГИБКИЕ ИСКЛЮЧЕНИЯ -->
       <div id="adminRulesSubView">
         <div class="card">
           <h3 class="card-title">Настроить исключение для ИП</h3>
@@ -1106,9 +1185,9 @@
         <input type="text" id="newAccName" placeholder="Например: Гумаров А.Р.">
         <label class="field-label">Роль</label>
         <select id="newAccRole">
-          <option value="Администратор">Администратор (согласует в т.ч. за Инженера)</option>
-          <option value="Инженер">Инженер (Темиргалиев Н.)</option>
-          <option value="Директор">Директор (Гумаров А.Р. — право за всех)</option>
+          <option value="Администратор">Администратор (предварительное согласование)</option>
+          <option value="Инженер">Инженер (предварительное согласование)</option>
+          <option value="Директор">Директор (финальное утверждение заявок)</option>
         </select>
         <button class="btn-primary" style="width:100%; margin-top:14px;" id="addAccBtn" onclick="addApprover()">Выдать доступ</button>
       </div>
@@ -1135,7 +1214,7 @@
         <span class="reason-chip" onclick="setRejectReason('Не указаны ФИО всех сотрудников')">Не указаны ФИО сотрудников</span>
         <span class="reason-chip" onclick="setRejectReason('Неверно выбрано время проведения работ')">Неверное время работ</span>
         <span class="reason-chip" onclick="setRejectReason('Превышен максимальный срок заявки')">Превышен максимальный срок</span>
-        <span class="reason-chip" onclick="setRejectReason('Заявка подана после 17:00')">Подано после 17:00</span>
+        <span class="reason-chip" onclick="setRejectReason('Отклонено Директором ТЦ')">Отклонено Директором</span>
       </div>
       <textarea id="rejectReasonInput" placeholder="Укажите причину отклонения (необязательно)..."></textarea>
       <div style="display:flex; gap:10px; margin-top:12px;">
@@ -1145,13 +1224,28 @@
     </div>
   </div>
 
+</div>
+
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNIb0lkUJHSGm5Wi6yzJgUM2jBZa_ORYkoNdT070gBrcrb4TnOWrURjbTdV-Er-j6r/exec";
     const tg = window.Telegram.WebApp;
-    tg.expand();
-    tg.setHeaderColor('#0D0D0F');
 
-    // Базовый список (будет автоматически синхронизироваться с таблицей Google Sheets)
+    // ФИКСАЦИЯ РАЗМЕРА ОКНА И ЗАПРЕТ ВЫХОДА ЗА РАМКИ / СВАЙП-ЗАКРЫТИЯ
+    tg.ready();
+    tg.expand();
+    if (typeof tg.disableVerticalSwipes === 'function') {
+      tg.disableVerticalSwipes();
+    }
+    tg.setHeaderColor('#0D0D0F');
+    tg.setBackgroundColor('#F3F4F6');
+
+    // Блокируем жест масштабирования двумя пальцами (pinch-to-zoom) на iOS/Android
+    document.addEventListener('gesturestart', e => e.preventDefault());
+    document.addEventListener('gesturechange', e => e.preventDefault());
+    document.addEventListener('touchmove', e => {
+      if (e.touches.length > 1) e.preventDefault();
+    }, { passive: false });
+
     let TENANTS_DB = {"1": ["Даниал ИП А1", "ИП Нурсултанова Shapki А2", "ТОО Bellas Pure парфюм А2/1", "Витайм аптека А3", "AlkorKazakhstanLtd ЛЭТУАЛЬ А4", "ИП Kelo Zhanna Kosmetic А5", "РТС Cosmart А6", "Биринши Lombard А7", "ИП Sandi А7/1", "Посуда Долголетия Fissman А8", "BBCorp Asyq toys А9", "TapTatti Retail А10", "Bizdin Et А11", "ИП Мино канцелярия А13", "Химчистка А14", "Гала-Косметик и К (быт. химия) А15", "ИП Khan fish А16", "Толганай ИП (сухофрукты) А17", "ИП Ayim А18", "MISKBAR ИП А19", "B-Rent Service (ломбард) А20", "KULINAR&CA. ИП Данабаев A21", "Тулеуов ИП Royal Coffee А22", "ИП Ернур (зебра) А23", "ИП Нади (оптика) А25", "REFORMA ИП (бижутерия) А27", "ИП Пернебаева А28", "Муздубаева Ш.Н. (вояж) ИП А31", "ИП SJ GROUP островок A36", "ТОО Скиф Трейд Смол", "Иманбаев (аквафор)", "Nur DORO (парфюм на разл) островок", "Абилов Руслан Эдигизович ИП", "Кучер Е.А. островок", "БРИТИШ АМЕРИКАН ТОБАККО островок", "Бельдеубаева ИП (кофе аппарат)", "ИП Атош островок", "ИП Яковенко островок", "ИП888", "ИП Куттыходжаева Балисмаил"], "2": ["Бэст Прайс Казахстан В1", "Белкин ИП (муж. одежда) В2", "Львова Валентина Николаевна В3", "Жетписбаев О.К. (муж. одежда) В4", "Авилов А.З. ИП (Lietta) В5", "Айрапетян К.Ж. ИП В6", "ИП Бекмухамбетова В7", "ИП Дильназ В8", "ИП Бауыржанов В9", "Щербинина И.Б. ИП (одежда) В10", "Артеменко Ирина Аркадьевна ИП В11", "Торговый дом «ЗОЛОТО МОСКВЫ» В12", "Аргента ТОО (юв. изд.) В13", "ДН Казахстан ТОО (юв. изд.) В14", "Рахимов ИП (COSSMO) В15", "Хамулло В.И. ИП В16", "Дюсенов Рамил Алемханович В17", "Дарын ИП В18", "Савицкая Лилия Темирбаевна В19", "ИП Дигимбаева В20", "Жакаева ИП В21", "Respect Retail Group В22", "ИП САТЫБАЛДИЕВ B24", "Адильханова ИП В25", "Аубакирова ИП В26", "Ермакова Е. А. ИП В27", "КАРИ КЗ ТОО В28", "Куанова Алия Жакеновна Отбасы банк"], "3": ["ТОО LPP Kazakhstan С1", "ИП Турушов С3", "ИП Нур-Али С4", "ИП Safa С5", "ИП Каженова С6", "ИП Болат С7", "ИП Баймагзумов С8", "ИП Омарова С9", "ИП Бекишева С10", "ИП Заришняк С14", "ИП Маркова С15", "ИП Береке2010 С15/1", "ИП Байжанова С16", "ИП Валиева С17", "ИП Бакишева С19", "ИП Жапар С24", "ТОО Калашникова С25", "ИП Asylai С26", "ИП Какетка С27", "ИП Данеля С28", "ИП АРАПАТ С29", "ИП Ержанова С30", "ИП Дина С31", "ИП Mәсілхан", "ИП Балыкова", "ИП Темирханова"], "4": ["Толенова ИП", "Анара ИП (Donix hub)", "ИП Айтжанова (Смак)", "ИП Firdaus", "Нуралы ИП (массаж. кресла)", "ИП Назарбекова (салон красоты)", "ТОО Маргарита", "ИП Проскурякова", "ИП Айка", "Maki-Maki", "ИП Кадырова", "ИП ALTUN", "ИП Нурпеисов"], "Улица и Банкоматы": ["АЛЕКСИЯ ИП", "Soul Food ИП", "Тойчу Кызы Аймончок ИП", "Толешова ИП", "Bereke Bank АО", "ALATAU BANK", "Народный банк Казахстана АО", "Cash Invest ТОО (терминал)", "Банк ЦентрКредит ДБ АО", "Филиал АО Каспи банк", "Каспи Магазин ТОО (Жаннур, постамат)", "Freedom Telecom Operations ТОО"]};
 
     const currentUser = tg.initDataUnsafe?.user || { id: 0 };
@@ -1166,10 +1260,11 @@
       workTime: "9:00-11:00"
     };
 
+    let currentViewName = "wizard";
     let myRequests = [];
     let pendingRequests = [];
     let approversList = [];
-    let tenantRules = {}; // { "Название ИП": { maxDays: 30, customTime: "До 14:00 (09:00–14:00)", exclusiveTime: true } }
+    let tenantRules = {};
     let isApprover = false;
     let userRole = "";
     let pendingRejectCard = null;
@@ -1179,31 +1274,59 @@
       if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred(type);
     }
 
-    function updateHeaderClockStatus() {
+    // ВРЕМЯ АСТАНЫ (UTC+5)
+    function getAstanaDate() {
       const now = new Date();
-      const astana = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + 3600000 * 5);
-      const h = astana.getHours();
+      return new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + 3600000 * 5);
+    }
+
+    // ПРОВЕРКА ОКНА ПРИЕМА ЗАЯВОК: СТРОГО ПН–ПТ (day 1..5) С 09:00 ДО 17:00
+    function isSubmissionWindowOpen() {
+      const astana = getAstanaDate();
+      const day = astana.getDay(); // 0 = Вс, 1 = Пн ... 5 = Пт, 6 = Сб
+      const hour = astana.getHours();
+      const isWeekday = (day >= 1 && day <= 5);
+      const isWorkingHour = (hour >= 9 && hour < 17);
+      return isWeekday && isWorkingHour;
+    }
+
+    function updateHeaderAndSubmissionLock() {
+      const open = isSubmissionWindowOpen();
       const dot = document.getElementById('statusDot');
       const txt = document.getElementById('statusText');
-      if (h >= 10 && h < 17) {
-        dot.classList.remove('warn');
-        txt.textContent = "Прием заявок открыт";
-      } else if (h >= 17 && h < 18) {
-        dot.classList.add('warn');
-        txt.textContent = "Идет согласование (17–18)";
+
+      if (open) {
+        dot.classList.remove('closed');
+        txt.textContent = "Прием открыт (до 17:00)";
       } else {
-        dot.classList.add('warn');
-        txt.textContent = "Прием Пн–Пт 10:00–17:00";
+        dot.classList.add('closed');
+        txt.textContent = "Прием Пн–Пт 09:00–17:00";
+      }
+
+      const closedBlock = document.getElementById('closedHoursBlock');
+      const activeBody = document.getElementById('wizardActiveBody');
+      const bottomBar = document.getElementById('wizardBottomBar');
+
+      if (open) {
+        closedBlock.classList.add('hidden');
+        activeBody.classList.remove('hidden');
+        bottomBar.classList.toggle('hidden', currentViewName !== 'wizard');
+      } else {
+        closedBlock.classList.remove('hidden');
+        activeBody.classList.add('hidden');
+        bottomBar.classList.add('hidden');
       }
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-      updateHeaderClockStatus();
+      updateHeaderAndSubmissionLock();
+      setInterval(updateHeaderAndSubmissionLock, 30000);
+
       if (currentUser.id) {
         document.getElementById('myIdTag').textContent = `JANNUR ID: ${currentUser.id}`;
       }
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = getAstanaDate().toISOString().split('T')[0];
       document.getElementById('startDate').min = today;
       document.getElementById('startDate').value = today;
       document.getElementById('endDate').min = today;
@@ -1253,8 +1376,12 @@
           document.getElementById('adminNav').classList.remove('hidden');
           document.getElementById('roleInfoBar').textContent = `Роль: ${userRole} ${data.userName ? '(' + data.userName + ')' : ''}`;
 
-          if (userRole === "Директор") document.getElementById('directorAllBtn').classList.remove('hidden');
-          if (userRole === "Администратор") document.getElementById('approveBtnLabel').textContent = "Согласовать (в т.ч. за Инженера)";
+          if (userRole === "Директор") {
+            document.getElementById('directorAllBtn').classList.remove('hidden');
+            document.getElementById('approveBtnLabel').textContent = "Утвердить (Директор)";
+          } else {
+            document.getElementById('approveBtnLabel').textContent = "Согласовать (на подпись Директору)";
+          }
 
           if (!showToast) switchView('approval');
           renderSwipeCards();
@@ -1269,6 +1396,7 @@
     }
 
     function switchView(view) {
+      currentViewName = view;
       haptic('light');
       const navContainer = isApprover ? document.getElementById('adminNav') : document.getElementById('tenantNav');
       navContainer.querySelectorAll('.nav-btn').forEach(btn => {
@@ -1281,7 +1409,8 @@
       document.getElementById('approvalView').classList.toggle('hidden', view !== 'approval');
       document.getElementById('limitsView').classList.toggle('hidden', view !== 'limits');
       document.getElementById('accessView').classList.toggle('hidden', view !== 'access');
-      document.getElementById('wizardBottomBar').classList.toggle('hidden', view !== 'wizard');
+
+      updateHeaderAndSubmissionLock();
 
       if (view === 'myRequests') renderMyRequests();
       if (view === 'limits') {
@@ -1322,7 +1451,8 @@
       myRequests.forEach(r => {
         const st = String(r.status || "На согласовании");
         let pillClass = "status-pending";
-        if (st.includes("Согласовано")) pillClass = "status-approved";
+        if (st.includes("Ожидает Директора")) pillClass = "status-director-wait";
+        else if (st.includes("Согласовано") || st.includes("Утверждено")) pillClass = "status-approved";
         else if (st.includes("Отклонено")) pillClass = "status-rejected";
 
         const card = document.createElement('div');
@@ -1341,6 +1471,7 @@
           <div style="font-size:12.5px; color:var(--graphite);">
             Этаж: <b>${r.floor}</b> • Срок: <b>с ${r.startDate} по ${r.endDate}</b> (${r.workTime})
           </div>
+          ${st.includes("Ожидает Директора") ? `<div style="margin-top:8px; font-size:11.5px; color:var(--blue); font-weight:600;">ℹ️ Предварительно согласовано. Заявка станет действительной только после утверждения Директором.</div>` : ''}
           ${r.rejectReason ? `<div class="reject-reason-box"><b>Комментарий администрации:</b> ${r.rejectReason}</div>` : ''}
         `;
         container.appendChild(card);
@@ -1349,6 +1480,10 @@
 
     // === ЛОГИКА ШАГОВ МАСТЕРА ===
     function goStep(n) {
+      if (!isSubmissionWindowOpen()) {
+        updateHeaderAndSubmissionLock();
+        return;
+      }
       if (n > 1 && !state.floor) return tg.showAlert("Сначала выберите этаж");
       if (n > 2 && !state.organization.trim()) return tg.showAlert("Выберите или введите ваше ИП / ТОО");
       if (n > 3 && !state.workType) return tg.showAlert("Выберите вид работ");
@@ -1376,6 +1511,10 @@
     function prevStep() { if (state.step > 1) goStep(state.step - 1); }
 
     function nextStep() {
+      if (!isSubmissionWindowOpen()) {
+        updateHeaderAndSubmissionLock();
+        return tg.showAlert("Прием заявок возможен только по будням с 09:00 до 17:00.");
+      }
       if (state.step === 1) {
         if (!state.floor) return tg.showAlert("Выберите этаж");
         goStep(2);
@@ -1510,7 +1649,6 @@
 
       const slots = [];
 
-      // Если у арендатора включен режим "Только индивидуальный промежуток" (и это не ночная ревизия/уборка)
       if (!isNightOnly && rule.customTime && rule.exclusiveTime) {
         slots.push({
           value: rule.customTime,
@@ -1518,7 +1656,6 @@
           sub: "Индивидуальный график для вашего ИП"
         });
       } else {
-        // Стандартные окна
         if (!isNightOnly) {
           slots.push({
             value: "9:00-11:00",
@@ -1533,7 +1670,6 @@
           sub: eveningDesc
         });
 
-        // Дополнительное индивидуальное окно (если настроено в админке)
         if (!isNightOnly && rule.customTime) {
           slots.push({
             value: rule.customTime,
@@ -1578,7 +1714,6 @@
       const rule = getCurrentTenantRule();
       const maxDays = Number(rule.maxDays) || 7;
 
-      // Динамически строим кнопки быстрого выбора срока под лимит арендатора
       if (presetsRow) {
         const presets = [1];
         if (maxDays >= 3) presets.push(3);
@@ -1635,6 +1770,11 @@
     }
 
     async function submitRequest() {
+      if (!isSubmissionWindowOpen()) {
+        updateHeaderAndSubmissionLock();
+        return tg.showAlert("Прием заявок возможен только по будням с 09:00 до 17:00.");
+      }
+
       const responsible = document.getElementById('responsibleInput').value.trim();
       const workers = document.getElementById('workersInput').value.trim();
       if (!responsible) return tg.showAlert("Укажите ФИО, должность и телефон ответственного");
@@ -1656,9 +1796,8 @@
       }));
 
       try {
-        await fetch(SCRIPT_URL, {
+        const res = await fetch(SCRIPT_URL, {
           method: 'POST',
-          mode: 'no-cors',
           body: JSON.stringify({
             floor: state.floor,
             organization: state.organization,
@@ -1673,11 +1812,19 @@
             tgChatId: currentUser.id || ""
           })
         });
+        const result = await res.json();
+
+        if (result.status === "closed") {
+          btn.disabled = false;
+          btn.textContent = "Отправить заявку ✓";
+          updateHeaderAndSubmissionLock();
+          return tg.showAlert(result.message || "Прием заявок открыт только по будням с 09:00 до 17:00.");
+        }
 
         await loadUserData(false);
         btn.disabled = false;
         btn.textContent = "Отправить заявку ✓";
-        tg.showAlert("✅ Заявка принята! Статус можно отслеживать во вкладке «Мои заявки».", () => {
+        tg.showAlert("✅ Заявка принята! Заявка станет действительной после финального согласования Директором.", () => {
           switchView('myRequests');
         });
       } catch (err) {
@@ -1889,8 +2036,7 @@
     // === СВАЙПЫ РУКОВОДСТВА ===
     function isApprovalTimeAllowed() {
       if (document.getElementById('forceUnlock').checked) return true;
-      const now = new Date();
-      const astana = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + 3600000 * 5);
+      const astana = getAstanaDate();
       return astana.getHours() >= 17;
     }
 
@@ -1919,21 +2065,26 @@
         card.className = 'swipe-card';
         if (!isTop) card.style.transform = 'scale(0.96) translateY(10px)';
 
+        const preApprovedBadge = req.status && req.status.includes("Ожидает Директора")
+          ? `<div style="background:var(--blue-bg); color:var(--blue); font-size:11px; font-weight:700; padding:4px 8px; border-radius:7px; margin-bottom:8px;">✓ ${req.status}</div>`
+          : '';
+
         card.innerHTML = `
-          <div class="stamp approve">СОГЛАСОВАНО</div>
+          <div class="stamp approve">${userRole === 'Директор' ? 'УТВЕРЖДЕНО' : 'НА ПОДПИСЬ ДИРЕКТОРУ'}</div>
           <div class="stamp reject">ОТКЛОНЕНО</div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
             <span style="background:var(--red); color:#fff; font-family:'Raleway',sans-serif; font-weight:800; font-size:12px; padding:4px 10px; border-radius:8px;">
               Этаж: ${req.floor}
             </span>
             <span style="font-size:11.5px; color:var(--graphite); font-weight:600;">№${req.rowIndex} • ${req.source}</span>
           </div>
-          <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:17px; color:var(--black); margin-bottom:8px;">${req.organization}</div>
-          <div style="font-size:13px; margin-bottom:5px;"><b>Вид работ:</b> ${req.workType}</div>
-          <div style="font-size:13px; margin-bottom:5px;"><b>Срок:</b> с ${req.startDate} по ${req.endDate}</div>
-          <div style="font-size:13px; margin-bottom:5px;"><b>Время:</b> ${req.workTime}</div>
-          <div style="font-size:13px; margin-bottom:5px;"><b>Авто:</b> ${req.carNumber}</div>
-          <div style="font-size:13px; margin-bottom:5px;"><b>Сотрудники:</b> ${req.nightDetails}</div>
+          ${preApprovedBadge}
+          <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:16.5px; color:var(--black); margin-bottom:7px;">${req.organization}</div>
+          <div style="font-size:13px; margin-bottom:4px;"><b>Вид работ:</b> ${req.workType}</div>
+          <div style="font-size:13px; margin-bottom:4px;"><b>Срок:</b> с ${req.startDate} по ${req.endDate}</div>
+          <div style="font-size:13px; margin-bottom:4px;"><b>Время:</b> ${req.workTime}</div>
+          <div style="font-size:13px; margin-bottom:4px;"><b>Авто:</b> ${req.carNumber}</div>
+          <div style="font-size:13px; margin-bottom:4px;"><b>Сотрудники:</b> ${req.nightDetails}</div>
           <div style="font-size:13px;"><b>Ответственный:</b> ${req.responsible}</div>
         `;
 
