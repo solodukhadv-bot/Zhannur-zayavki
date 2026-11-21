@@ -36,7 +36,6 @@
       -webkit-text-size-adjust: 100%;
     }
 
-    /* ЖЕСТКАЯ ФИКСАЦИЯ ОКНА БЕЗ МАСШТАБИРОВАНИЯ И ВЫХОДА ЗА РАМКИ */
     html, body {
       width: 100%;
       max-width: 100vw;
@@ -63,7 +62,7 @@
     .hero-header {
       background: linear-gradient(145deg, #0D0D0F 0%, #232429 100%);
       color: #FFFFFF;
-      padding: 16px 18px 18px;
+      padding: 15px 16px 17px;
       border-bottom-left-radius: 22px;
       border-bottom-right-radius: 22px;
       box-shadow: 0 10px 28px rgba(13, 13, 15, 0.16);
@@ -84,14 +83,14 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
-      gap: 8px;
+      gap: 6px;
     }
     .brand-lockup { display: flex; flex-direction: column; }
     .brand-title {
       font-family: 'Raleway', sans-serif;
       font-weight: 800;
-      font-size: 23px;
-      letter-spacing: 0.16em;
+      font-size: 22px;
+      letter-spacing: 0.15em;
       color: #FFFFFF;
       line-height: 1;
     }
@@ -99,21 +98,48 @@
     .brand-sub {
       font-family: 'Raleway', sans-serif;
       font-weight: 600;
-      font-size: 8.5px;
-      letter-spacing: 0.32em;
+      font-size: 8px;
+      letter-spacing: 0.3em;
       color: var(--nude);
-      margin-top: 4px;
+      margin-top: 3px;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .lang-switch {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(209, 186, 166, 0.35);
+      border-radius: 14px;
+      padding: 2px;
+    }
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.75);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 10.5px;
+      padding: 4px 8px;
+      border-radius: 11px;
+      cursor: pointer;
+    }
+    .lang-btn.active {
+      background: var(--red);
+      color: #FFFFFF;
     }
     .live-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(209, 186, 166, 0.3);
-      padding: 5px 10px;
+      padding: 5px 9px;
       border-radius: 20px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       color: #FFFFFF;
       white-space: nowrap;
@@ -128,7 +154,7 @@
     .live-dot.closed { background: #EF4444; box-shadow: 0 0 8px #EF4444; }
     .hero-subtitle {
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.78);
+      color: rgba(255, 255, 255, 0.8);
       line-height: 1.35;
     }
 
@@ -136,7 +162,7 @@
       width: 100%;
       max-width: 520px;
       margin: 0 auto;
-      padding: 14px 14px 0;
+      padding: 12px 14px 0;
     }
 
     /* === НАВИГАЦИЯ === */
@@ -149,6 +175,7 @@
       box-shadow: 0 4px 14px rgba(0,0,0,0.04);
       border: 1px solid var(--border);
       gap: 3px;
+      overflow-x: auto;
     }
     .nav-btn {
       flex: 1;
@@ -158,7 +185,7 @@
       color: var(--graphite);
       font-family: 'Raleway', sans-serif;
       font-weight: 700;
-      font-size: 11.5px;
+      font-size: 11px;
       border-radius: 11px;
       cursor: pointer;
       white-space: nowrap;
@@ -178,33 +205,41 @@
       margin-left: 2px;
     }
 
-    /* === ЭКРАН ЗАКРЫТОГО ПРИЕМА ЗАЯВОК (ВНЕ БУДНЕЙ 09:00–17:00) === */
+    /* === ЭКРАН ЗАКРЫТОГО ПРИЕМА ЗАЯВОК === */
     .closed-card {
       background: var(--surface);
       border-radius: 22px;
-      padding: 26px 20px;
+      padding: 24px 18px;
       text-align: center;
       border: 1px solid rgba(209, 186, 166, 0.6);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
     }
     .closed-icon {
-      width: 56px; height: 56px;
+      width: 54px; height: 54px;
       border-radius: 18px;
       background: var(--red-soft);
       color: var(--red);
-      font-size: 26px;
+      font-size: 25px;
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 14px;
+      margin: 0 auto 12px;
     }
     .closed-schedule-box {
       background: var(--nude-bg);
       border: 1px solid var(--nude);
       border-radius: 14px;
       padding: 12px 14px;
-      margin: 16px 0;
-      font-size: 13px;
+      margin: 14px 0;
+      font-size: 12.5px;
       color: var(--black);
       line-height: 1.45;
+      text-align: left;
+    }
+    .emergency-open-box {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--bg);
+      border: 1px dashed var(--graphite);
     }
 
     /* === ПРОГРЕСС-БАР ШАГОВ === */
@@ -255,6 +290,7 @@
       font-size: 10px;
       font-weight: 600;
       color: var(--muted);
+      text-align: center;
     }
     .step-item.active .step-label { color: var(--black); font-weight: 700; }
 
@@ -312,7 +348,7 @@
     .floor-num {
       font-family: 'Raleway', sans-serif;
       font-weight: 800;
-      font-size: 15.5px;
+      font-size: 15px;
       color: var(--black);
     }
     .floor-tile.selected .floor-num { color: var(--red); }
@@ -502,7 +538,6 @@
     }
     .req { color: var(--red); }
 
-    /* ВАЖНО: font-size: 16px предотвращает авто-зум на iPhone/iOS при нажатии на поле! */
     input[type="text"], input[type="number"], input[type="date"], select, textarea {
       width: 100%;
       padding: 11px 13px;
@@ -589,7 +624,7 @@
       text-align: right;
     }
     .status-pending { background: var(--amber-bg); color: var(--amber); }
-    .status-director-wait { background: var(--blue-bg); color: var(--blue); }
+    .status-step { background: var(--blue-bg); color: var(--blue); }
     .status-approved { background: var(--green-bg); color: var(--green); }
     .status-rejected { background: #FDECEF; color: var(--red); }
 
@@ -708,7 +743,7 @@
     /* === СВАЙПЫ РУКОВОДСТВА === */
     .swipe-arena {
       position: relative;
-      height: 415px;
+      height: 425px;
       width: 100%;
       overflow: hidden;
     }
@@ -792,20 +827,27 @@
         <div class="brand-title">JANNUR<span>.</span></div>
         <div class="brand-sub">SHOPPING MALL</div>
       </div>
-      <div class="live-pill" id="statusPill">
-        <span class="live-dot" id="statusDot"></span>
-        <span id="statusText">Пн–Пт 09:00–17:00</span>
+      <div class="header-actions">
+        <!-- ПЛАШКА СМЕНЫ ЯЗЫКА (РУССКИЙ / КАЗАХСКИЙ) -->
+        <div class="lang-switch" role="group" aria-label="Language switch">
+          <button type="button" class="lang-btn active" id="langRuBtn" onclick="setLanguage('ru')">РУС</button>
+          <button type="button" class="lang-btn" id="langKkBtn" onclick="setLanguage('kk')">ҚАЗ</button>
+        </div>
+        <div class="live-pill" id="statusPill">
+          <span class="live-dot" id="statusDot"></span>
+          <span id="statusText">Пн–Пт 09:00–17:00</span>
+        </div>
       </div>
     </div>
-    <div class="hero-subtitle">Ввоз/вывоз товара и оборудования, ревизия и уборка</div>
+    <div class="hero-subtitle" id="heroSubtitleText">Ввоз/вывоз товара и оборудования, ревизия и уборка</div>
   </header>
 
   <div class="container">
     <!-- НАВИГАЦИЯ ДЛЯ АРЕНДАТОРОВ -->
     <div class="top-nav" id="tenantNav">
-      <button class="nav-btn active" onclick="switchView('wizard')">Новая заявка</button>
-      <button class="nav-btn" onclick="switchView('myRequests')">
-        Мои заявки <span class="nav-badge" id="myReqBadge">0</span>
+      <button class="nav-btn active" id="tNavWizard" onclick="switchView('wizard')">Новая заявка</button>
+      <button class="nav-btn" id="tNavMy" onclick="switchView('myRequests')">
+        <span id="tNavMyLabel">Мои заявки</span> <span class="nav-badge" id="myReqBadge">0</span>
       </button>
     </div>
 
@@ -825,79 +867,97 @@
       <!-- ЗАГЛУШКА, ЕСЛИ СЕЙЧАС НЕ БУДНИЙ ДЕНЬ 09:00–17:00 -->
       <div id="closedHoursBlock" class="closed-card hidden">
         <div class="closed-icon">🕘</div>
-        <h2 class="card-title" style="font-size:19px;">Прием новых заявок сейчас закрыт</h2>
-        <p class="card-desc" style="margin-top:6px;">
+        <h2 class="card-title" id="closedTitleText" style="font-size:19px;">Прием новых заявок сейчас закрыт</h2>
+        <p class="card-desc" id="closedDescText" style="margin-top:6px;">
           Подача электронных заявок доступна строго по будням с <b>09:00 до 17:00</b>.
         </p>
-        <div class="closed-schedule-box">
+        <div class="closed-schedule-box" id="closedScheduleBox">
           <b>График работы сервиса:</b><br>
           • Подача заявок: <b>Пн – Пт, с 09:00 до 17:00</b><br>
-          • Согласование администрацией: <b>с 17:00 до 18:00</b><br>
+          • Согласование: <b>Администратор → Инженер → Директор</b><br>
           • Выходные (Сб, Вс): <b>прием заявок закрыт</b>
         </div>
-        <button type="button" class="btn-primary" style="width:100%;" onclick="switchView('myRequests')">
+        <button type="button" class="btn-primary" id="closedViewMyBtn" style="width:100%;" onclick="switchView('myRequests')">
           Посмотреть мои ранее поданные заявки →
         </button>
+
+        <!-- ЭКСТРЕННОЕ ОТКРЫТИЕ ПРИЕМА ЗАЯВОК ДЛЯ АДМИНИСТРАТОРА -->
+        <div id="adminEmergencyBox" class="emergency-open-box hidden">
+          <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:13px; color:var(--black); margin-bottom:4px;">
+            ⚡ Экстренный режим администратора
+          </div>
+          <div style="font-size:11.5px; color:var(--graphite); margin-bottom:10px;">
+            Если необходимо срочно принять заявку вне графика, откройте форму подачи сейчас.
+          </div>
+          <button type="button" class="btn-secondary" style="width:100%; border-color:var(--red); color:var(--red);" onclick="enableAdminEmergencyOpen()">
+            Открыть прием заявок (экстренно)
+          </button>
+        </div>
       </div>
 
-      <!-- ОСНОВНОЙ МАСТЕР (ДОСТУПЕН ПН–ПТ 09:00–17:00) -->
+      <!-- ОСНОВНОЙ МАСТЕР -->
       <div id="wizardActiveBody">
+        <div id="emergencyActiveBanner" class="hidden" style="background:var(--amber-bg); color:var(--amber); border:1px solid #F59E0B; border-radius:12px; padding:9px 12px; margin-bottom:12px; font-size:12px; font-weight:700; display:flex; justify-content:space-between; align-items:center;">
+          <span>⚡ Включен экстренный прием заявок</span>
+          <button type="button" onclick="disableAdminEmergencyOpen()" style="background:none; border:none; color:var(--amber); font-weight:800; text-decoration:underline; cursor:pointer; font-size:11.5px;">Закрыть</button>
+        </div>
+
         <div class="stepper">
           <div class="step-item active" id="st1" onclick="goStep(1)">
             <div class="step-circle">1</div>
-            <div class="step-label">Этаж</div>
+            <div class="step-label" id="st1Label">Этаж</div>
           </div>
           <div class="step-item" id="st2" onclick="goStep(2)">
             <div class="step-circle">2</div>
-            <div class="step-label">Ваше ИП</div>
+            <div class="step-label" id="st2Label">Ваше ИП</div>
           </div>
           <div class="step-item" id="st3" onclick="goStep(3)">
             <div class="step-circle">3</div>
-            <div class="step-label">Работы и Срок</div>
+            <div class="step-label" id="st3Label">Работы и Срок</div>
           </div>
           <div class="step-item" id="st4" onclick="goStep(4)">
             <div class="step-circle">4</div>
-            <div class="step-label">Пропуск</div>
+            <div class="step-label" id="st4Label">Пропуск</div>
           </div>
         </div>
 
         <!-- ШАГ 1: ВЫБОР ЭТАЖА -->
         <div class="card" id="stepCard1">
-          <h2 class="card-title">Выберите этаж</h2>
-          <p class="card-desc">Укажите этаж, на котором расположено ваше ИП или ТОО.</p>
+          <h2 class="card-title" id="step1Title">Выберите этаж</h2>
+          <p class="card-desc" id="step1Desc">Укажите этаж, на котором расположено ваше ИП или ТОО.</p>
 
           <div class="floor-grid">
             <div class="floor-tile" data-floor="1" onclick="selectFloor('1')">
-              <span class="floor-num">1 этаж</span>
+              <span class="floor-num" id="fl1Name">1 этаж</span>
               <span class="floor-sub">Сектор А • Островки • Small</span>
             </div>
             <div class="floor-tile" data-floor="2" onclick="selectFloor('2')">
-              <span class="floor-num">2 этаж</span>
+              <span class="floor-num" id="fl2Name">2 этаж</span>
               <span class="floor-sub">Сектор В • Одежда и ювелирные</span>
             </div>
             <div class="floor-tile" data-floor="3" onclick="selectFloor('3')">
-              <span class="floor-num">3 этаж</span>
+              <span class="floor-num" id="fl3Name">3 этаж</span>
               <span class="floor-sub">Сектор С • Бутики 3 этажа</span>
             </div>
             <div class="floor-tile" data-floor="4" onclick="selectFloor('4')">
-              <span class="floor-num">4 этаж</span>
+              <span class="floor-num" id="fl4Name">4 этаж</span>
               <span class="floor-sub">Фуд-корт • Салоны • Досуг</span>
             </div>
             <div class="floor-tile" data-floor="Улица и Банкоматы" onclick="selectFloor('Улица и Банкоматы')">
-              <span class="floor-num">Улица / Банки</span>
+              <span class="floor-num" id="flStreetName">Улица / Банки</span>
               <span class="floor-sub">Банкоматы • Постаматы • Улица</span>
             </div>
             <div class="floor-tile" data-floor="Подрядчик/новый арендатор" onclick="selectFloor('Подрядчик/новый арендатор')">
-              <span class="floor-num">Подрядчик</span>
-              <span class="floor-sub">Новый арендатор</span>
+              <span class="floor-num" id="flSubName">Подрядчик</span>
+              <span class="floor-sub" id="flSubDesc">Новый арендатор</span>
             </div>
           </div>
         </div>
 
         <!-- ШАГ 2: ТОЛЬКО ВЫБОР ИП / ТОО -->
         <div class="card hidden" id="stepCard2">
-          <h2 class="card-title">Выберите ваше ИП / ТОО</h2>
-          <p class="card-desc">Найдите свою организацию в списке этажа или введите вручную.</p>
+          <h2 class="card-title" id="step2Title">Выберите ваше ИП / ТОО</h2>
+          <p class="card-desc" id="step2Desc">Найдите свою организацию в списке этажа или введите вручную.</p>
 
           <div id="tenantPickerBlock">
             <div class="search-box">
@@ -926,8 +986,8 @@
 
         <!-- ШАГ 3: ВИД РАБОТ, ВРЕМЯ И СРОК -->
         <div class="card hidden" id="stepCard3">
-          <h2 class="card-title">Вид работ, время и срок</h2>
-          <p class="card-desc">Выберите тип заявки и разрешенное окно времени.</p>
+          <h2 class="card-title" id="step3Title">Вид работ, время и срок</h2>
+          <p class="card-desc" id="step3Desc">Выберите тип заявки и разрешенное окно времени.</p>
 
           <div id="tenantPrivilegeBanner" class="hidden" style="background:var(--nude-bg); border:1px solid var(--nude); border-radius:12px; padding:10px 12px; margin-bottom:12px; font-size:12.5px; color:var(--black); font-weight:600;"></div>
 
@@ -935,60 +995,60 @@
             <div class="work-tile" data-work="Ввоз товара" onclick="selectWork('Ввоз товара')">
               <div class="work-icon">📦</div>
               <div>
-                <div class="work-info-title">Ввоз товара</div>
-                <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+                <div class="work-info-title" id="wImportGoodsTitle">Ввоз товара</div>
+                <div class="work-info-sub">09:00–11:00 или вечернее окно этажа</div>
               </div>
             </div>
             <div class="work-tile" data-work="Вывоз товара" onclick="selectWork('Вывоз товара')">
               <div class="work-icon">🚚</div>
               <div>
-                <div class="work-info-title">Вывоз товара</div>
-                <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+                <div class="work-info-title" id="wExportGoodsTitle">Вывоз товара</div>
+                <div class="work-info-sub">09:00–11:00 или вечернее окно этажа</div>
               </div>
             </div>
             <div class="work-tile" data-work="Ввоз и Вывоз товара" onclick="selectWork('Ввоз и Вывоз товара')">
               <div class="work-icon">🔄</div>
               <div>
-                <div class="work-info-title">Ввоз и вывоз товара</div>
-                <div class="work-info-sub">Утром 09:00–11:00 или в вечернее окно этажа</div>
+                <div class="work-info-title" id="wBothGoodsTitle">Ввоз и вывоз товара</div>
+                <div class="work-info-sub">09:00–11:00 или вечернее окно этажа</div>
               </div>
             </div>
             <div class="work-tile" data-work="Ввоз оборудования" onclick="selectWork('Ввоз оборудования')">
               <div class="work-icon">🖥</div>
               <div>
-                <div class="work-info-title">Ввоз оборудования</div>
-                <div class="work-info-sub">Утром 09:00–11:00 или после закрытия ТЦ</div>
+                <div class="work-info-title" id="wImportEqTitle">Ввоз оборудования</div>
+                <div class="work-info-sub">09:00–11:00 или после закрытия ТЦ</div>
               </div>
             </div>
             <div class="work-tile" data-work="Вывоз оборудования" onclick="selectWork('Вывоз оборудования')">
               <div class="work-icon">📤</div>
               <div>
-                <div class="work-info-title">Вывоз оборудования</div>
-                <div class="work-info-sub">Утром 09:00–11:00 или после закрытия ТЦ</div>
+                <div class="work-info-title" id="wExportEqTitle">Вывоз оборудования</div>
+                <div class="work-info-sub">09:00–11:00 или после закрытия ТЦ</div>
               </div>
             </div>
             <div class="work-tile" data-work="Ночные работы(ревизия,уборка)" onclick="selectWork('Ночные работы(ревизия,уборка)')">
               <div class="work-icon">🌙</div>
               <div>
-                <div class="work-info-title">Ночные работы (ревизия, уборка)</div>
+                <div class="work-info-title" id="wNightTitle">Ночные работы (ревизия, уборка)</div>
                 <div class="work-info-sub">После 21:00 (2–3 эт.) / После 22:00 (1, 4 эт.)</div>
               </div>
             </div>
           </div>
 
-          <label class="field-label">Время проведения работ <span class="req">*</span></label>
+          <label class="field-label" id="timeFieldLabel">Время проведения работ <span class="req">*</span></label>
           <div class="time-slots-grid" id="timeSlotsGrid"></div>
 
-          <label class="field-label">Срок действия заявки:</label>
+          <label class="field-label" id="durationFieldLabel">Срок действия заявки:</label>
           <div class="preset-row" id="durationPresetsRow"></div>
 
           <div class="date-row">
             <div>
-              <label class="field-label" style="margin-top:4px;">Дата начала <span class="req">*</span></label>
+              <label class="field-label" id="startDateLabel" style="margin-top:4px;">Дата начала <span class="req">*</span></label>
               <input type="date" id="startDate" onchange="applyDateRules()">
             </div>
             <div>
-              <label class="field-label" style="margin-top:4px;">Дата окончания <span class="req">*</span></label>
+              <label class="field-label" id="endDateLabel" style="margin-top:4px;">Дата окончания <span class="req">*</span></label>
               <input type="date" id="endDate" onchange="updatePassPreview()">
             </div>
           </div>
@@ -997,14 +1057,14 @@
 
         <!-- ШАГ 4: ОТВЕТСТВЕННЫЙ И ПРОПУСК -->
         <div class="card hidden" id="stepCard4">
-          <h2 class="card-title">Подтверждение заявки</h2>
-          <p class="card-desc">Проверьте данные пропуска и укажите ответственного сотрудника.</p>
+          <h2 class="card-title" id="step4Title">Подтверждение заявки</h2>
+          <p class="card-desc" id="step4Desc">Согласуют Администратор и Инженер, утверждает Директор.</p>
 
           <div class="pass-ticket">
             <div class="pass-top">
               <div>
                 <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:13px; letter-spacing:0.15em;">JANNUR PASS</div>
-                <div style="font-size:11px; color:var(--nude);">Обязательна подпись Директора</div>
+                <div style="font-size:11px; color:var(--nude);" id="passChainSub">Согласование: Админ → Инженер → Директор</div>
               </div>
               <div class="pass-floor-badge" id="passFloorBadge">Этаж —</div>
             </div>
@@ -1029,13 +1089,13 @@
             </div>
           </div>
 
-          <label class="field-label">ФИО, должность и телефон ответственного <span class="req">*</span></label>
+          <label class="field-label" id="respFieldLabel">ФИО, должность и телефон ответственного <span class="req">*</span></label>
           <input type="text" id="responsibleInput" placeholder="Например: Ахметов Ерлан, администратор, +7 701 000 00 00">
 
-          <label class="field-label">ФИО всех сотрудников <span class="req" id="workersReq">*</span></label>
+          <label class="field-label" id="workersFieldLabel">ФИО всех сотрудников <span class="req" id="workersReq">*</span></label>
           <textarea id="workersInput" placeholder="При ночных работах (ревизия, уборка) обязательно укажите ФИО всех задействованных сотрудников."></textarea>
 
-          <label class="field-label">Госномер автомобиля (если известен)</label>
+          <label class="field-label" id="carFieldLabel">Госномер автомобиля (если известен)</label>
           <input type="text" id="carInput" placeholder="Например: 123 ABC 01" oninput="updatePassPreview()">
         </div>
       </div>
@@ -1043,10 +1103,10 @@
       <div id="myIdTag" style="text-align:center; font-size:11.5px; color:var(--muted); margin-top:8px;"></div>
     </div>
 
-    <!-- ==================== ЭКРАН 2: МОИ ЗАЯВКИ (ДОСТУПНЫ ВСЕГДА) ==================== -->
+    <!-- ==================== ЭКРАН 2: МОИ ЗАЯВКИ ==================== -->
     <div id="myRequestsView" class="hidden">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h2 class="card-title" style="margin:0;">Мои заявки</h2>
+        <h2 class="card-title" id="myReqTitle" style="margin:0;">Мои заявки</h2>
         <button type="button" onclick="loadUserData(true)" style="background:var(--surface); border:1px solid var(--border); padding:7px 12px; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer;">
           ↻ Обновить
         </button>
@@ -1079,7 +1139,7 @@
       </div>
 
       <button class="ctrl-director hidden" id="directorAllBtn" onclick="triggerSwipe('approve_all')">
-        Утвердить финально (Директор)
+        Согласовать напрямую в обход всех (Директор)
       </button>
     </div>
 
@@ -1090,7 +1150,6 @@
         <button class="sub-tab-btn" id="subTabTenantsBtn" onclick="switchAdminSubTab('tenants')">Список ИП по этажам</button>
       </div>
 
-      <!-- ПОДВКЛАДКА А: ГИБКИЕ ИСКЛЮЧЕНИЯ -->
       <div id="adminRulesSubView">
         <div class="card">
           <h3 class="card-title">Настроить исключение для ИП</h3>
@@ -1110,25 +1169,25 @@
 
           <label class="field-label">3. Максимальный срок заявки (дней)</label>
           <div class="preset-row" style="margin-bottom:6px;">
-            <button type="button" class="preset-btn" onclick="document.getElementById('adminMaxDaysInput').value=7">7 дней (стандарт)</button>
+            <button type="button" class="preset-btn" onclick="document.getElementById('adminMaxDaysInput').value=7">7 дней</button>
             <button type="button" class="preset-btn" onclick="document.getElementById('adminMaxDaysInput').value=14">14 дней</button>
             <button type="button" class="preset-btn" onclick="document.getElementById('adminMaxDaysInput').value=30">30 дней</button>
           </div>
-          <input type="number" id="adminMaxDaysInput" min="1" max="90" value="7" placeholder="Например: 30">
+          <input type="number" id="adminMaxDaysInput" min="1" max="90" value="7">
 
           <label class="field-label">4. Индивидуальный временной промежуток</label>
           <div class="preset-row" style="margin-bottom:6px;">
             <button type="button" class="preset-btn" onclick="setAdminTimePreset('До 14:00 (09:00–14:00)')">До 14:00</button>
             <button type="button" class="preset-btn" onclick="setAdminTimePreset('Круглосуточно (24/7)')">Круглосуточно</button>
             <button type="button" class="preset-btn" onclick="setAdminTimePreset('В течение дня (10:00–22:00)')">В течение дня</button>
-            <button type="button" class="preset-btn" onclick="setAdminTimePreset('')">Стандарт (без исключений)</button>
+            <button type="button" class="preset-btn" onclick="setAdminTimePreset('')">Стандарт</button>
           </div>
-          <input type="text" id="adminCustomTimeInput" placeholder="Оставьте пустым для стандарта или впишите свой, напр.: 08:00–14:00">
+          <input type="text" id="adminCustomTimeInput" placeholder="Например: 09:00–14:00 или Круглосуточно">
 
-          <label class="switch-row" id="timeModeRow">
+          <label class="switch-row">
             <div>
               <div style="font-weight:700; font-size:13px; color:var(--black);">Только этот промежуток (заменить стандартные)</div>
-              <div style="font-size:11px; color:var(--graphite);">Если выключено — добавится как дополнительный вариант к стандартным окнам этажа</div>
+              <div style="font-size:11px; color:var(--graphite);">Если выключено — добавится как дополнительный вариант</div>
             </div>
             <input type="checkbox" id="adminExclusiveTimeCheck">
           </label>
@@ -1140,16 +1199,14 @@
 
         <div class="card">
           <h3 class="card-title">Активные исключения</h3>
-          <p class="card-desc">Арендаторы, для которых настроены особые сроки или время.</p>
           <div id="customRulesList"></div>
         </div>
       </div>
 
-      <!-- ПОДВКЛАДКА Б: ДОБАВЛЕНИЕ И УДАЛЕНИЕ ИП ПО ЭТАЖАМ -->
       <div id="adminTenantsSubView" class="hidden">
         <div class="card">
           <h3 class="card-title">Управление списком ИП по этажам</h3>
-          <p class="card-desc">Добавляйте новых арендаторов или удаляйте съехавших — список обновится у всех пользователей сразу.</p>
+          <p class="card-desc">Добавляйте новых арендаторов или удаляйте съехавших на каждом этаже.</p>
 
           <label class="field-label">Выберите этаж</label>
           <select id="manageFloorSelect" onchange="renderAdminTenantsManager()">
@@ -1160,7 +1217,7 @@
             <option value="Улица и Банкоматы">Улица и Банкоматы</option>
           </select>
 
-          <label class="field-label">Добавить новое ИП / ТОО на этот этаж</label>
+          <label class="field-label">Добавить новое ИП / ТОО</label>
           <div style="display:flex; gap:8px;">
             <input type="text" id="newTenantNameInput" placeholder="Например: ИП Асанов А12">
             <button type="button" class="btn-primary" style="flex:0 0 auto; padding:12px 16px;" id="addTenantBtn" onclick="addTenantToFloor()">+ Добавить</button>
@@ -1178,16 +1235,16 @@
     <div id="accessView" class="hidden">
       <div class="card">
         <h3 class="card-title">Добавить сотрудника в согласование</h3>
-        <p class="card-desc">Укажите Telegram ID сотрудника (отображается внизу экрана при открытии бота).</p>
+        <p class="card-desc">Укажите Telegram ID сотрудника. Для полноценного согласования нужны Администратор, Инженер и Директор.</p>
         <label class="field-label">Telegram ID</label>
         <input type="number" id="newAccId" placeholder="Например: 482910452">
         <label class="field-label">Имя и фамилия</label>
-        <input type="text" id="newAccName" placeholder="Например: Гумаров А.Р.">
+        <input type="text" id="newAccName" placeholder="Например: Темиргалиев Н.">
         <label class="field-label">Роль</label>
         <select id="newAccRole">
-          <option value="Администратор">Администратор (предварительное согласование)</option>
-          <option value="Инженер">Инженер (предварительное согласование)</option>
-          <option value="Директор">Директор (финальное утверждение заявок)</option>
+          <option value="Администратор">Администратор (1-й этап согласования)</option>
+          <option value="Инженер">Инженер (2-й обязательный этап согласования)</option>
+          <option value="Директор">Директор (3-й финальный этап утверждения)</option>
         </select>
         <button class="btn-primary" style="width:100%; margin-top:14px;" id="addAccBtn" onclick="addApprover()">Выдать доступ</button>
       </div>
@@ -1209,12 +1266,12 @@
   <div class="modal-backdrop hidden" id="rejectModal">
     <div class="modal-sheet">
       <h3 class="card-title" style="margin-bottom:6px;">Причина отклонения заявки</h3>
-      <p class="card-desc" style="margin-bottom:10px;">Арендатор получит это сообщение в Telegram и увидит его в разделе «Мои заявки».</p>
+      <p class="card-desc" style="margin-bottom:10px;">Арендатор получит уведомление в Telegram и увидит комментарий в разделе «Мои заявки».</p>
       <div style="margin-bottom:10px;">
         <span class="reason-chip" onclick="setRejectReason('Не указаны ФИО всех сотрудников')">Не указаны ФИО сотрудников</span>
         <span class="reason-chip" onclick="setRejectReason('Неверно выбрано время проведения работ')">Неверное время работ</span>
-        <span class="reason-chip" onclick="setRejectReason('Превышен максимальный срок заявки')">Превышен максимальный срок</span>
-        <span class="reason-chip" onclick="setRejectReason('Отклонено Директором ТЦ')">Отклонено Директором</span>
+        <span class="reason-chip" onclick="setRejectReason('Превышен максимальный срок заявки')">Превышен срок</span>
+        <span class="reason-chip" onclick="setRejectReason('Отклонено при согласовании')">Отклонено</span>
       </div>
       <textarea id="rejectReasonInput" placeholder="Укажите причину отклонения (необязательно)..."></textarea>
       <div style="display:flex; gap:10px; margin-top:12px;">
@@ -1230,7 +1287,7 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNIb0lkUJHSGm5Wi6yzJgUM2jBZa_ORYkoNdT070gBrcrb4TnOWrURjbTdV-Er-j6r/exec";
     const tg = window.Telegram.WebApp;
 
-    // ФИКСАЦИЯ РАЗМЕРА ОКНА И ЗАПРЕТ ВЫХОДА ЗА РАМКИ / СВАЙП-ЗАКРЫТИЯ
+    // ФИКСАЦИЯ РАЗМЕРА ОКНА И ЗАПРЕТ МАСШТАБИРОВАНИЯ / ВЫХОДА ЗА РАМКИ
     tg.ready();
     tg.expand();
     if (typeof tg.disableVerticalSwipes === 'function') {
@@ -1239,13 +1296,73 @@
     tg.setHeaderColor('#0D0D0F');
     tg.setBackgroundColor('#F3F4F6');
 
-    // Блокируем жест масштабирования двумя пальцами (pinch-to-zoom) на iOS/Android
     document.addEventListener('gesturestart', e => e.preventDefault());
     document.addEventListener('gesturechange', e => e.preventDefault());
     document.addEventListener('touchmove', e => {
       if (e.touches.length > 1) e.preventDefault();
     }, { passive: false });
 
+    // ПЕРЕВОДЫ (РУССКИЙ / КАЗАХСКИЙ)
+    const I18N = {
+      ru: {
+        heroSub: "Ввоз/вывоз товара и оборудования, ревизия и уборка",
+        navNew: "Новая заявка",
+        navMy: "Мои заявки",
+        statusOpen: "Прием открыт (до 17:00)",
+        statusClosed: "Прием Пн–Пт 09:00–17:00",
+        closedTitle: "Прием новых заявок сейчас закрыт",
+        closedDesc: "Подача электронных заявок доступна строго по будням с <b>09:00 до 17:00</b>.",
+        closedSchedule: "<b>График работы сервиса:</b><br>• Подача заявок: <b>Пн – Пт, с 09:00 до 17:00</b><br>• Согласование: <b>Администратор → Инженер → Директор</b><br>• Выходные (Сб, Вс): <b>прием заявок закрыт</b>",
+        viewMyBtn: "Посмотреть мои ранее поданные заявки →",
+        st1: "Этаж", st2: "Ваше ИП", st3: "Работы и Срок", st4: "Пропуск",
+        step1Title: "Выберите этаж", step1Desc: "Укажите этаж, на котором расположено ваше ИП или ТОО.",
+        fl1: "1 этаж", fl2: "2 этаж", fl3: "3 этаж", fl4: "4 этаж",
+        flStreet: "Улица / Банки", flSub: "Подрядчик", flSubDesc: "Новый арендатор",
+        step2Title: "Выберите ваше ИП / ТОО", step2Desc: "Найдите свою организацию в списке этажа или введите вручную.",
+        step3Title: "Вид работ, время и срок", step3Desc: "Выберите тип заявки и разрешенное окно времени.",
+        wImportGoods: "Ввоз товара", wExportGoods: "Вывоз товара", wBothGoods: "Ввоз и вывоз товара",
+        wImportEq: "Ввоз оборудования", wExportEq: "Вывоз оборудования", wNight: "Ночные работы (ревизия, уборка)",
+        timeLabel: "Время проведения работ", durationLabel: "Срок действия заявки:",
+        startDateLabel: "Дата начала", endDateLabel: "Дата окончания",
+        step4Title: "Подтверждение заявки", step4Desc: "Согласуют Администратор и Инженер, утверждает Директор.",
+        passChainSub: "Согласование: Админ → Инженер → Директор",
+        respLabel: "ФИО, должность и телефон ответственного",
+        workersLabel: "ФИО всех сотрудников",
+        carLabel: "Госномер автомобиля (если известен)",
+        myReqTitle: "Мои заявки",
+        nextBtn: "Далее →", submitBtn: "Отправить заявку ✓", prevBtn: "← Назад"
+      },
+      kk: {
+        heroSub: "Тауар мен жабдықты әкелу/әкету, ревизия және тазалау",
+        navNew: "Жаңа өтінім",
+        navMy: "Менің өтінімдерім",
+        statusOpen: "Қабылдау ашық (17:00-ге дейін)",
+        statusClosed: "Дс–Жм 09:00–17:00",
+        closedTitle: "Жаңа өтінімдерді қабылдау қазір жабық",
+        closedDesc: "Электрондық өтінімдер тек жұмыс күндері <b>09:00-ден 17:00-ге дейін</b> қабылданады.",
+        closedSchedule: "<b>Сервис жұмыс кестесі:</b><br>• Өтінім беру: <b>Дс – Жм, 09:00 – 17:00</b><br>• Келісу: <b>Әкімші → Инженер → Директор</b><br>• Демалыс (Сб, Жс): <b>қабылдау жабық</b>",
+        viewMyBtn: "Бұрын берілген өтінімдерімді көру →",
+        st1: "Қабат", st2: "Сіздің ЖК", st3: "Жұмыс / Мерзім", st4: "Рұқсаттама",
+        step1Title: "Қабатты таңдаңыз", step1Desc: "Сіздің ЖК немесе ЖШС орналасқан қабатты көрсетіңіз.",
+        fl1: "1-қабат", fl2: "2-қабат", fl3: "3-қабат", fl4: "4-қабат",
+        flStreet: "Көше / Банктер", flSub: "Мердігер", flSubDesc: "Жаңа жалға алушы",
+        step2Title: "ЖК / ЖШС таңдаңыз", step2Desc: "Тізімнен ұйымыңызды табыңыз немесе қолмен жазыңыз.",
+        step3Title: "Жұмыс түрі, уақыты және мерзімі", step3Desc: "Өтінім түрін және рұқсат етілген уақыт аралығын таңдаңыз.",
+        wImportGoods: "Тауар әкелу", wExportGoods: "Тауар әкету", wBothGoods: "Тауар әкелу және әкету",
+        wImportEq: "Жабдық әкелу", wExportEq: "Жабдық әкету", wNight: "Түнгі жұмыстар (ревизия, тазалау)",
+        timeLabel: "Жұмыс жүргізу уақыты", durationLabel: "Өтінімнің жарамдылық мерзімі:",
+        startDateLabel: "Басталу күні", endDateLabel: "Аяқталу күні",
+        step4Title: "Өтінімді растау", step4Desc: "Әкімші мен Инженер келіседі, Директор бекітеді.",
+        passChainSub: "Келісу: Әкімші → Инженер → Директор",
+        respLabel: "Жауапты тұлғаның ТАӘ, лауазымы және телефоны",
+        workersLabel: "Барлық қызметкерлердің ТАӘ",
+        carLabel: "Көліктің мемлекеттік нөмірі (белгілі болса)",
+        myReqTitle: "Менің өтінімдерім",
+        nextBtn: "Келесі →", submitBtn: "Өтінімді жіберу ✓", prevBtn: "← Артқа"
+      }
+    };
+
+    let currentLang = localStorage.getItem('jannurLang') || 'ru';
     let TENANTS_DB = {"1": ["Даниал ИП А1", "ИП Нурсултанова Shapki А2", "ТОО Bellas Pure парфюм А2/1", "Витайм аптека А3", "AlkorKazakhstanLtd ЛЭТУАЛЬ А4", "ИП Kelo Zhanna Kosmetic А5", "РТС Cosmart А6", "Биринши Lombard А7", "ИП Sandi А7/1", "Посуда Долголетия Fissman А8", "BBCorp Asyq toys А9", "TapTatti Retail А10", "Bizdin Et А11", "ИП Мино канцелярия А13", "Химчистка А14", "Гала-Косметик и К (быт. химия) А15", "ИП Khan fish А16", "Толганай ИП (сухофрукты) А17", "ИП Ayim А18", "MISKBAR ИП А19", "B-Rent Service (ломбард) А20", "KULINAR&CA. ИП Данабаев A21", "Тулеуов ИП Royal Coffee А22", "ИП Ернур (зебра) А23", "ИП Нади (оптика) А25", "REFORMA ИП (бижутерия) А27", "ИП Пернебаева А28", "Муздубаева Ш.Н. (вояж) ИП А31", "ИП SJ GROUP островок A36", "ТОО Скиф Трейд Смол", "Иманбаев (аквафор)", "Nur DORO (парфюм на разл) островок", "Абилов Руслан Эдигизович ИП", "Кучер Е.А. островок", "БРИТИШ АМЕРИКАН ТОБАККО островок", "Бельдеубаева ИП (кофе аппарат)", "ИП Атош островок", "ИП Яковенко островок", "ИП888", "ИП Куттыходжаева Балисмаил"], "2": ["Бэст Прайс Казахстан В1", "Белкин ИП (муж. одежда) В2", "Львова Валентина Николаевна В3", "Жетписбаев О.К. (муж. одежда) В4", "Авилов А.З. ИП (Lietta) В5", "Айрапетян К.Ж. ИП В6", "ИП Бекмухамбетова В7", "ИП Дильназ В8", "ИП Бауыржанов В9", "Щербинина И.Б. ИП (одежда) В10", "Артеменко Ирина Аркадьевна ИП В11", "Торговый дом «ЗОЛОТО МОСКВЫ» В12", "Аргента ТОО (юв. изд.) В13", "ДН Казахстан ТОО (юв. изд.) В14", "Рахимов ИП (COSSMO) В15", "Хамулло В.И. ИП В16", "Дюсенов Рамил Алемханович В17", "Дарын ИП В18", "Савицкая Лилия Темирбаевна В19", "ИП Дигимбаева В20", "Жакаева ИП В21", "Respect Retail Group В22", "ИП САТЫБАЛДИЕВ B24", "Адильханова ИП В25", "Аубакирова ИП В26", "Ермакова Е. А. ИП В27", "КАРИ КЗ ТОО В28", "Куанова Алия Жакеновна Отбасы банк"], "3": ["ТОО LPP Kazakhstan С1", "ИП Турушов С3", "ИП Нур-Али С4", "ИП Safa С5", "ИП Каженова С6", "ИП Болат С7", "ИП Баймагзумов С8", "ИП Омарова С9", "ИП Бекишева С10", "ИП Заришняк С14", "ИП Маркова С15", "ИП Береке2010 С15/1", "ИП Байжанова С16", "ИП Валиева С17", "ИП Бакишева С19", "ИП Жапар С24", "ТОО Калашникова С25", "ИП Asylai С26", "ИП Какетка С27", "ИП Данеля С28", "ИП АРАПАТ С29", "ИП Ержанова С30", "ИП Дина С31", "ИП Mәсілхан", "ИП Балыкова", "ИП Темирханова"], "4": ["Толенова ИП", "Анара ИП (Donix hub)", "ИП Айтжанова (Смак)", "ИП Firdaus", "Нуралы ИП (массаж. кресла)", "ИП Назарбекова (салон красоты)", "ТОО Маргарита", "ИП Проскурякова", "ИП Айка", "Maki-Maki", "ИП Кадырова", "ИП ALTUN", "ИП Нурпеисов"], "Улица и Банкоматы": ["АЛЕКСИЯ ИП", "Soul Food ИП", "Тойчу Кызы Аймончок ИП", "Толешова ИП", "Bereke Bank АО", "ALATAU BANK", "Народный банк Казахстана АО", "Cash Invest ТОО (терминал)", "Банк ЦентрКредит ДБ АО", "Филиал АО Каспи банк", "Каспи Магазин ТОО (Жаннур, постамат)", "Freedom Telecom Operations ТОО"]};
 
     const currentUser = tg.initDataUnsafe?.user || { id: 0 };
@@ -1261,6 +1378,7 @@
     };
 
     let currentViewName = "wizard";
+    let adminEmergencyOpen = false;
     let myRequests = [];
     let pendingRequests = [];
     let approversList = [];
@@ -1274,38 +1392,124 @@
       if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred(type);
     }
 
-    // ВРЕМЯ АСТАНЫ (UTC+5)
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('jannurLang', lang);
+      document.getElementById('langRuBtn').classList.toggle('active', lang === 'ru');
+      document.getElementById('langKkBtn').classList.toggle('active', lang === 'kk');
+      applyTranslations();
+      haptic('light');
+    }
+
+    function applyTranslations() {
+      const t = I18N[currentLang] || I18N.ru;
+      document.getElementById('heroSubtitleText').textContent = t.heroSub;
+      document.getElementById('tNavWizard').textContent = t.navNew;
+      document.getElementById('tNavMyLabel').textContent = t.navMy;
+
+      document.getElementById('closedTitleText').textContent = t.closedTitle;
+      document.getElementById('closedDescText').innerHTML = t.closedDesc;
+      document.getElementById('closedScheduleBox').innerHTML = t.closedSchedule;
+      document.getElementById('closedViewMyBtn').textContent = t.viewMyBtn;
+
+      document.getElementById('st1Label').textContent = t.st1;
+      document.getElementById('st2Label').textContent = t.st2;
+      document.getElementById('st3Label').textContent = t.st3;
+      document.getElementById('st4Label').textContent = t.st4;
+
+      document.getElementById('step1Title').textContent = t.step1Title;
+      document.getElementById('step1Desc').textContent = t.step1Desc;
+      document.getElementById('fl1Name').textContent = t.fl1;
+      document.getElementById('fl2Name').textContent = t.fl2;
+      document.getElementById('fl3Name').textContent = t.fl3;
+      document.getElementById('fl4Name').textContent = t.fl4;
+      document.getElementById('flStreetName').textContent = t.flStreet;
+      document.getElementById('flSubName').textContent = t.flSub;
+      document.getElementById('flSubDesc').textContent = t.flSubDesc;
+
+      document.getElementById('step2Title').textContent = t.step2Title;
+      document.getElementById('step2Desc').textContent = t.step2Desc;
+
+      document.getElementById('step3Title').textContent = t.step3Title;
+      document.getElementById('step3Desc').textContent = t.step3Desc;
+      document.getElementById('wImportGoodsTitle').textContent = t.wImportGoods;
+      document.getElementById('wExportGoodsTitle').textContent = t.wExportGoods;
+      document.getElementById('wBothGoodsTitle').textContent = t.wBothGoods;
+      document.getElementById('wImportEqTitle').textContent = t.wImportEq;
+      document.getElementById('wExportEqTitle').textContent = t.wExportEq;
+      document.getElementById('wNightTitle').textContent = t.wNight;
+
+      document.getElementById('timeFieldLabel').innerHTML = `${t.timeLabel} <span class="req">*</span>`;
+      document.getElementById('durationFieldLabel').textContent = t.durationLabel;
+      document.getElementById('startDateLabel').innerHTML = `${t.startDateLabel} <span class="req">*</span>`;
+      document.getElementById('endDateLabel').innerHTML = `${t.endDateLabel} <span class="req">*</span>`;
+
+      document.getElementById('step4Title').textContent = t.step4Title;
+      document.getElementById('step4Desc').textContent = t.step4Desc;
+      document.getElementById('passChainSub').textContent = t.passChainSub;
+      document.getElementById('respFieldLabel').innerHTML = `${t.respLabel} <span class="req">*</span>`;
+      document.getElementById('workersFieldLabel').innerHTML = `${t.workersLabel} <span class="req" id="workersReq" style="display:${state.workType.includes('Ночные') ? 'inline' : 'none'}">*</span>`;
+      document.getElementById('carFieldLabel').textContent = t.carLabel;
+
+      document.getElementById('myReqTitle').textContent = t.myReqTitle;
+      document.getElementById('prevBtn').textContent = t.prevBtn;
+      document.getElementById('nextBtn').textContent = state.step === 4 ? t.submitBtn : t.nextBtn;
+
+      updateHeaderAndSubmissionLock();
+    }
+
     function getAstanaDate() {
       const now = new Date();
       return new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + 3600000 * 5);
     }
 
-    // ПРОВЕРКА ОКНА ПРИЕМА ЗАЯВОК: СТРОГО ПН–ПТ (day 1..5) С 09:00 ДО 17:00
+    // Прием заявок: Пн–Пт (day 1..5) с 09:00 до 17:00, либо экстренно открыто Администратором
     function isSubmissionWindowOpen() {
+      if (adminEmergencyOpen) return true;
       const astana = getAstanaDate();
-      const day = astana.getDay(); // 0 = Вс, 1 = Пн ... 5 = Пт, 6 = Сб
+      const day = astana.getDay();
       const hour = astana.getHours();
-      const isWeekday = (day >= 1 && day <= 5);
-      const isWorkingHour = (hour >= 9 && hour < 17);
-      return isWeekday && isWorkingHour;
+      return (day >= 1 && day <= 5) && (hour >= 9 && hour < 17);
+    }
+
+    function enableAdminEmergencyOpen() {
+      adminEmergencyOpen = true;
+      haptic('medium');
+      updateHeaderAndSubmissionLock();
+    }
+
+    function disableAdminEmergencyOpen() {
+      adminEmergencyOpen = false;
+      haptic('light');
+      updateHeaderAndSubmissionLock();
     }
 
     function updateHeaderAndSubmissionLock() {
+      const t = I18N[currentLang] || I18N.ru;
       const open = isSubmissionWindowOpen();
       const dot = document.getElementById('statusDot');
       const txt = document.getElementById('statusText');
 
       if (open) {
         dot.classList.remove('closed');
-        txt.textContent = "Прием открыт (до 17:00)";
+        txt.textContent = adminEmergencyOpen ? "⚡ Экстренный прием" : t.statusOpen;
       } else {
         dot.classList.add('closed');
-        txt.textContent = "Прием Пн–Пт 09:00–17:00";
+        txt.textContent = t.statusClosed;
       }
 
       const closedBlock = document.getElementById('closedHoursBlock');
       const activeBody = document.getElementById('wizardActiveBody');
       const bottomBar = document.getElementById('wizardBottomBar');
+      const emergencyBox = document.getElementById('adminEmergencyBox');
+      const emergencyBanner = document.getElementById('emergencyActiveBanner');
+
+      if (emergencyBox) {
+        emergencyBox.classList.toggle('hidden', !(isApprover && userRole === "Администратор"));
+      }
+      if (emergencyBanner) {
+        emergencyBanner.classList.toggle('hidden', !adminEmergencyOpen);
+      }
 
       if (open) {
         closedBlock.classList.add('hidden');
@@ -1319,7 +1523,9 @@
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-      updateHeaderAndSubmissionLock();
+      document.getElementById('langRuBtn').classList.toggle('active', currentLang === 'ru');
+      document.getElementById('langKkBtn').classList.toggle('active', currentLang === 'kk');
+      applyTranslations();
       setInterval(updateHeaderAndSubmissionLock, 30000);
 
       if (currentUser.id) {
@@ -1332,7 +1538,7 @@
       document.getElementById('endDate').min = today;
       document.getElementById('endDate').value = today;
 
-      const saved = JSON.parse(localStorage.getItem('jannurPassProfileV5') || '{}');
+      const saved = JSON.parse(localStorage.getItem('jannurPassProfileV6') || '{}');
       if (saved.responsible) document.getElementById('responsibleInput').value = saved.responsible;
       if (saved.car) document.getElementById('carInput').value = saved.car;
       if (saved.floor) {
@@ -1379,10 +1585,13 @@
           if (userRole === "Директор") {
             document.getElementById('directorAllBtn').classList.remove('hidden');
             document.getElementById('approveBtnLabel').textContent = "Утвердить (Директор)";
+          } else if (userRole === "Инженер") {
+            document.getElementById('approveBtnLabel').textContent = "Согласовать (Инженер)";
           } else {
-            document.getElementById('approveBtnLabel').textContent = "Согласовать (на подпись Директору)";
+            document.getElementById('approveBtnLabel').textContent = "Согласовать (Администратор)";
           }
 
+          updateHeaderAndSubmissionLock();
           if (!showToast) switchView('approval');
           renderSwipeCards();
           renderApprovers();
@@ -1433,7 +1642,6 @@
       return tenantRules[org] || { maxDays: 7, customTime: "", exclusiveTime: false };
     }
 
-    // === РЕНДЕР "МОИ ЗАЯВКИ" АРЕНДАТОРА ===
     function renderMyRequests() {
       const container = document.getElementById('myRequestsList');
       if (!myRequests || myRequests.length === 0) {
@@ -1441,7 +1649,7 @@
           <div class="card" style="text-align:center; padding:28px 18px;">
             <div style="font-size:28px; margin-bottom:8px;">📋</div>
             <div style="font-family:'Raleway',sans-serif; font-weight:700; font-size:15px; color:var(--black);">У вас пока нет поданных заявок</div>
-            <div style="font-size:12.5px; color:var(--graphite); margin-top:4px;">Все заявки, отправленные через этот бот, появятся здесь со статусом согласования.</div>
+            <div style="font-size:12.5px; color:var(--graphite); margin-top:4px;">Все заявки появятся здесь со статусом согласования.</div>
           </div>
         `;
         return;
@@ -1451,9 +1659,12 @@
       myRequests.forEach(r => {
         const st = String(r.status || "На согласовании");
         let pillClass = "status-pending";
-        if (st.includes("Ожидает Директора")) pillClass = "status-director-wait";
-        else if (st.includes("Согласовано") || st.includes("Утверждено")) pillClass = "status-approved";
+        if (st.includes("Согласовано (Директор")) pillClass = "status-approved";
         else if (st.includes("Отклонено")) pillClass = "status-rejected";
+        else if (st.includes("Ожидает")) pillClass = "status-step";
+
+        const isFinalValid = st.includes("Согласовано (Директор");
+        const isRejected = st.includes("Отклонено");
 
         const card = document.createElement('div');
         card.className = 'my-req-card';
@@ -1471,14 +1682,13 @@
           <div style="font-size:12.5px; color:var(--graphite);">
             Этаж: <b>${r.floor}</b> • Срок: <b>с ${r.startDate} по ${r.endDate}</b> (${r.workTime})
           </div>
-          ${st.includes("Ожидает Директора") ? `<div style="margin-top:8px; font-size:11.5px; color:var(--blue); font-weight:600;">ℹ️ Предварительно согласовано. Заявка станет действительной только после утверждения Директором.</div>` : ''}
-          ${r.rejectReason ? `<div class="reject-reason-box"><b>Комментарий администрации:</b> ${r.rejectReason}</div>` : ''}
+          ${!isFinalValid && !isRejected ? `<div style="margin-top:8px; font-size:11.5px; color:var(--blue); font-weight:600;">ℹ️ Заявка станет действительной только после согласования Администратором, Инженером и финального утверждения Директором.</div>` : ''}
+          ${r.rejectReason ? `<div class="reject-reason-box"><b>Комментарий:</b> ${r.rejectReason}</div>` : ''}
         `;
         container.appendChild(card);
       });
     }
 
-    // === ЛОГИКА ШАГОВ МАСТЕРА ===
     function goStep(n) {
       if (!isSubmissionWindowOpen()) {
         updateHeaderAndSubmissionLock();
@@ -1488,6 +1698,7 @@
       if (n > 2 && !state.organization.trim()) return tg.showAlert("Выберите или введите ваше ИП / ТОО");
       if (n > 3 && !state.workType) return tg.showAlert("Выберите вид работ");
 
+      const t = I18N[currentLang] || I18N.ru;
       state.step = n;
       for (let i = 1; i <= 4; i++) {
         document.getElementById(`stepCard${i}`).classList.toggle('hidden', i !== n);
@@ -1498,7 +1709,7 @@
 
       document.getElementById('prevBtn').classList.toggle('hidden', n === 1);
       const nextBtn = document.getElementById('nextBtn');
-      nextBtn.textContent = n === 4 ? "Отправить заявку ✓" : "Далее →";
+      nextBtn.textContent = n === 4 ? t.submitBtn : t.nextBtn;
       if (n === 3) {
         updatePrivilegeBanner();
         renderTimeSlots();
@@ -1530,7 +1741,6 @@
       }
     }
 
-    // ШАГ 1: ЭТАЖ
     function selectFloor(fl, autoAdvance = true) {
       state.floor = fl;
       document.querySelectorAll('.floor-tile').forEach(el => {
@@ -1555,7 +1765,6 @@
       }
     }
 
-    // ШАГ 2: ВЫБОР ИП / ТОО
     function renderTenantList() {
       const q = (document.getElementById('tenantSearch').value || "").toLowerCase();
       const list = TENANTS_DB[state.floor] || [];
@@ -1604,7 +1813,6 @@
       if (manual) state.organization = document.getElementById('manualOrgInput').value;
     }
 
-    // ШАГ 3: ВИД РАБОТ, ВРЕМЯ И СРОКИ
     function updatePrivilegeBanner() {
       const rule = getCurrentTenantRule();
       const banner = document.getElementById('tenantPrivilegeBanner');
@@ -1631,7 +1839,8 @@
 
       const isNight = wt.includes("Ночные");
       document.getElementById('workersInput').required = isNight;
-      document.getElementById('workersReq').style.display = isNight ? "inline" : "none";
+      const reqEl = document.getElementById('workersReq');
+      if (reqEl) reqEl.style.display = isNight ? "inline" : "none";
 
       renderTimeSlots();
       applyDateRules();
@@ -1757,7 +1966,6 @@
       endEl.value = end.toISOString().split('T')[0];
     }
 
-    // ШАГ 4: ПРОПУСК И ОТПРАВКА
     function updatePassPreview() {
       document.getElementById('passFloorBadge').textContent = state.floor ? `${state.floor} этаж` : "Этаж —";
       document.getElementById('passOrgText').textContent = state.organization || "Не указано";
@@ -1784,11 +1992,11 @@
 
       const btn = document.getElementById('nextBtn');
       btn.disabled = true;
-      btn.textContent = "Отправляем заявку...";
+      btn.textContent = "Отправляем...";
       haptic('medium');
 
       const car = document.getElementById('carInput').value.trim();
-      localStorage.setItem('jannurPassProfileV5', JSON.stringify({
+      localStorage.setItem('jannurPassProfileV6', JSON.stringify({
         floor: state.floor,
         organization: state.organization,
         responsible: responsible,
@@ -1816,25 +2024,25 @@
 
         if (result.status === "closed") {
           btn.disabled = false;
-          btn.textContent = "Отправить заявку ✓";
+          applyTranslations();
           updateHeaderAndSubmissionLock();
           return tg.showAlert(result.message || "Прием заявок открыт только по будням с 09:00 до 17:00.");
         }
 
         await loadUserData(false);
         btn.disabled = false;
-        btn.textContent = "Отправить заявку ✓";
-        tg.showAlert("✅ Заявка принята! Заявка станет действительной после финального согласования Директором.", () => {
+        applyTranslations();
+        tg.showAlert("✅ Заявка отправлена! Руководству направлено уведомление. Заявка станет действительной после утверждения Директором.", () => {
           switchView('myRequests');
         });
       } catch (err) {
         tg.showAlert("Ошибка сети. Проверьте интернет и попробуйте снова.");
         btn.disabled = false;
-        btn.textContent = "Отправить заявку ✓";
+        applyTranslations();
       }
     }
 
-    // === АДМИН-ПАНЕЛЬ: ИСКЛЮЧЕНИЯ И ВРЕМЕННЫЕ ПРОМЕЖУТКИ ===
+    // === АДМИН-ПАНЕЛЬ: ИСКЛЮЧЕНИЯ И СПИСОК ИП ===
     function populateAdminTenantSelect() {
       const fl = document.getElementById('adminLimitFloor').value;
       const sel = document.getElementById('adminLimitOrg');
@@ -1949,7 +2157,6 @@
       });
     }
 
-    // === АДМИН-ПАНЕЛЬ: ДОБАВЛЕНИЕ И УДАЛЕНИЕ ИП НА КАЖДОМ ЭТАЖЕ ===
     function renderAdminTenantsManager() {
       const fl = document.getElementById('manageFloorSelect').value;
       const list = TENANTS_DB[fl] || [];
@@ -2065,12 +2272,15 @@
         card.className = 'swipe-card';
         if (!isTop) card.style.transform = 'scale(0.96) translateY(10px)';
 
-        const preApprovedBadge = req.status && req.status.includes("Ожидает Директора")
-          ? `<div style="background:var(--blue-bg); color:var(--blue); font-size:11px; font-weight:700; padding:4px 8px; border-radius:7px; margin-bottom:8px;">✓ ${req.status}</div>`
-          : '';
+        let stageInfo = '';
+        if (req.status && !req.status.includes("На согласовании")) {
+          stageInfo = `<div style="background:var(--blue-bg); color:var(--blue); font-size:11px; font-weight:700; padding:4px 8px; border-radius:7px; margin-bottom:8px;">✓ ${req.status}</div>`;
+        } else if (userRole === 'Директор') {
+          stageInfo = `<div style="background:var(--nude-bg); color:var(--black); border:1px solid var(--nude); font-size:11px; font-weight:700; padding:4px 8px; border-radius:7px; margin-bottom:8px;">⚡ Новая заявка — доступно прямое согласование Директором</div>`;
+        }
 
         card.innerHTML = `
-          <div class="stamp approve">${userRole === 'Директор' ? 'УТВЕРЖДЕНО' : 'НА ПОДПИСЬ ДИРЕКТОРУ'}</div>
+          <div class="stamp approve">${userRole === 'Директор' ? 'УТВЕРЖДЕНО' : 'СОГЛАСОВАНО'}</div>
           <div class="stamp reject">ОТКЛОНЕНО</div>
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
             <span style="background:var(--red); color:#fff; font-family:'Raleway',sans-serif; font-weight:800; font-size:12px; padding:4px 10px; border-radius:8px;">
@@ -2078,7 +2288,7 @@
             </span>
             <span style="font-size:11.5px; color:var(--graphite); font-weight:600;">№${req.rowIndex} • ${req.source}</span>
           </div>
-          ${preApprovedBadge}
+          ${stageInfo}
           <div style="font-family:'Raleway',sans-serif; font-weight:800; font-size:16.5px; color:var(--black); margin-bottom:7px;">${req.organization}</div>
           <div style="font-size:13px; margin-bottom:4px;"><b>Вид работ:</b> ${req.workType}</div>
           <div style="font-size:13px; margin-bottom:4px;"><b>Срок:</b> с ${req.startDate} по ${req.endDate}</div>
