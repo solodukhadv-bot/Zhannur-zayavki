@@ -300,6 +300,47 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .tenant-ad-banner-wrap.wide-mode {
+      padding: 0;
+      gap: 0;
+      background: #151518;
+      border-color: rgba(200, 37, 63, 0.28);
+      height: 64px; /* Пропорция 6:1 (~380x64 px на экране смартфона = 1200x200 px) */
+    }
+    .ad-banner-wide-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .tenant-ad-banner-wrap.wide-mode .ad-banner-dots {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(21, 21, 24, 0.48);
+      padding: 4px 3px;
+      border-radius: 99px;
+    }
+    .tenant-ad-banner-wrap.wide-mode .ad-dot {
+      background: rgba(255, 255, 255, 0.45);
+    }
+    .tenant-ad-banner-wrap.wide-mode .ad-dot.active {
+      background: #FFFFFF;
+    }
+    .ad-banner-link-pill {
+      position: absolute;
+      left: 8px;
+      bottom: 6px;
+      background: rgba(21, 21, 24, 0.68);
+      color: #FFFFFF;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 99px;
+      backdrop-filter: blur(6px);
+      pointer-events: none;
+    }
     .ad-banner-dots {
       display: flex;
       flex-direction: column;
@@ -1679,12 +1720,14 @@
   <div class="container">
 
     <!-- ==================== КОМПАКТНЫЙ РЕКЛАМНЫЙ БАННЕР ДЛЯ АРЕНДАТОРОВ ==================== -->
-    <div id="tenantAdBannerContainer" class="tenant-ad-banner-wrap hidden" onclick="nextTenantBannerSlide()">
+    <div id="tenantAdBannerContainer" class="tenant-ad-banner-wrap hidden" onclick="handleTenantBannerClick()">
+      <img id="adBannerWideImg" class="ad-banner-wide-img hidden" src="" alt="Баннер">
       <div class="ad-banner-thumb" id="adBannerThumb">🎁</div>
-      <div class="ad-banner-body">
+      <div class="ad-banner-body" id="adBannerBody">
         <div class="ad-banner-title" id="adBannerTitle">Акции и предложения партнёров ТРЦ</div>
         <div class="ad-banner-sub" id="adBannerSub">Партнёр ТРЦ Jannur</div>
       </div>
+      <span id="adBannerLinkBadge" class="ad-banner-link-pill hidden">Открыть ↗</span>
       <div class="ad-banner-dots" id="adBannerDots"></div>
     </div>
 
@@ -2546,27 +2589,47 @@
     <div class="surface-card">
       <h3 class="card-title">Добавить рекламный баннер</h3>
       <p class="card-desc">
-        Баннер отображается арендаторам в верхней части экрана (высота <b>62 px</b>, не более <b>8% экрана</b>, не перекрывает кнопки).
+        Поддерживаются широкие баннеры <b>1200 × 200 px</b>, живые <b>GIF-анимации</b> и переход по ссылке при нажатии.
       </p>
 
-      <div style="background:var(--bg); border-radius:12px; padding:10px 12px; font-size:11.5px; color:var(--ink-secondary); margin-bottom:10px; line-height:1.45;">
-        📐 <b>Рекомендуемый размер картинки:</b> <b>240 × 240 px</b> (квадрат 1:1, до 300 КБ) для миниатюры слева или <b>1200 × 200 px</b> (формат 6:1).
+      <label class="field-label">Формат отображения баннера</label>
+      <div class="mode-switch-bar" style="margin-bottom:10px;">
+        <button type="button" class="mode-tab active bm-layout-wide" onclick="setBannerManagerLayout(this, 'wide')">🖼 Широкий 1200×200 / GIF</button>
+        <button type="button" class="mode-tab bm-layout-card" onclick="setBannerManagerLayout(this, 'card')">📝 Текст + Иконка</button>
+      </div>
+      <input type="hidden" class="bm-layout-val" value="wide">
+
+      <div class="bm-wide-upload-block">
+        <label class="field-label">Загрузите баннер 1200×200 px или GIF-анимацию <span class="req">*</span></label>
+        <input type="file" accept="image/*,.gif" class="bm-file-input hidden" onchange="handleBannerFileSelect(this)">
+        <div class="upload-drop-zone bm-drop-label" onclick="this.previousElementSibling.click()">
+          🎞 Выбрать баннер (1200×200 px, PNG / JPG / GIF)
+        </div>
+        <div class="bm-preview-wrap hidden" style="margin-top:8px; border-radius:12px; overflow:hidden; border:1px solid var(--hairline);">
+          <img class="bm-preview-img" src="" alt="Предпросмотр" style="width:100%; height:64px; object-fit:cover; display:block;">
+        </div>
       </div>
 
-      <label class="field-label">Текст объявления <span class="req">*</span></label>
-      <input type="text" class="bm-title-input" placeholder="Например: В Kulinar&ca скидки для сотрудников 20%">
+      <div class="bm-card-text-block hidden">
+        <label class="field-label">Текст объявления <span class="req">*</span></label>
+        <input type="text" class="bm-title-input" placeholder="Например: В Kulinar&ca скидки для сотрудников 20%">
 
-      <label class="field-label">Подпись / Этаж партнёра</label>
-      <input type="text" class="bm-sub-input" placeholder="Например: Акция партнёра ТРЦ · 1 этаж">
-
-      <label class="field-label">Картинка баннера (необязательно)</label>
-      <input type="file" accept="image/*" class="bm-file-input hidden" onchange="handleBannerFileSelect(this)">
-      <div class="upload-drop-zone bm-drop-label" onclick="this.previousElementSibling.click()">
-        🖼 Выбрать картинку (240×240 px)
+        <label class="field-label">Подпись / Этаж партнёра</label>
+        <input type="text" class="bm-sub-input" placeholder="Например: Акция партнёра ТРЦ · 1 этаж">
       </div>
+
+      <label class="field-label">Название баннера в списке (для маркетолога)</label>
+      <input type="text" class="bm-admin-label-input" placeholder="Например: Баннер — Расскажи о своей акции (GIF)">
+
+      <label class="field-label">Ссылка при нажатии на баннер (необязательно)</label>
+      <div class="preset-row" style="margin-bottom:6px;">
+        <button type="button" class="preset-btn" onclick="setBannerLinkPreset(this, '#promo')">📣 Раздел «Акция» в приложении</button>
+        <button type="button" class="preset-btn" onclick="setBannerLinkPreset(this, 'https://instagram.com/')">Instagram</button>
+      </div>
+      <input type="text" class="bm-link-input" placeholder="https://... или @instagram или #promo">
 
       <button type="button" class="btn-primary bm-add-btn" style="width:100%; margin-top:12px;" onclick="submitNewBanner(this)">
-        + Добавить баннер
+        + Опубликовать баннер
       </button>
     </div>
 
@@ -4466,17 +4529,70 @@
     renderTenantBannerSlide();
   }
 
-  function renderTenantBannerSlide() {
+  function handleTenantBannerClick() {
     if (!bannersList || bannersList.length === 0) return;
     const item = bannersList[activeBannerIdx] || bannersList[0];
-    document.getElementById('adBannerTitle').textContent = item.title;
-    document.getElementById('adBannerSub').textContent = `${item.subtitle || 'Акция партнёра ТРЦ'} · ${activeBannerIdx + 1}/${bannersList.length}`;
+    const rawLink = String(item.linkUrl || "").trim();
 
-    const thumbEl = document.getElementById('adBannerThumb');
-    if (item.imageUrl) {
-      thumbEl.innerHTML = `<img src="${item.imageUrl}" alt="Баннер" onerror="this.parentElement.textContent='🎁'">`;
+    if (!rawLink) {
+      nextTenantBannerSlide();
+      return;
+    }
+
+    haptic('medium');
+    if (rawLink === '#promo' || rawLink.toLowerCase() === 'promo') {
+      switchView('promo');
+      return;
+    }
+
+    let targetUrl = rawLink;
+    if (targetUrl.startsWith('@')) {
+      targetUrl = 'https://instagram.com/' + targetUrl.slice(1);
+    } else if (!/^https?:\/\//i.test(targetUrl)) {
+      targetUrl = 'https://' + targetUrl;
+    }
+
+    if (targetUrl.includes('t.me/') && typeof tg.openTelegramLink === 'function') {
+      tg.openTelegramLink(targetUrl);
+    } else if (typeof tg.openLink === 'function') {
+      tg.openLink(targetUrl);
     } else {
-      thumbEl.textContent = "🎁";
+      window.open(targetUrl, '_blank');
+    }
+  }
+
+  function renderTenantBannerSlide() {
+    if (!bannersList || bannersList.length === 0) return;
+    const wrap = document.getElementById('tenantAdBannerContainer');
+    const wideImg = document.getElementById('adBannerWideImg');
+    const thumbEl = document.getElementById('adBannerThumb');
+    const bodyEl = document.getElementById('adBannerBody');
+    const linkBadge = document.getElementById('adBannerLinkBadge');
+
+    const item = bannersList[activeBannerIdx] || bannersList[0];
+    const isWide = (item.layout === 'wide' || (!item.title && item.imageUrl)) && Boolean(item.imageUrl);
+
+    wrap.classList.toggle('wide-mode', isWide);
+    if (linkBadge) {
+      linkBadge.classList.toggle('hidden', !item.linkUrl);
+    }
+
+    if (isWide) {
+      wideImg.src = item.imageUrl;
+      wideImg.classList.remove('hidden');
+      thumbEl.classList.add('hidden');
+      bodyEl.classList.add('hidden');
+    } else {
+      wideImg.classList.add('hidden');
+      thumbEl.classList.remove('hidden');
+      bodyEl.classList.remove('hidden');
+      document.getElementById('adBannerTitle').textContent = item.title || "Акция партнёра ТРЦ";
+      document.getElementById('adBannerSub').textContent = `${item.subtitle || 'Акция партнёра ТРЦ'} · ${activeBannerIdx + 1}/${bannersList.length}`;
+      if (item.imageUrl) {
+        thumbEl.innerHTML = `<img src="${item.imageUrl}" alt="Баннер" onerror="this.parentElement.textContent='🎁'">`;
+      } else {
+        thumbEl.textContent = "🎁";
+      }
     }
 
     const dotsEl = document.getElementById('adBannerDots');
@@ -4885,6 +5001,21 @@
     renderBannersManagerList(host);
   }
 
+  function setBannerManagerLayout(btn, layout) {
+    const card = btn.closest('.surface-card');
+    haptic('light');
+    card.querySelector('.bm-layout-wide').classList.toggle('active', layout === 'wide');
+    card.querySelector('.bm-layout-card').classList.toggle('active', layout === 'card');
+    card.querySelector('.bm-layout-val').value = layout;
+    card.querySelector('.bm-card-text-block').classList.toggle('hidden', layout === 'wide');
+  }
+
+  function setBannerLinkPreset(btn, val) {
+    const card = btn.closest('.surface-card');
+    haptic('light');
+    card.querySelector('.bm-link-input').value = val;
+  }
+
   async function handleBannerFileSelect(input) {
     const file = input.files && input.files[0];
     if (!file) return;
@@ -4894,26 +5025,46 @@
       r.readAsDataURL(file);
     });
     pendingBannerImage = { dataUrl: rawUrl, name: file.name };
-    const dropLabel = input.nextElementSibling;
+    const card = input.closest('.surface-card');
+    const dropLabel = card.querySelector('.bm-drop-label');
     if (dropLabel) dropLabel.textContent = `✅ Выбрано: ${file.name}`;
+    const prevWrap = card.querySelector('.bm-preview-wrap');
+    const prevImg = card.querySelector('.bm-preview-img');
+    if (prevWrap && prevImg) {
+      prevImg.src = rawUrl;
+      prevWrap.classList.remove('hidden');
+    }
   }
 
   async function submitNewBanner(btn) {
     const card = btn.closest('.surface-card');
-    const title = card.querySelector('.bm-title-input').value.trim();
+    const layout = card.querySelector('.bm-layout-val')?.value || 'wide';
+    const rawTextTitle = card.querySelector('.bm-title-input').value.trim();
+    const adminLabel = card.querySelector('.bm-admin-label-input').value.trim();
     const subtitle = card.querySelector('.bm-sub-input').value.trim();
-    if (!title) return tg.showAlert("Введите текст рекламного баннера");
+    const linkUrl = card.querySelector('.bm-link-input').value.trim();
+
+    const title = layout === 'wide' ? (adminLabel || rawTextTitle || "Широкий баннер 1200×200") : rawTextTitle;
+
+    if (layout === 'wide' && !pendingBannerImage.dataUrl) {
+      return tg.showAlert("Выберите файл баннера 1200×200 px или GIF-анимацию");
+    }
+    if (layout !== 'wide' && !title) {
+      return tg.showAlert("Введите текст рекламного баннера");
+    }
 
     btn.disabled = true;
-    btn.textContent = "Добавляем...";
+    btn.textContent = "⏳ Загружаем баннер...";
     try {
       const res = await fetch(SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify({
           action: 'manage_banners',
           subAction: 'add',
+          layout,
           title,
           subtitle,
+          linkUrl,
           imageDataUrl: pendingBannerImage.dataUrl,
           imageName: pendingBannerImage.name,
           initData: initDataRaw
@@ -4924,15 +5075,23 @@
         bannersList = data.banners || [];
         pendingBannerImage = { dataUrl: "", name: "" };
         card.querySelector('.bm-title-input').value = "";
+        card.querySelector('.bm-admin-label-input').value = "";
         card.querySelector('.bm-sub-input').value = "";
-        card.querySelector('.bm-drop-label').textContent = "🖼 Выбрать картинку (240×240 px)";
+        card.querySelector('.bm-link-input').value = "";
+        card.querySelector('.bm-drop-label').textContent = "🎞 Выбрать баннер (1200×200 px, PNG / JPG / GIF)";
+        const prevWrap = card.querySelector('.bm-preview-wrap');
+        if (prevWrap) prevWrap.classList.add('hidden');
         renderAllBannerHosts();
         haptic('medium');
-        tg.showAlert("✅ Рекламный баннер добавлен!");
+        tg.showAlert("✅ Рекламный баннер опубликован!");
+      } else {
+        tg.showAlert(data.message || "Ошибка загрузки баннера");
       }
+    } catch (e) {
+      tg.showAlert("Ошибка при загрузке баннера: " + (e && e.message ? e.message : "проверьте доступ к Google Drive"));
     } finally {
       btn.disabled = false;
-      btn.textContent = "+ Добавить баннер";
+      btn.textContent = "+ Опубликовать баннер";
     }
   }
 
@@ -5018,7 +5177,7 @@
             ${idx + 1}. ${b.title}
           </div>
           <div style="font-size:11px; color:var(--ink-secondary); margin-top:2px;">
-            ${b.active ? '🟢 Показывается' : '⚪ Скрыт'} · ${b.subtitle || ''}
+            ${b.active ? '🟢 Активен' : '⚪ Скрыт'} · ${b.layout === 'wide' ? '1200×200 / GIF' : 'Карточка'}${b.linkUrl ? ' · 🔗 Ссылка' : ''}
           </div>
         </div>
         <div style="display:flex; gap:4px; align-items:center; flex-shrink:0;">
