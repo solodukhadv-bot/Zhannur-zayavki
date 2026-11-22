@@ -303,14 +303,18 @@
     .tenant-ad-banner-wrap.wide-mode {
       padding: 0;
       gap: 0;
-      background: #151518;
-      border-color: rgba(200, 37, 63, 0.28);
-      height: 64px; /* Пропорция 6:1 (~380x64 px на экране смартфона = 1200x200 px) */
+      background: #F6F0E4;
+      border-color: rgba(209, 186, 166, 0.75);
+      height: 72px;
+      width: 100%;
     }
     .ad-banner-wide-img {
       width: 100%;
       height: 100%;
+      max-width: 100%;
+      max-height: 100%;
       object-fit: cover;
+      object-position: center;
       display: block;
     }
     .tenant-ad-banner-wrap.wide-mode .ad-banner-dots {
@@ -1685,10 +1689,80 @@
       color: var(--ink);
     }
 
+    /* Быстрый загрузочный экран (Splash Screen) */
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: #F5F5F7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
+    }
+    .splash-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .splash-logo-box {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: var(--ink);
+      color: #FFFFFF;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 28px rgba(21, 21, 24, 0.16);
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .splash-logo-box::after {
+      content: "";
+      position: absolute;
+      bottom: 11px;
+      right: 11px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+    .splash-bar-track {
+      width: 170px;
+      height: 4px;
+      border-radius: 99px;
+      background: rgba(21, 21, 24, 0.08);
+      overflow: hidden;
+      margin-top: 14px;
+    }
+    .splash-bar-fill {
+      width: 45%;
+      height: 100%;
+      border-radius: 99px;
+      background: var(--brand);
+      animation: splashSlide 0.9s infinite ease-in-out alternate;
+    }
+    @keyframes splashSlide {
+      from { transform: translateX(-20%); width: 35%; }
+      to { transform: translateX(130%); width: 55%; }
+    }
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
+  <!-- Быстрый загрузочный экран -->
+  <div class="splash-overlay" id="appSplashScreen">
+    <div class="splash-logo-box">J</div>
+    <div style="font-weight:800; font-size:18px; letter-spacing:0.12em; color:var(--ink);">JANNUR<span style="color:var(--brand);">.</span></div>
+    <div id="splashSubText" style="font-size:12.5px; color:var(--ink-secondary); margin-top:4px;">Жүктелуде...</div>
+    <div class="splash-bar-track"><div class="splash-bar-fill"></div></div>
+  </div>
 <div class="app-viewport">
 
   <!-- ==================== КОМПАКТНАЯ ШАПКА iOS 26 ==================== -->
@@ -3047,6 +3121,7 @@
   let guardDayMode = "today";
   let guardFilterMode = "all";
   let isApprover = false;
+  let hasInitialAppLoaded = false;
   let userRole = "";
   let userStaffName = "";
   let pendingRejectCard = null;
@@ -3130,9 +3205,62 @@
     document.getElementById('prevBtn').textContent = t.prevBtn;
     document.getElementById('nextBtn').textContent = state.step === 4 ? t.submitBtn : t.nextBtn;
 
+    const isKk = currentLang === 'kk';
+    const splashSub = document.getElementById('splashSubText');
+    if (splashSub) splashSub.textContent = isKk ? "Жүктелуде..." : "Загрузка...";
+
+    const mySubPermits = document.getElementById('mySubPermitsBtn');
+    if (mySubPermits) {
+      const cnt = document.getElementById('myPermitsTabCnt')?.textContent || '0';
+      mySubPermits.innerHTML = `${isKk ? 'Рұқсаттамалар' : 'Пропуска'} (<span id="myPermitsTabCnt">${cnt}</span>)`;
+    }
+    const mySubPromos = document.getElementById('mySubPromosBtn');
+    if (mySubPromos) {
+      const cnt = document.getElementById('myPromosTabCnt')?.textContent || '0';
+      mySubPromos.innerHTML = `${isKk ? 'Акциялар' : 'Акции'} (<span id="myPromosTabCnt">${cnt}</span>)`;
+    }
+
+    const promoHeading = document.querySelector('#promoView .section-title');
+    if (promoHeading) promoHeading.textContent = isKk ? "СО Әлеуметтік желісіндегі акция" : "Акция в соцсети ТРЦ";
+    const promoSubHead = document.querySelector('#promoView .section-title + div');
+    if (promoSubHead) promoSubHead.textContent = isKk ? "«Жаннур» СОО барлық жалға алушыларына қолжетімді" : "Доступно всем арендаторам ТРЦ «Жаннур»";
+    const promoCardTitle = document.querySelector('#promoView .card-title');
+    if (promoCardTitle) promoCardTitle.textContent = isKk ? "📣 Маркетологқа акция жіберу" : "📣 Подать акцию маркетологу";
+    const promoCardDesc = document.querySelector('#promoView .card-desc');
+    if (promoCardDesc) promoCardDesc.textContent = isKk
+      ? "Өткізу күндерін көрсетіңіз, акция мәнін жазып, фото немесе видео тіркеңіз — маркетолог СОО әлеуметтік желілеріне жариялайды."
+      : "Укажите даты проведения, опишите суть акции и прикрепите фото или видео — маркетолог разместит публикацию в соцсетях ТРЦ.";
+    const submitPromoBtn = document.getElementById('submitPromoBtn');
+    if (submitPromoBtn && !submitPromoBtn.disabled) {
+      submitPromoBtn.textContent = isKk ? "Маркетологқа жіберу →" : "Отправить маркетологу →";
+    }
+
+    const moreTitle = document.getElementById('moreSectionTitle');
+    if (moreTitle && !isApprover) {
+      moreTitle.textContent = isKk ? "Жеке кабинет" : "Личный кабинет";
+    }
+    const cabHeroTitle = document.querySelector('#cabinetUnverifiedState h3');
+    if (cabHeroTitle) cabHeroTitle.textContent = isKk ? "Жеке кабинет және авторизация" : "Личный кабинет и авторизация";
+    const cabHeroDesc = document.querySelector('#cabinetUnverifiedState p');
+    if (cabHeroDesc) cabHeroDesc.textContent = isKk
+      ? "Telegram арқылы телефон нөміріңізді растаңыз: бутик басшылары жалдау шоттарына қол жеткізеді, ал СОО қызметкерлері өз жұмыс бөліміне өтеді."
+      : "Подтвердите свой номер телефона через Telegram: руководители бутиков получат доступ к счетам аренды, а сотрудники ТРЦ — автоматический переход в свой рабочий раздел.";
+    const verifyPhoneBtn = document.getElementById('verifyPhoneBtn');
+    if (verifyPhoneBtn && !verifyPhoneBtn.disabled) {
+      verifyPhoneBtn.textContent = isKk ? "📱 Телефон нөмірін растау" : "📱 Подтвердить номер телефона";
+    }
+
     updateHeaderAndSubmissionLock();
     updateGateVisualState();
   }
+
+  function hideSplashScreen() {
+    const sp = document.getElementById('appSplashScreen');
+    if (sp && !sp.classList.contains('fade-out')) {
+      sp.classList.add('fade-out');
+    }
+  }
+  setTimeout(hideSplashScreen, 2500);
 
   function getAstanaDate() {
     const now = new Date();
@@ -3308,15 +3436,22 @@
       if (document.getElementById('myPermitsTabCnt')) document.getElementById('myPermitsTabCnt').textContent = myRequests.length;
       if (document.getElementById('myPromosTabCnt')) document.getElementById('myPromosTabCnt').textContent = myPromos.length;
 
+      const isBgPoll = !showToast && hasInitialAppLoaded;
+      const isInMoreTab = currentViewName === 'more';
+
       renderMyRequests();
       renderMyPromosLists();
-      renderTenantCabinet();
+      if (!isInMoreTab) {
+        renderTenantCabinet();
+      }
       setupPromoFormOrgBlocks();
-      renderTenantList();
-      renderTimeSlots();
-      applyDateRules();
-      populateAdminTenantSelect();
-      renderAdminTenantsManager();
+      if (!isBgPoll) {
+        renderTenantList();
+        renderTimeSlots();
+        applyDateRules();
+        populateAdminTenantSelect();
+        renderAdminTenantsManager();
+      }
 
       if (data.isApprover) {
         isApprover = true;
@@ -3327,14 +3462,13 @@
         document.getElementById('tenantAdBannerContainer').classList.add('hidden');
 
         if (userRole === "Маркетолог") {
-          // Изолированное рабочее пространство Маркетолога
           document.getElementById('adminDock').classList.add('hidden');
           document.getElementById('guardDock').classList.add('hidden');
           document.getElementById('marketerDock').classList.remove('hidden');
           document.getElementById('floatingFabRow').classList.add('hidden');
-          mountBannerManager('marketerBannersHost');
+          if (!isBgPoll) mountBannerManager('marketerBannersHost');
           renderMarketerPromos();
-          if (!showToast) switchView('marketer');
+          if (!hasInitialAppLoaded && !showToast) switchView('marketer');
         } else if (userRole === "Охрана") {
           securityToday = data.securityToday || [];
           securityTomorrow = data.securityTomorrow || [];
@@ -3347,7 +3481,7 @@
           document.getElementById('marketerDock').classList.add('hidden');
           document.getElementById('guardDock').classList.remove('hidden');
           document.getElementById('floatingFabRow').classList.add('hidden');
-          if (!showToast) switchView('guard');
+          if (!hasInitialAppLoaded && !showToast) switchView('guard');
           renderGuardList();
         } else {
           pendingRequests = data.requests || [];
@@ -3361,7 +3495,7 @@
           setBadgeCount('guardNavBadge', securityToday.length);
           setBadgeCount('pendingBadge', pendingRequests.length);
 
-          if (data.securityChatId && document.getElementById('securityChatIdInput')) {
+          if (data.securityChatId && document.getElementById('securityChatIdInput') && !isInMoreTab) {
             document.getElementById('securityChatIdInput').value = data.securityChatId;
           }
           kppLogUrl = data.kppLogUrl || "";
@@ -3370,8 +3504,7 @@
           document.getElementById('guardDock').classList.add('hidden');
           document.getElementById('marketerDock').classList.add('hidden');
           document.getElementById('adminDock').classList.remove('hidden');
-          document.getElementById('floatingFabRow').classList.remove('hidden');
-          mountBannerManager('adminBannersHost');
+          document.getElementById('floatingFabRow').classList.toggle('hidden', currentViewName === 'more');
 
           if (userRole === "Директор") {
             document.getElementById('directorAllBtn').classList.remove('hidden');
@@ -3381,17 +3514,19 @@
             document.getElementById('approveBtnLabel').textContent = "Согласовать";
           }
 
-          if (!showToast) switchView('approval');
+          if (!hasInitialAppLoaded && !showToast) switchView('approval');
           renderApprovalUI();
-          renderApprovers();
-          renderCustomRulesList();
-          syncAdminLimitForm();
-          populateAdminCabOrgSelect();
-          renderAdminCabinetList();
+          if (!isInMoreTab) {
+            mountBannerManager('adminBannersHost');
+            renderApprovers();
+            renderCustomRulesList();
+            syncAdminLimitForm();
+            populateAdminCabOrgSelect();
+            renderAdminCabinetList();
+          }
           renderGuardList();
         }
       } else {
-        // Арендатор: убираем лишнюю сетку «Дополнительно» и показываем сразу Личный кабинет
         document.getElementById('tileLimits').classList.add('hidden');
         document.getElementById('tileAccess').classList.add('hidden');
         document.getElementById('tileAdminCab').classList.add('hidden');
@@ -3399,14 +3534,22 @@
         document.getElementById('moreMenuGrid').classList.add('hidden');
         const moreTitle = document.getElementById('moreSectionTitle');
         if (moreTitle) moreTitle.textContent = "Личный кабинет";
-        switchMoreTab('cabinet');
+        if (!hasInitialAppLoaded && !showToast) {
+          switchMoreTab('cabinet');
+        } else if (!isInMoreTab) {
+          renderTenantCabinet();
+        }
         initTenantAdBannerCarousel();
       }
 
+      hasInitialAppLoaded = true;
+      hideSplashScreen();
       updateUserProfileBlock();
       if (showToast) haptic('light');
     } catch (e) {
       console.error(e);
+    } finally {
+      hideSplashScreen();
     }
   }
 
@@ -4570,7 +4713,12 @@
     const linkBadge = document.getElementById('adBannerLinkBadge');
 
     const item = bannersList[activeBannerIdx] || bannersList[0];
-    const isWide = (item.layout === 'wide' || (!item.title && item.imageUrl)) && Boolean(item.imageUrl);
+    const looksLikeWide = item.layout === 'wide'
+      || !item.title
+      || String(item.title).includes('1200×200')
+      || String(item.title).includes('1200x200')
+      || String(item.title).toLowerCase().includes('gif');
+    const isWide = looksLikeWide && Boolean(item.imageUrl);
 
     wrap.classList.toggle('wide-mode', isWide);
     if (linkBadge) {
