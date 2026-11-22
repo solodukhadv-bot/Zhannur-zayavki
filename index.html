@@ -2140,7 +2140,7 @@
         <label class="field-label">Суть акции <span class="req">*</span></label>
         <textarea id="promoDescriptionInput" placeholder="Например: Скидка 20% на весь ассортимент кофе и выпечки для сотрудников и гостей ТРЦ..."></textarea>
 
-        <label class="field-label">Фото или видео для публикации (до 5 файлов)</label>
+        <label class="field-label">Фото или видео для публикации</label>
         <input type="file" id="promoMediaFilesInput" accept="image/*,video/*" multiple class="hidden" onchange="handlePromoFilesSelected(this)">
         <div class="upload-drop-zone" onclick="document.getElementById('promoMediaFilesInput').click()">
           📷 Прикрепить фото или видео
@@ -2963,6 +2963,7 @@
   let pendingRequests = [];
   let pendingPromoRejectRowIndex = null;
   let forcePromoManualPicker = false;
+  let activeMarketerTab = "promos";
   let approversList = [];
   let tenantRules = {};
   let securityToday = [];
@@ -3095,6 +3096,23 @@
   }
 
   function updateUserProfileBlock() {
+    const profileBlock = document.getElementById('userProfileBlock');
+    if (profileBlock) {
+      // Показываем карточку профиля (имя и должность) ТОЛЬКО на последней вкладке для всех ролей!
+      let shouldShowProfile = false;
+      if (!isApprover) {
+        shouldShowProfile = (currentViewName === 'more');
+      } else if (userRole === "Маркетолог") {
+        shouldShowProfile = (currentViewName === 'marketer' && activeMarketerTab === 'banners');
+      } else if (userRole === "Охрана") {
+        shouldShowProfile = false;
+      } else {
+        // Директор, Администратор, Инженер — только на последней вкладке «Ещё»
+        shouldShowProfile = (currentViewName === 'more');
+      }
+      profileBlock.classList.toggle('hidden', !shouldShowProfile);
+    }
+
     const tgFullName = `${currentUser.first_name || ""} ${currentUser.last_name || ""}`.trim();
     const displayName = userStaffName || tgFullName || (state.organization ? state.organization : "Гость ТРЦ");
     const initials = displayName.split(/\s+/).map(p => p[0] || "").join("").slice(0, 2).toUpperCase() || "J";
@@ -3310,12 +3328,14 @@
           renderGuardList();
         }
       } else {
-        // Арендатор: показываем рекламные баннеры (если есть активные)
+        // Арендатор: убираем лишнюю сетку «Дополнительно» и показываем сразу Личный кабинет
         document.getElementById('tileLimits').classList.add('hidden');
         document.getElementById('tileAccess').classList.add('hidden');
         document.getElementById('tileAdminCab').classList.add('hidden');
         document.getElementById('tileBanners').classList.add('hidden');
-        document.getElementById('moreMenuGrid').style.gridTemplateColumns = "1fr";
+        document.getElementById('moreMenuGrid').classList.add('hidden');
+        const moreTitle = document.getElementById('moreSectionTitle');
+        if (moreTitle) moreTitle.textContent = "Личный кабинет";
         switchMoreTab('cabinet');
         initTenantAdBannerCarousel();
       }
@@ -3343,7 +3363,7 @@
     // Скрываем кнопку "+ Подать заявку", когда пользователь уже на экране подачи или в посте охраны
     const fabRow = document.getElementById('floatingFabRow');
     if (fabRow) {
-      const hideFab = (view === 'wizard') || (view === 'promo') || (userRole === "Охрана") || (userRole === "Маркетолог");
+      const hideFab = (view === 'wizard') || (view === 'promo') || (view === 'more') || (userRole === "Охрана") || (userRole === "Маркетолог");
       fabRow.classList.toggle('hidden', hideFab);
     }
 
@@ -3360,6 +3380,7 @@
       renderMyPromosLists();
     }
 
+    updateUserProfileBlock();
     updateHeaderAndSubmissionLock();
 
     if (view === 'approval') renderApprovalUI();
@@ -4498,25 +4519,20 @@
     if (!files.length) return;
 
     for (const file of files) {
-      if (selectedPromoMedia.length >= 5) {
-        tg.showAlert("Можно прикрепить максимум 5 файлов.");
-        break;
-      }
-      if (file.type.startsWith('image/')) {
-        const compressed = await compressImageToBase64(file, 1080);
-        selectedPromoMedia.push({ name: file.name, type: 'image', dataUrl: compressed });
-      } else if (file.type.startsWith('video/')) {
-        if (file.size > 15 * 1024 * 1024) {
-          tg.showAlert(`Видео «${file.name}» превышает 15 МБ. Выберите ролик покороче.`);
-          continue;
-        }
-        const rawUrl = await new Promise(res => {
-          const r = new FileReader();
-          r.onload = ev => res(ev.target.result);
-          r.readAsDataURL(file);
-        });
-        selectedPromoMedia.push({ name: file.name, type: 'video', dataUrl: rawUrl });
-      }
+      const isImg = file.type.startsWith('image/');
+      const isVid = file.type.startsWith('video/');
+      if (!isImg && !isVid) continue;
+
+      const rawUrl = await new Promise(res => {
+        const r = new FileReader();
+        r.onload = ev => res(ev.target.result);
+        r.readAsDataURL(file);
+      });
+      selectedPromoMedia.push({
+        name: file.name,
+        type: isVid ? 'video' : 'image',
+        dataUrl: rawUrl
+      });
     }
     input.value = "";
     renderSelectedPromoFiles();
@@ -4661,7 +4677,7 @@
         tg.showAlert(data.message || "Ошибка отправки акции");
       }
     } catch (e) {
-      tg.showAlert("Ошибка сети при загрузке файлов.");
+      tg.showAlert("Не удалось загрузить файлы (" + (e && e.message ? e.message : "проверьте размер файлов или права Google Drive") + ").");
     } finally {
       btn.disabled = false;
       btn.textContent = "Отправить маркетологу →";
@@ -4727,12 +4743,14 @@
 
   /* ==================== РАБОЧЕЕ ПРОСТРАНСТВО МАРКЕТОЛОГА И КОНСТРУКТОР БАННЕРОВ ==================== */
   function switchMarketerTab(tab) {
+    activeMarketerTab = tab;
     haptic('light');
     document.querySelectorAll('#marketerDock .dock-item').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.mtab === tab);
     });
     document.getElementById('marketerPromosTab').classList.toggle('hidden', tab !== 'promos');
     document.getElementById('marketerBannersTab').classList.toggle('hidden', tab !== 'banners');
+    updateUserProfileBlock();
     if (tab === 'banners') mountBannerManager('marketerBannersHost');
     if (tab === 'promos') renderMarketerPromos();
   }
@@ -4870,8 +4888,12 @@
   async function handleBannerFileSelect(input) {
     const file = input.files && input.files[0];
     if (!file) return;
-    const compressed = await compressImageToBase64(file, 480);
-    pendingBannerImage = { dataUrl: compressed, name: file.name };
+    const rawUrl = await new Promise(res => {
+      const r = new FileReader();
+      r.onload = ev => res(ev.target.result);
+      r.readAsDataURL(file);
+    });
+    pendingBannerImage = { dataUrl: rawUrl, name: file.name };
     const dropLabel = input.nextElementSibling;
     if (dropLabel) dropLabel.textContent = `✅ Выбрано: ${file.name}`;
   }
@@ -5221,14 +5243,17 @@
     const verifiedEl = document.getElementById('cabinetVerifiedState');
     if (!unverifiedEl || !verifiedEl) return;
 
+    const tileCab = document.getElementById('tilePersonalCab');
     if (!cabinetAccounts || cabinetAccounts.length === 0) {
       unverifiedEl.classList.remove('hidden');
       verifiedEl.classList.add('hidden');
+      if (tileCab && isApprover) tileCab.classList.remove('hidden');
       return;
     }
 
     unverifiedEl.classList.add('hidden');
     verifiedEl.classList.remove('hidden');
+    if (tileCab) tileCab.classList.add('hidden');
     document.getElementById('cabVerifiedPhoneText').textContent = cabinetAccounts[0].phonePretty || "Телефон подтвержден";
 
     const promoOrgSel = document.getElementById('promoOrgSelect');
