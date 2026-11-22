@@ -118,31 +118,22 @@
     }
 
     .jannur-mark {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: var(--ink);
-      color: #FFFFFF;
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: #151518;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-      font-weight: 800;
-      font-size: 16px;
-      letter-spacing: -0.02em;
       box-shadow: 0 4px 12px rgba(21, 21, 24, 0.16);
       flex-shrink: 0;
-      position: relative;
+      overflow: hidden;
     }
-    .jannur-mark::after {
-      content: "";
-      position: absolute;
-      bottom: 6px;
-      right: 6px;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--brand);
+    .jannur-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .brand-titles {
@@ -1708,30 +1699,35 @@
       pointer-events: none;
     }
     .splash-logo-box {
-      width: 64px;
-      height: 64px;
-      border-radius: 20px;
-      background: var(--ink);
-      color: #FFFFFF;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-      font-weight: 800;
-      font-size: 28px;
+      width: 132px;
+      height: 132px;
+      border-radius: 28px;
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 12px 28px rgba(21, 21, 24, 0.16);
-      position: relative;
       margin-bottom: 14px;
+      overflow: hidden;
+      position: relative;
     }
-    .splash-logo-box::after {
-      content: "";
-      position: absolute;
-      bottom: 11px;
-      right: 11px;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--brand);
+    .splash-logo-box img,
+    .splash-logo-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .splash-logo-box video.bg-removed {
+      mix-blend-mode: multiply;
+      filter: contrast(1.2) saturate(1.15);
+    }
+    .jannur-mark video.bg-removed {
+      mix-blend-mode: screen;
+      filter: contrast(1.2) saturate(1.15);
+    }
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
     .splash-bar-track {
       width: 170px;
@@ -1758,7 +1754,7 @@
 <body>
   <!-- Быстрый загрузочный экран -->
   <div class="splash-overlay" id="appSplashScreen">
-    <div class="splash-logo-box">J</div>
+    <div class="splash-logo-box"><video id="splashLogoVideo" class="hidden" muted autoplay loop playsinline></video><img id="splashLogoImg" src="data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="28" fill="%23151518"/><path d="M72 28c4.5 0 8 2.2 8 6.5v42c0 15.5-9.5 25.5-25 25.5-7.5 0-14-2.4-18-6.2l7.5-9.2c2.8 2.5 6.3 4 10.2 4 8.5 0 13.3-5.6 13.3-15.2V34.5c0-4.3 3.5-6.5 8-6.5h6z" fill="%23C8253F"/><circle cx="38" cy="64" r="10.5" fill="%23C8253F"/></svg>" alt="JANNUR SHOPPING MALL"></div>
     <div style="font-weight:800; font-size:18px; letter-spacing:0.12em; color:var(--ink);">JANNUR<span style="color:var(--brand);">.</span></div>
     <div id="splashSubText" style="font-size:12.5px; color:var(--ink-secondary); margin-top:4px;">Жүктелуде...</div>
     <div class="splash-bar-track"><div class="splash-bar-fill"></div></div>
@@ -1769,7 +1765,7 @@
   <header class="ios-header">
     <div class="header-row-main">
       <div class="brand-cluster">
-        <div class="jannur-mark">J</div>
+        <div class="jannur-mark"><video id="headerLogoVideo" class="hidden" muted autoplay loop playsinline></video><img id="headerLogoImg" src="data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="28" fill="%23151518"/><path d="M72 28c4.5 0 8 2.2 8 6.5v42c0 15.5-9.5 25.5-25 25.5-7.5 0-14-2.4-18-6.2l7.5-9.2c2.8 2.5 6.3 4 10.2 4 8.5 0 13.3-5.6 13.3-15.2V34.5c0-4.3 3.5-6.5 8-6.5h6z" fill="%23C8253F"/><circle cx="38" cy="64" r="10.5" fill="%23C8253F"/></svg>" alt="JANNUR"></div>
         <div class="brand-titles">
           <div class="brand-wordmark">JANNUR<span>.</span></div>
           <div class="app-name-sub" id="headerAppNameText">Zhannur Заявки</div>
@@ -3254,6 +3250,39 @@
     updateGateVisualState();
   }
 
+  function applyMallLogoSrc(src) {
+    if (!src) return;
+    const sImg = document.getElementById('splashLogoImg');
+    const hImg = document.getElementById('headerLogoImg');
+    const sVid = document.getElementById('splashLogoVideo');
+    const hVid = document.getElementById('headerLogoVideo');
+
+    if (String(src).startsWith('data:video/') || /\.(mp4|webm|mov)(\?|$)/i.test(String(src))) {
+      if (sImg) sImg.classList.add('hidden');
+      if (hImg) hImg.classList.add('hidden');
+      if (sVid) {
+        sVid.src = src;
+        sVid.playbackRate = 1.65;
+        sVid.classList.remove('hidden');
+        sVid.classList.add('bg-removed');
+        sVid.play().catch(() => {});
+      }
+      if (hVid) {
+        hVid.src = src;
+        hVid.playbackRate = 1.65;
+        hVid.classList.remove('hidden');
+        hVid.classList.add('bg-removed');
+        hVid.play().catch(() => {});
+      }
+      return;
+    }
+
+    if (sVid) sVid.classList.add('hidden');
+    if (hVid) hVid.classList.add('hidden');
+    if (sImg) { sImg.src = src; sImg.classList.remove('hidden'); }
+    if (hImg) { hImg.src = src; hImg.classList.remove('hidden'); }
+  }
+
   function hideSplashScreen() {
     const sp = document.getElementById('appSplashScreen');
     if (sp && !sp.classList.contains('fade-out')) {
@@ -3402,6 +3431,10 @@
       renderTenantList();
     }
 
+    const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
+    if (savedMallLogo) {
+      applyMallLogoSrc(savedMallLogo);
+    }
     updateUserProfileBlock();
     populateAdminTenantSelect();
     renderAdminTenantsManager();
@@ -3544,7 +3577,11 @@
 
       hasInitialAppLoaded = true;
       hideSplashScreen();
-      updateUserProfileBlock();
+      const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
+    if (savedMallLogo) {
+      applyMallLogoSrc(savedMallLogo);
+    }
+    updateUserProfileBlock();
       if (showToast) haptic('light');
     } catch (e) {
       console.error(e);
@@ -3586,6 +3623,10 @@
       renderMyPromosLists();
     }
 
+    const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
+    if (savedMallLogo) {
+      applyMallLogoSrc(savedMallLogo);
+    }
     updateUserProfileBlock();
     updateHeaderAndSubmissionLock();
 
@@ -5014,6 +5055,10 @@
     });
     document.getElementById('marketerPromosTab').classList.toggle('hidden', tab !== 'promos');
     document.getElementById('marketerBannersTab').classList.toggle('hidden', tab !== 'banners');
+    const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
+    if (savedMallLogo) {
+      applyMallLogoSrc(savedMallLogo);
+    }
     updateUserProfileBlock();
     if (tab === 'banners') mountBannerManager('marketerBannersHost');
     if (tab === 'promos') renderMarketerPromos();
@@ -5640,7 +5685,11 @@
         } else if (data.status === 'success') {
           cabinetAccounts = data.cabinetAccounts || [];
           renderTenantCabinet();
-          updateUserProfileBlock();
+          const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
+    if (savedMallLogo) {
+      applyMallLogoSrc(savedMallLogo);
+    }
+    updateUserProfileBlock();
           haptic('heavy');
           tg.showAlert(`✅ Номер ${data.phonePretty} подтвержден!`);
         } else {
