@@ -1685,7 +1685,7 @@
       position: fixed;
       inset: 0;
       z-index: 200;
-      background: #F5F5F7;
+      background: radial-gradient(circle at 50% 42%, #FFFFFF 0%, #F5F5F7 68%, #EAEAEF 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1693,22 +1693,59 @@
       padding: 24px;
       transition: opacity 0.28s ease, visibility 0.28s ease;
     }
+    .splash-stage-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .splash-ground-shadow {
+      width: 92px;
+      height: 16px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(21, 21, 24, 0.26) 0%, rgba(200, 37, 63, 0.12) 45%, rgba(21, 21, 24, 0) 75%);
+      filter: blur(5px);
+      margin-top: 6px;
+      animation: splashShadowSync 1.8s var(--spring) infinite alternate;
+    }
+    @keyframes splashShadowSync {
+      0% { transform: scale(0.76); opacity: 0.55; }
+      50% { transform: scale(1.08); opacity: 0.9; }
+      100% { transform: scale(0.96); opacity: 0.75; }
+    }
     .splash-overlay.fade-out {
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
     }
     .splash-logo-box {
-      width: 132px;
-      height: 132px;
-      border-radius: 28px;
+      width: 156px;
+      height: 124px;
+      border-radius: 24px;
       background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 14px;
-      overflow: hidden;
+      overflow: visible;
       position: relative;
+      filter: drop-shadow(0 12px 20px rgba(21, 21, 24, 0.18)) drop-shadow(0 4px 12px rgba(200, 37, 63, 0.16));
+      animation: birdToLogoReveal 1.8s var(--spring) forwards;
+    }
+    @keyframes birdToLogoReveal {
+      0% {
+        transform: translateX(18px) scale(0.84) rotate(6deg);
+        opacity: 0.55;
+      }
+      45% {
+        transform: translateX(-3px) scale(1.05) rotate(-2deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(0) scale(1) rotate(0deg);
+        opacity: 1;
+      }
     }
     .splash-logo-box img,
     .splash-logo-box video {
@@ -1716,6 +1753,7 @@
       height: 100%;
       object-fit: contain;
       display: block;
+      transition: filter 0.3s ease;
     }
     .splash-logo-box video.bg-removed {
       mix-blend-mode: multiply;
@@ -1754,7 +1792,10 @@
 <body>
   <!-- Быстрый загрузочный экран -->
   <div class="splash-overlay" id="appSplashScreen">
-    <div class="splash-logo-box"><video id="splashLogoVideo" class="hidden" muted autoplay loop playsinline></video><img id="splashLogoImg" src="data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="28" fill="%23151518"/><path d="M72 28c4.5 0 8 2.2 8 6.5v42c0 15.5-9.5 25.5-25 25.5-7.5 0-14-2.4-18-6.2l7.5-9.2c2.8 2.5 6.3 4 10.2 4 8.5 0 13.3-5.6 13.3-15.2V34.5c0-4.3 3.5-6.5 8-6.5h6z" fill="%23C8253F"/><circle cx="38" cy="64" r="10.5" fill="%23C8253F"/></svg>" alt="JANNUR SHOPPING MALL"></div>
+    <div class="splash-stage-wrap">
+      <div class="splash-logo-box"><video id="splashLogoVideo" class="hidden" muted autoplay loop playsinline></video><img id="splashLogoImg" src="jannur_logo_fast_transparent.gif" onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20120%20120%27%3E%3Crect%20width%3D%27120%27%20height%3D%27120%27%20rx%3D%2728%27%20fill%3D%27%23151518%27/%3E%3Cpath%20d%3D%27M72%2028c4.5%200%208%202.2%208%206.5v42c0%2015.5-9.5%2025.5-25%2025.5-7.5%200-14-2.4-18-6.2l7.5-9.2c2.8%202.5%206.3%204%2010.2%204%208.5%200%2013.3-5.6%2013.3-15.2V34.5c0-4.3%203.5-6.5%208-6.5h6z%27%20fill%3D%27%23C8253F%27/%3E%3Ccircle%20cx%3D%2738%27%20cy%3D%2764%27%20r%3D%2710.5%27%20fill%3D%27%23C8253F%27/%3E%3C/svg%3E';}" alt="JANNUR SHOPPING MALL"></div>
+      <div class="splash-ground-shadow" aria-hidden="true"></div>
+    </div>
     <div style="font-weight:800; font-size:18px; letter-spacing:0.12em; color:var(--ink);">JANNUR<span style="color:var(--brand);">.</span></div>
     <div id="splashSubText" style="font-size:12.5px; color:var(--ink-secondary); margin-top:4px;">Жүктелуде...</div>
     <div class="splash-bar-track"><div class="splash-bar-fill"></div></div>
@@ -1765,7 +1806,7 @@
   <header class="ios-header">
     <div class="header-row-main">
       <div class="brand-cluster">
-        <div class="jannur-mark"><video id="headerLogoVideo" class="hidden" muted autoplay loop playsinline></video><img id="headerLogoImg" src="data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="28" fill="%23151518"/><path d="M72 28c4.5 0 8 2.2 8 6.5v42c0 15.5-9.5 25.5-25 25.5-7.5 0-14-2.4-18-6.2l7.5-9.2c2.8 2.5 6.3 4 10.2 4 8.5 0 13.3-5.6 13.3-15.2V34.5c0-4.3 3.5-6.5 8-6.5h6z" fill="%23C8253F"/><circle cx="38" cy="64" r="10.5" fill="%23C8253F"/></svg>" alt="JANNUR"></div>
+        <div class="jannur-mark"><video id="headerLogoVideo" class="hidden" muted autoplay loop playsinline></video><img id="headerLogoImg" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20120%20120%27%3E%3Crect%20width%3D%27120%27%20height%3D%27120%27%20rx%3D%2728%27%20fill%3D%27%23151518%27/%3E%3Cpath%20d%3D%27M72%2028c4.5%200%208%202.2%208%206.5v42c0%2015.5-9.5%2025.5-25%2025.5-7.5%200-14-2.4-18-6.2l7.5-9.2c2.8%202.5%206.3%204%2010.2%204%208.5%200%2013.3-5.6%2013.3-15.2V34.5c0-4.3%203.5-6.5%208-6.5h6z%27%20fill%3D%27%23C8253F%27/%3E%3Ccircle%20cx%3D%2738%27%20cy%3D%2764%27%20r%3D%2710.5%27%20fill%3D%27%23C8253F%27/%3E%3C/svg%3E" alt="JANNUR"></div>
         <div class="brand-titles">
           <div class="brand-wordmark">JANNUR<span>.</span></div>
           <div class="app-name-sub" id="headerAppNameText">Zhannur Заявки</div>
@@ -2303,6 +2344,30 @@
     <div id="moreView" class="view-section hidden">
       <div class="section-head-row">
         <h2 class="section-title" id="moreSectionTitle">Дополнительно</h2>
+      </div>
+
+      <!-- Быстрое управление экстренным приемом заявок для Администратора (15 / 30 / 60 мин) -->
+      <div class="surface-card hidden" id="moreAdminEmergencyCard" style="border: 1px solid rgba(200, 37, 63, 0.25);">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
+          <h3 class="card-title" style="margin:0;">⚡ Экстренный прием заявок</h3>
+          <span class="profile-role-badge" id="moreEmergencyStatusPill">По расписанию</span>
+        </div>
+        <p class="card-desc" style="margin-bottom:10px;">
+          Открывает или закрывает форму подачи заявок для всех арендаторов вне графика (09:00–17:00).
+        </p>
+        <div class="preset-row" id="moreEmDurationRow" style="margin-bottom:10px;">
+          <button type="button" class="preset-btn active" onclick="selectEmergencyMinutes(15, this)">15 мин</button>
+          <button type="button" class="preset-btn" onclick="selectEmergencyMinutes(30, this)">30 мин</button>
+          <button type="button" class="preset-btn" onclick="selectEmergencyMinutes(60, this)">60 мин</button>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn-primary" id="moreOpenEmergencyBtn" onclick="enableAdminEmergencyOpen()">
+            Открыть на 15 мин
+          </button>
+          <button type="button" class="btn-secondary hidden" id="moreCloseEmergencyBtn" style="border-color:var(--brand); color:var(--brand);" onclick="disableAdminEmergencyOpen()">
+            Закрыть сейчас
+          </button>
+        </div>
       </div>
 
       <!-- Плитки разделов внутри «Ещё» -->
@@ -3381,8 +3446,23 @@
     const emergencyText = document.getElementById('emergencyCountdownText');
     const closeEmBtn = document.getElementById('closeEmergencyBtn');
 
+    const isAdminUser = Boolean(isApprover && userRole === "Администратор");
     if (emergencyBox) {
-      emergencyBox.classList.toggle('hidden', !(isApprover && userRole === "Администратор"));
+      emergencyBox.classList.toggle('hidden', !isAdminUser);
+    }
+    const moreEmCard = document.getElementById('moreAdminEmergencyCard');
+    const moreEmPill = document.getElementById('moreEmergencyStatusPill');
+    const moreCloseBtn = document.getElementById('moreCloseEmergencyBtn');
+    if (moreEmCard) {
+      moreEmCard.classList.toggle('hidden', !isAdminUser);
+      if (isAdminUser) {
+        if (moreEmPill) {
+          moreEmPill.textContent = emActive ? `Активен (${formatRemainingEmergency()})` : "По расписанию";
+        }
+        if (moreCloseBtn) {
+          moreCloseBtn.classList.toggle('hidden', !emActive);
+        }
+      }
     }
     if (emergencyBanner) {
       emergencyBanner.classList.toggle('hidden', !emActive);
@@ -4388,10 +4468,14 @@
   function selectEmergencyMinutes(mins, btn) {
     emergencyMinutes = mins;
     haptic('light');
-    document.querySelectorAll('#adminEmergencyBox .preset-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#adminEmergencyBox .preset-btn, #moreEmDurationRow .preset-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent.trim().startsWith(String(mins)));
+    });
     if (btn) btn.classList.add('active');
     const openBtn = document.getElementById('openEmergencyBtn');
     if (openBtn) openBtn.textContent = `Открыть прием на ${mins} мин для всех`;
+    const moreOpenBtn = document.getElementById('moreOpenEmergencyBtn');
+    if (moreOpenBtn) moreOpenBtn.textContent = `Открыть на ${mins} мин`;
   }
 
   async function enableAdminEmergencyOpen() {
