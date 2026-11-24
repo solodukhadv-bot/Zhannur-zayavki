@@ -1822,6 +1822,92 @@
       from { transform: translateX(-20%); width: 35%; }
       to { transform: translateX(130%); width: 55%; }
     }
+
+    /* ==================== АКТЫ О НАРУШЕНИЯХ (АДМИН-ПАНЕЛЬ) ==================== */
+    .act-chip-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 6px;
+    }
+    .act-chip-btn {
+      width: 100%;
+      text-align: left;
+      padding: 11px 13px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 13px;
+      border: 1px solid var(--hairline-strong);
+      background: var(--bg);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.16s var(--spring);
+      line-height: 1.3;
+    }
+    .act-chip-btn:active { transform: scale(0.98); }
+    .act-chip-btn.active {
+      border-color: var(--brand);
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-weight: 700;
+    }
+    .act-penalty-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .act-penalty-grid .act-chip-btn {
+      text-align: center;
+      padding: 11px 8px;
+      font-size: 13px;
+    }
+    .act-penalty-grid .act-chip-btn.full-span { grid-column: span 2; }
+    .act-photo-thumbs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .act-photo-thumb-item {
+      position: relative;
+      border-radius: 11px;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      border: 1px solid var(--hairline);
+      background: var(--bg);
+    }
+    .act-photo-thumb-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .act-photo-del {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(21, 21, 24, 0.72);
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .act-pdf-ready-banner {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(22, 163, 74, 0.09);
+      border: 1px solid rgba(22, 163, 74, 0.35);
+    }
+
     .hidden { display: none !important; }
   </style>
 </head>
@@ -2427,10 +2513,110 @@
           <div class="more-tile-title">Баннеры</div>
           <div class="more-tile-sub">Реклама для арендаторов</div>
         </div>
+        <div class="more-tile" id="tileActs" onclick="switchMoreTab('acts')">
+          <div class="more-tile-icon">⚖️</div>
+          <div class="more-tile-title">Акты нарушений</div>
+          <div class="more-tile-sub">Составление и PDF-файл</div>
+        </div>
         <div class="more-tile" id="tilePersonalCab" onclick="switchMoreTab('cabinet')">
           <div class="more-tile-icon">👤</div>
           <div class="more-tile-title">Личный кабинет</div>
           <div class="more-tile-sub">Вход по номеру телефона</div>
+        </div>
+      </div>
+
+      <!-- Подраздел 5.0: Составление актов о нарушении на арендаторов (PDF) -->
+      <div id="moreSubActs" class="hidden">
+        <div class="surface-card" style="border: 1px solid rgba(200, 37, 63, 0.22);">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
+            <h3 class="card-title" style="margin:0;">⚖️ Акт обнаружения нарушения</h3>
+            <span class="profile-role-badge">PDF-документ</span>
+          </div>
+          <p class="card-desc">
+            Заполните данные нарушения — система мгновенно сформирует официальный PDF-акт на бланке ТРЦ «Жаннур», сохранит его на Google Диск и отправит готовый PDF в Telegram.
+          </p>
+
+          <label class="field-label" for="actAdminName">1. Представитель администрации ТРЦ «Жаннур» <span class="req">*</span></label>
+          <input type="text" id="actAdminName" placeholder="ФИО и должность (например: Солодуха Д. В., администратор)">
+
+          <div class="date-row">
+            <div>
+              <label class="field-label" for="actViolationDate">Дата фиксации <span class="req">*</span></label>
+              <input type="date" id="actViolationDate">
+            </div>
+            <div>
+              <label class="field-label" for="actViolationTime">Время фиксации <span class="req">*</span></label>
+              <input type="time" id="actViolationTime" style="width:100%; padding:11px 13px; border-radius:13px; border:1px solid var(--hairline-strong); background:var(--surface); color:var(--ink); font-family:inherit; font-size:16px;">
+            </div>
+          </div>
+
+          <label class="field-label" for="actFloorSelect">2. Этаж арендатора <span class="req">*</span></label>
+          <select id="actFloorSelect" onchange="populateActTenantSelect()">
+            <option value="1">1 этаж</option>
+            <option value="2">2 этаж</option>
+            <option value="3">3 этаж</option>
+            <option value="4">4 этаж</option>
+            <option value="Улица и Банкоматы">Улица и Банкоматы</option>
+            <option value="Подрядчик/новый арендатор">Подрядчик / новый арендатор</option>
+          </select>
+
+          <label class="field-label" for="actTenantSelect">3. Арендатор (ИП / ТОО) <span class="req">*</span></label>
+          <select id="actTenantSelect" onchange="handleActTenantSelect()"></select>
+          <input type="text" id="actTenantCustom" placeholder="Наименование ИП / ТОО и номер бутика..." style="margin-top:8px;">
+
+          <label class="field-label">4. Характер нарушения (шаблоны)</label>
+          <div style="font-size:11.5px; color:var(--ink-secondary); margin-bottom:4px;">Нажмите на типовую причину — формулировка для акта подставится автоматически:</div>
+          <div class="act-chip-list" id="actReasonList">
+            <button type="button" class="act-chip-btn" data-key="late_open" onclick="selectActReason('late_open', this)">⏰ Позднее открытие бутика</button>
+            <button type="button" class="act-chip-btn" data-key="early_close" onclick="selectActReason('early_close', this)">🚪 Раннее закрытие бутика</button>
+            <button type="button" class="act-chip-btn" data-key="goods_import" onclick="selectActReason('goods_import', this)">📦 Ввоз / вывоз товара в неположенное время или без согласования</button>
+            <button type="button" class="act-chip-btn" data-key="repair_work" onclick="selectActReason('repair_work', this)">🛠 Проведение ремонтных работ без согласования / в неположенное время</button>
+            <button type="button" class="act-chip-btn" data-key="sanpin_grease" onclick="selectActReason('sanpin_grease', this)">🧼 Жироуловитель / кухня / несоблюдение норм СанПиН</button>
+            <button type="button" class="act-chip-btn" data-key="mop_trash" onclick="selectActReason('mop_trash', this)">🗑 Мусор / выставление товара в местах общего пользования (МОП)</button>
+            <button type="button" class="act-chip-btn" data-key="fire_safety" onclick="selectActReason('fire_safety', this)">🔥 Нарушение пожарной безопасности / загромождение выхода</button>
+            <button type="button" class="act-chip-btn" data-key="other" onclick="selectActReason('other', this)">✏️ Другое нарушение (ввести вручную)</button>
+          </div>
+
+          <label class="field-label" for="actViolationShort">Кратко (что нарушил) <span class="req">*</span></label>
+          <input type="text" id="actViolationShort" placeholder="Например: допустил позднее открытие торгового помещения">
+
+          <label class="field-label" for="actViolationDetails">В чём выразилось нарушение (текст в акт) <span class="req">*</span></label>
+          <textarea id="actViolationDetails" placeholder="Подробное описание нарушения с указанием времени и обстоятельств..."></textarea>
+
+          <label class="field-label" for="actRequirementText">Предписание / требование в конце акта</label>
+          <textarea id="actRequirementText" style="min-height:66px;">Арендатору необходимо обеспечить соблюдение установленного графика работы и Правил внутреннего распорядка ТРЦ «Жаннур» в дальнейшем.</textarea>
+
+          <label class="field-label">5. Мера воздействия (санкция) <span class="req">*</span></label>
+          <div class="act-penalty-grid" id="actPenaltyList">
+            <button type="button" class="act-chip-btn full-span active" data-val="предупреждение" onclick="selectActPenalty('предупреждение', this)">Предупреждение (1-е нарушение)</button>
+            <button type="button" class="act-chip-btn" data-val="штраф в размере 3 МРП" onclick="selectActPenalty('штраф в размере 3 МРП', this)">Штраф 3 МРП</button>
+            <button type="button" class="act-chip-btn" data-val="штраф в размере 10 МРП" onclick="selectActPenalty('штраф в размере 10 МРП', this)">Штраф 10 МРП</button>
+            <button type="button" class="act-chip-btn" data-val="штраф в размере 20 МРП" onclick="selectActPenalty('штраф в размере 20 МРП', this)">Штраф 20 МРП</button>
+            <button type="button" class="act-chip-btn" data-val="штраф в размере 30 МРП" onclick="selectActPenalty('штраф в размере 30 МРП', this)">Штраф 30 МРП</button>
+            <button type="button" class="act-chip-btn full-span" data-val="штраф в размере 50 МРП" onclick="selectActPenalty('штраф в размере 50 МРП', this)">Штраф 50 МРП (по договору)</button>
+          </div>
+
+          <label class="field-label">6. Фотофиксация нарушения (до 3 фото, по желанию)</label>
+          <input type="file" id="actPhotoInput" accept="image/*" multiple class="hidden" onchange="handleActPhotosSelected(event)">
+          <div class="upload-drop-zone" onclick="document.getElementById('actPhotoInput').click()">
+            📷 Сделать фото или выбрать из галереи
+          </div>
+          <div class="act-photo-thumbs" id="actPhotoPreviewGrid"></div>
+
+          <button type="button" class="btn-primary" style="width:100%; margin-top:14px;" id="submitActPdfBtn" onclick="submitViolationActPdf()">
+            📄 Сформировать PDF-акт и отправить
+          </button>
+
+          <div id="actPdfResultBox" class="hidden act-pdf-ready-banner"></div>
+        </div>
+
+        <div class="surface-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;">
+            <h3 class="card-title" style="margin:0;">Журнал составленных актов (<span id="actsArchiveCount">0</span>)</h3>
+            <button type="button" class="refresh-pill-btn" onclick="loadUserData(true)">↻ Обновить</button>
+          </div>
+          <p class="card-desc">Все сформированные PDF-акты сохраняются в Google Таблице «Акты_нарушений» и на Google Диске.</p>
+          <div id="actsArchiveList"></div>
         </div>
       </div>
 
@@ -3210,6 +3396,9 @@
   let activeBannerIdx = 0;
   let bannerTimerId = null;
   let promoRequests = [];
+  let violationActsList = [];
+  let selectedActPenalty = "предупреждение";
+  let selectedActPhotos = [];
   let promoFilterMode = "all";
   let selectedPromoMedia = [];
   let pendingBannerImage = { dataUrl: "", name: "" };
@@ -3553,6 +3742,7 @@
       bannersList = data.banners || [];
       bannerIntervalSec = Number(data.bannerIntervalSec || 7);
       promoRequests = data.promoRequests || [];
+      violationActsList = data.violationActs || [];
 
       const totalTenantBadge = myRequests.length + myPromos.length;
       setBadgeCount('myReqBadge', totalTenantBadge);
@@ -3648,7 +3838,9 @@
             syncAdminLimitForm();
             populateAdminCabOrgSelect();
             renderAdminCabinetList();
+            initActViolationForm();
           }
+          renderViolationActsArchive();
           renderGuardList();
         }
       } else {
@@ -3656,6 +3848,7 @@
         document.getElementById('tileAccess').classList.add('hidden');
         document.getElementById('tileAdminCab').classList.add('hidden');
         document.getElementById('tileBanners').classList.add('hidden');
+        document.getElementById('tileActs').classList.add('hidden');
         document.getElementById('moreMenuGrid').classList.add('hidden');
         const moreTitle = document.getElementById('moreSectionTitle');
         if (moreTitle) moreTitle.textContent = "Личный кабинет";
@@ -3744,12 +3937,14 @@
     document.getElementById('tileAccess').classList.toggle('active', tab === 'access');
     document.getElementById('tileAdminCab').classList.toggle('active', tab === 'adminCabinet');
     document.getElementById('tileBanners').classList.toggle('active', tab === 'banners');
+    document.getElementById('tileActs').classList.toggle('active', tab === 'acts');
     document.getElementById('tilePersonalCab').classList.toggle('active', tab === 'cabinet');
 
     document.getElementById('moreSubLimits').classList.toggle('hidden', tab !== 'limits');
     document.getElementById('moreSubAccess').classList.toggle('hidden', tab !== 'access');
     document.getElementById('moreSubAdminCabinet').classList.toggle('hidden', tab !== 'adminCabinet');
     document.getElementById('moreSubBanners').classList.toggle('hidden', tab !== 'banners');
+    document.getElementById('moreSubActs').classList.toggle('hidden', tab !== 'acts');
     document.getElementById('moreSubCabinet').classList.toggle('hidden', tab !== 'cabinet');
 
     if (tab === 'adminCabinet') {
@@ -3758,6 +3953,10 @@
     }
     if (tab === 'banners') {
       mountBannerManager('adminBannersHost');
+    }
+    if (tab === 'acts') {
+      initActViolationForm();
+      renderViolationActsArchive();
     }
     if (tab === 'cabinet') renderTenantCabinet();
   }
@@ -5272,6 +5471,7 @@
     const data = await res.json();
     if (data.status === 'success') {
       promoRequests = data.promoRequests || [];
+      violationActsList = data.violationActs || [];
       renderMarketerPromos();
       tg.showAlert(status === 'Отклонено'
         ? `❌ Заявка отклонена. Арендатору отправлено уведомление с причиной.`
@@ -5986,6 +6186,314 @@
     document.getElementById('moreSubAdminCabinet').scrollIntoView({ behavior: 'smooth' });
     haptic('light');
   }
+
+  /* ==================== СОСТАВЛЕНИЕ АКТОВ О НАРУШЕНИЯХ И PDF ==================== */
+  const ACT_PRESETS = {
+    late_open: {
+      short: "допустил позднее открытие торгового помещения",
+      details: (t) => `При проведении обхода в ${t} зафиксировано, что торговое помещение арендатора закрыто для посетителей, коммерческая деятельность не ведется, персонал на рабочем месте отсутствует.`,
+      req: "Арендатору необходимо обеспечить соблюдение установленного графика работы ТРЦ «Жаннур» и не допускать позднего открытия бутика в дальнейшем."
+    },
+    early_close: {
+      short: "допустил досрочное (раннее) закрытие торгового помещения",
+      details: (t) => `При проведении обхода в ${t} зафиксировано, что торговое помещение арендатора закрыто до окончания установленного времени работы ТРЦ «Жаннур» без предварительного согласования с администрацией.`,
+      req: "Арендатору необходимо обеспечить соблюдение установленного графика работы и не допускать досрочного закрытия бутика в дальнейшем."
+    },
+    goods_import: {
+      short: "осуществил ввоз (вывоз) товара в неположенное время / без согласования",
+      details: (t) => `В ${t} зафиксирован факт перемещения (ввоза/вывоза) товарно-материальных ценностей через пешеходные галереи / места общего пользования в рабочее время ТРЦ без предварительного письменного разрешения администрации.`,
+      req: "Арендатору необходимо осуществлять погрузочно-разгрузочные работы и транспортировку товара строго в установленное время через служебные коридоры и грузовой лифт по согласованию с администрацией."
+    },
+    repair_work: {
+      short: "производил ремонтные (монтажные) работы в неположенное время / без согласования",
+      details: (t) => `В ${t} зафиксировано проведение строительно-ремонтных / монтажных работ в помещении без предварительного письменного согласования с администрацией ТРЦ (либо в часы работы торгового центра с нарушением требований безопасности и тишины).`,
+      req: "Арендатору необходимо немедленно прекратить несогласованные работы и проводить любые ремонтные или монтажные мероприятия исключительно после письменного согласования с администрацией в установленное время."
+    },
+    sanpin_grease: {
+      short: "допустил нарушение санитарных норм (СанПиН) и правил эксплуатации жироуловителя / кухни",
+      details: (t) => `В ${t} при проверке выявлено несоблюдение санитарно-гигиенических требований и норм СанПиН на кухне / в помещении арендатора, а также нарушение правил содержания и своевременной очистки жироуловителя (угроза попадания жировых отходов в систему канализации).`,
+      req: "Арендатору необходимо в кратчайший срок привести состояние кухни и жироуловителя в соответствие с нормами СанПиН и требованиями договора аренды, исключив сброс жиров и отходов в трубопроводы."
+    },
+    mop_trash: {
+      short: "допустил складирование мусора (товара) в местах общего пользования",
+      details: (t) => `В ${t} зафиксировано размещение бытового мусора, тары или оборудования за пределами арендуемого помещения в местах общего пользования / служебном коридоре ТРЦ «Жаннур».`,
+      req: "Арендатору необходимо немедленно освободить места общего пользования и осуществлять вынос отходов строго в главный мусоросборник на погрузочной площадке."
+    },
+    fire_safety: {
+      short: "допустил нарушение требований пожарной безопасности",
+      details: (t) => `В ${t} зафиксировано нарушение правил пожарной безопасности (загромождение прохода / использование несогласованных электронагревательных приборов или временных удлинителей).`,
+      req: "Арендатору необходимо незамедлительно устранить выявленное нарушение требований пожарной безопасности и строго соблюдать инструкции администрации ТРЦ."
+    },
+    other: {
+      short: "",
+      details: () => "",
+      req: "Арендатору необходимо устранить выявленное нарушение и строго соблюдать Правила внутреннего распорядка ТРЦ «Жаннур» в дальнейшем."
+    }
+  };
+
+  function initActViolationForm() {
+    const adminInp = document.getElementById('actAdminName');
+    if (adminInp && !adminInp.value.trim()) {
+      const tgFullName = `${currentUser.first_name || ""} ${currentUser.last_name || ""}`.trim();
+      const baseName = userStaffName || tgFullName || "";
+      if (baseName) {
+        adminInp.value = userRole ? `${baseName} (${userRole})` : baseName;
+      }
+    }
+    const dateInp = document.getElementById('actViolationDate');
+    const timeInp = document.getElementById('actViolationTime');
+    if (dateInp && !dateInp.value) {
+      const astana = getAstanaDate();
+      dateInp.value = astana.toISOString().split('T')[0];
+    }
+    if (timeInp && !timeInp.value) {
+      const astana = getAstanaDate();
+      timeInp.value = `${String(astana.getHours()).padStart(2, '0')}:${String(astana.getMinutes()).padStart(2, '0')}`;
+    }
+    populateActTenantSelect();
+  }
+
+  function populateActTenantSelect() {
+    const flSel = document.getElementById('actFloorSelect');
+    const orgSel = document.getElementById('actTenantSelect');
+    const customInp = document.getElementById('actTenantCustom');
+    if (!flSel || !orgSel) return;
+
+    const fl = flSel.value;
+    const list = TENANTS_DB[fl] || [];
+    orgSel.innerHTML = `<option value="">— Выберите ИП / ТОО из списка (${fl} эт.) —</option>`;
+    list.forEach(org => {
+      const opt = document.createElement('option');
+      opt.value = org;
+      opt.textContent = org;
+      orgSel.appendChild(opt);
+    });
+    const customOpt = document.createElement('option');
+    customOpt.value = "CUSTOM";
+    customOpt.textContent = "✏️ Ввести вручную...";
+    orgSel.appendChild(customOpt);
+
+    if (fl === "Подрядчик/новый арендатор") {
+      orgSel.value = "CUSTOM";
+      if (customInp) customInp.value = "";
+    }
+  }
+
+  function handleActTenantSelect() {
+    const sel = document.getElementById('actTenantSelect').value;
+    const customInp = document.getElementById('actTenantCustom');
+    const fl = document.getElementById('actFloorSelect').value;
+    if (!customInp) return;
+    if (sel && sel !== "CUSTOM") {
+      const floorSuffix = (fl === "1" || fl === "2" || fl === "3" || fl === "4") ? ` (${fl} этаж)` : "";
+      customInp.value = sel.includes("этаж") ? sel : `${sel}${floorSuffix}`;
+    } else if (sel === "CUSTOM") {
+      customInp.value = "";
+      customInp.focus();
+    }
+  }
+
+  function selectActReason(key, btnEl) {
+    haptic('light');
+    document.querySelectorAll('#actReasonList .act-chip-btn').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+    const preset = ACT_PRESETS[key];
+    const timeVal = document.getElementById('actViolationTime').value || "указанное время";
+    if (preset) {
+      document.getElementById('actViolationShort').value = preset.short;
+      document.getElementById('actViolationDetails').value = preset.details(timeVal);
+      document.getElementById('actRequirementText').value = preset.req;
+    }
+  }
+
+  function selectActPenalty(val, btnEl) {
+    haptic('light');
+    document.querySelectorAll('#actPenaltyList .act-chip-btn').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+    selectedActPenalty = val;
+  }
+
+  function handleActPhotosSelected(event) {
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
+    const remain = Math.max(0, 3 - selectedActPhotos.length);
+    const slice = files.slice(0, remain);
+    if (files.length > remain) {
+      tg.showAlert("Можно прикрепить максимум 3 фотографии к одному акту.");
+    }
+    slice.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxW = 1280;
+          const scale = img.width > maxW ? maxW / img.width : 1;
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.80);
+          selectedActPhotos.push({ name: file.name, dataUrl: dataUrl });
+          renderActPhotoThumbs();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    event.target.value = "";
+  }
+
+  function removeActPhoto(idx) {
+    haptic('light');
+    selectedActPhotos.splice(idx, 1);
+    renderActPhotoThumbs();
+  }
+
+  function renderActPhotoThumbs() {
+    const grid = document.getElementById('actPhotoPreviewGrid');
+    if (!grid) return;
+    grid.innerHTML = "";
+    selectedActPhotos.forEach((p, idx) => {
+      const cell = document.createElement('div');
+      cell.className = 'act-photo-thumb-item';
+      cell.innerHTML = `
+        <img src="${p.dataUrl}" alt="Фото ${idx + 1}">
+        <button type="button" class="act-photo-del" onclick="removeActPhoto(${idx})">✕</button>
+      `;
+      grid.appendChild(cell);
+    });
+  }
+
+  function formatActDateRu(isoDate) {
+    if (!isoDate) return "";
+    const parts = isoDate.split("-");
+    if (parts.length !== 3) return isoDate;
+    return `${parts[2]}.${parts[1]}.${parts[0]} г.`;
+  }
+
+  function openExternalPdfUrl(url) {
+    if (!url) return;
+    if (tg && typeof tg.openLink === 'function') {
+      tg.openLink(url);
+    } else {
+      window.open(url, '_blank');
+    }
+  }
+
+  async function submitViolationActPdf() {
+    const adminName = document.getElementById('actAdminName').value.trim();
+    const rawDate = document.getElementById('actViolationDate').value;
+    const violationTime = document.getElementById('actViolationTime').value;
+    const floor = document.getElementById('actFloorSelect').value;
+    const tenantName = document.getElementById('actTenantCustom').value.trim();
+    const violationShort = document.getElementById('actViolationShort').value.trim();
+    const violationDetails = document.getElementById('actViolationDetails').value.trim();
+    const requirementText = document.getElementById('actRequirementText').value.trim();
+
+    if (!adminName || !tenantName || !violationShort || !violationDetails) {
+      tg.showAlert("Заполните ФИО представителя администрации, наименование арендатора и описание нарушения.");
+      return;
+    }
+
+    const astanaTodayIso = getAstanaDate().toISOString().slice(0, 10);
+    const todayDateRu = formatActDateRu(astanaTodayIso);
+    const violationDateRu = `${formatActDateRu(rawDate)} в ${violationTime}`;
+
+    const btn = document.getElementById('submitActPdfBtn');
+    const resultBox = document.getElementById('actPdfResultBox');
+    btn.disabled = true;
+    btn.textContent = "⏳ Формируем PDF-акт...";
+    resultBox.classList.add('hidden');
+    haptic('medium');
+
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "create_violation_act",
+          initData: initDataRaw,
+          today_date: todayDateRu,
+          admin_name: adminName,
+          floor: floor,
+          violation_date: violationDateRu,
+          tenant_name: tenantName,
+          violation_short: violationShort,
+          violation_details: violationDetails,
+          requirement_text: requirementText,
+          penalty: selectedActPenalty,
+          photos: selectedActPhotos.map(p => p.dataUrl)
+        })
+      });
+      const json = await res.json();
+      if (json.status === "success") {
+        haptic('heavy');
+        const pdfLinkHtml = json.pdfUrl
+          ? `<button type="button" class="btn-primary" style="width:100%; margin-top:10px; background:var(--green); box-shadow:none;" onclick="openExternalPdfUrl('${json.pdfUrl}')">📄 Открыть / Скачать готовый PDF-акт</button>`
+          : "";
+        resultBox.innerHTML = `
+          <div style="font-weight:800; font-size:14.5px; color:var(--green);">✅ Акт №${json.actNumber || ""} сформирован в PDF!</div>
+          <div style="font-size:12.5px; color:var(--ink); margin-top:4px; line-height:1.4;">
+            Готовый PDF-файл сохранен на Google Диске и отправлен в ваш чат Telegram.
+          </div>
+          ${pdfLinkHtml}
+        `;
+        resultBox.classList.remove('hidden');
+
+        document.getElementById('actViolationShort').value = "";
+        document.getElementById('actViolationDetails').value = "";
+        selectedActPhotos = [];
+        renderActPhotoThumbs();
+        document.querySelectorAll('#actReasonList .act-chip-btn').forEach(b => b.classList.remove('active'));
+
+        await loadUserData(false);
+      } else {
+        tg.showAlert("Ошибка: " + (json.message || "Не удалось сформировать PDF-акт"));
+      }
+    } catch (e) {
+      tg.showAlert("Ошибка сети при формировании PDF-акта.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "📄 Сформировать PDF-акт и отправить";
+    }
+  }
+
+  function renderViolationActsArchive() {
+    const listEl = document.getElementById('actsArchiveList');
+    const cntEl = document.getElementById('actsArchiveCount');
+    if (cntEl) cntEl.textContent = violationActsList.length;
+    if (!listEl) return;
+
+    if (!violationActsList.length) {
+      listEl.innerHTML = `<div style="font-size:13px; color:var(--ink-secondary); padding:6px 0;">Составленных актов пока нет.</div>`;
+      return;
+    }
+
+    listEl.innerHTML = "";
+    violationActsList.forEach(act => {
+      const item = document.createElement('div');
+      item.className = 'rule-item';
+      item.style.flexDirection = 'column';
+      item.style.alignItems = 'stretch';
+      const isFine = String(act.penalty || "").toLowerCase().includes("штраф");
+      const badgeCls = isFine ? "st-rejected" : "st-pending";
+      const pdfBtn = act.pdfUrl
+        ? `<button type="button" class="qr-btn" style="margin-top:8px; padding:9px 12px;" onclick="openExternalPdfUrl('${act.pdfUrl}')">📄 Открыть PDF-акт №${act.actNumber}</button>`
+        : "";
+      item.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+          <span class="req-num-tag">Акт №${act.actNumber} · ${act.violationDate || act.createdAt}</span>
+          <span class="status-chip ${badgeCls}">${act.penalty}</span>
+        </div>
+        <div style="font-weight:700; font-size:14px; color:var(--ink); margin-top:4px;">${act.tenantName}</div>
+        <div style="font-size:12px; color:var(--ink-secondary); margin-top:2px;">${act.violationShort}</div>
+        <div style="font-size:11px; color:var(--ink-muted); margin-top:3px;">Составил: ${act.adminName}</div>
+        ${pdfBtn}
+      `;
+      listEl.appendChild(item);
+    });
+  }
+
 </script>
 </body>
 </html>
