@@ -1,16 +1,46 @@
-function updateGateVisualState() {
-    const card = document.getElementById('timeLockAlert');
-    const chk = document.getElementById('forceUnlock');
-    if (!card || !chk) return;
-    const t = I18N[currentLang] || I18N.ru;
-    const active = chk.checked;
-    card.classList.toggle('urgent-active', active);
-    setTextSafe('gateTitleText', active ? t.gateUrgentTitle : t.gateClosedTitle);
-    setTextSafe('gateTimeChipText', active ? t.gateUrgentTime : t.gateClosedTime);
-    setTextSafe('gateDescText', active ? t.gateUrgentDesc : t.gateClosedDesc);
-    setTextSafe('gateSwitchLabelText', t.gateSwitchLabel);
+const PAGE_MODE = window.JANNUR_PAGE_MODE || 'tenant';
+
+  function navigateToPage(targetFile, params = {}) {
+    const url = new URL(targetFile, window.location.href);
+    Object.keys(params).forEach(k => {
+      if (params[k] !== undefined && params[k] !== null && params[k] !== '') {
+        url.searchParams.set(k, params[k]);
+      }
+    });
+    window.location.replace(url.toString());
   }
 
+  function saveSessionCache(payload) {
+    try {
+      sessionStorage.setItem('jannurSessionCacheV1', JSON.stringify({
+        ts: Date.now(),
+        data: payload
+      }));
+    } catch (e) {}
+  }
+
+  function readSessionCache() {
+    try {
+      const raw = sessionStorage.getItem('jannurSessionCacheV1');
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.data) return null;
+      if (Date.now() - (parsed.ts || 0) > 120000) return null;
+      return parsed.data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setTextSafe(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+
+  function setHtmlSafe(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = val;
+  }
 
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNIb0lkUJHSGm5Wi6yzJgUM2jBZa_ORYkoNdT070gBrcrb4TnOWrURjbTdV-Er-j6r/exec";
   const tg = window.Telegram.WebApp;
@@ -188,70 +218,62 @@ function updateGateVisualState() {
     haptic('light');
   }
 
-  function setTextSafe(id, val) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = val;
-  }
-  function setHtmlSafe(id, val) {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = val;
-  }
   function applyTranslations() {
     const t = I18N[currentLang] || I18N.ru;
-    setTextSafe('headerAppNameText',  t.appName);
-    setTextSafe('fabCreateText',  t.fabCreate);
-    setTextSafe('tDockNewLbl',  t.dockNew);
-    if (document.getElementById('tDockPromoLbl')) setTextSafe('tDockPromoLbl',  t.dockPromo);
-    setTextSafe('tDockMyLbl',  t.dockMy);
-    setTextSafe('tDockCabLbl',  t.dockCab);
+    document.getElementById('headerAppNameText').textContent = t.appName;
+    document.getElementById('fabCreateText').textContent = t.fabCreate;
+    document.getElementById('tDockNewLbl').textContent = t.dockNew;
+    if (document.getElementById('tDockPromoLbl')) document.getElementById('tDockPromoLbl').textContent = t.dockPromo;
+    document.getElementById('tDockMyLbl').textContent = t.dockMy;
+    document.getElementById('tDockCabLbl').textContent = t.dockCab;
 
-    setTextSafe('closedTitleText',  t.closedTitle);
-    setHtmlSafe('closedDescText', t.closedDesc);
-    setHtmlSafe('closedScheduleBox', t.closedSchedule);
-    setTextSafe('closedViewMyBtn',  t.viewMyBtn);
+    document.getElementById('closedTitleText').textContent = t.closedTitle;
+    document.getElementById('closedDescText').innerHTML = t.closedDesc;
+    document.getElementById('closedScheduleBox').innerHTML = t.closedSchedule;
+    document.getElementById('closedViewMyBtn').textContent = t.viewMyBtn;
 
-    setTextSafe('st1Label',  t.st1);
-    setTextSafe('st2Label',  t.st2);
-    setTextSafe('st3Label',  t.st3);
-    setTextSafe('st4Label',  t.st4);
+    document.getElementById('st1Label').textContent = t.st1;
+    document.getElementById('st2Label').textContent = t.st2;
+    document.getElementById('st3Label').textContent = t.st3;
+    document.getElementById('st4Label').textContent = t.st4;
 
-    setTextSafe('step1Title',  t.step1Title);
-    setTextSafe('step1Desc',  t.step1Desc);
-    setTextSafe('fl1Name',  t.fl1);
-    setTextSafe('fl2Name',  t.fl2);
-    setTextSafe('fl3Name',  t.fl3);
-    setTextSafe('fl4Name',  t.fl4);
-    setTextSafe('flStreetName',  t.flStreet);
-    setTextSafe('flSubName',  t.flSub);
-    setTextSafe('flSubDesc',  t.flSubDesc);
+    document.getElementById('step1Title').textContent = t.step1Title;
+    document.getElementById('step1Desc').textContent = t.step1Desc;
+    document.getElementById('fl1Name').textContent = t.fl1;
+    document.getElementById('fl2Name').textContent = t.fl2;
+    document.getElementById('fl3Name').textContent = t.fl3;
+    document.getElementById('fl4Name').textContent = t.fl4;
+    document.getElementById('flStreetName').textContent = t.flStreet;
+    document.getElementById('flSubName').textContent = t.flSub;
+    document.getElementById('flSubDesc').textContent = t.flSubDesc;
 
-    setTextSafe('step2Title',  t.step2Title);
-    setTextSafe('step2Desc',  t.step2Desc);
+    document.getElementById('step2Title').textContent = t.step2Title;
+    document.getElementById('step2Desc').textContent = t.step2Desc;
 
-    setTextSafe('step3Title',  t.step3Title);
-    setTextSafe('step3Desc',  t.step3Desc);
-    setTextSafe('wImportGoodsTitle',  t.wImportGoods);
-    setTextSafe('wExportGoodsTitle',  t.wExportGoods);
-    setTextSafe('wBothGoodsTitle',  t.wBothGoods);
-    setTextSafe('wImportEqTitle',  t.wImportEq);
-    setTextSafe('wExportEqTitle',  t.wExportEq);
-    setTextSafe('wNightTitle',  t.wNight);
+    document.getElementById('step3Title').textContent = t.step3Title;
+    document.getElementById('step3Desc').textContent = t.step3Desc;
+    document.getElementById('wImportGoodsTitle').textContent = t.wImportGoods;
+    document.getElementById('wExportGoodsTitle').textContent = t.wExportGoods;
+    document.getElementById('wBothGoodsTitle').textContent = t.wBothGoods;
+    document.getElementById('wImportEqTitle').textContent = t.wImportEq;
+    document.getElementById('wExportEqTitle').textContent = t.wExportEq;
+    document.getElementById('wNightTitle').textContent = t.wNight;
 
-    setHtmlSafe('timeFieldLabel', `${t.timeLabel} <span class="req">*</span>`);
-    setTextSafe('durationFieldLabel',  t.durationLabel);
-    setHtmlSafe('startDateLabel', `${t.startDateLabel} <span class="req">*</span>`);
-    setHtmlSafe('endDateLabel', `${t.endDateLabel} <span class="req">*</span>`);
+    document.getElementById('timeFieldLabel').innerHTML = `${t.timeLabel} <span class="req">*</span>`;
+    document.getElementById('durationFieldLabel').textContent = t.durationLabel;
+    document.getElementById('startDateLabel').innerHTML = `${t.startDateLabel} <span class="req">*</span>`;
+    document.getElementById('endDateLabel').innerHTML = `${t.endDateLabel} <span class="req">*</span>`;
 
-    setTextSafe('step4Title',  t.step4Title);
-    setTextSafe('step4Desc',  t.step4Desc);
-    setTextSafe('passChainSub',  t.passChainSub);
-    setHtmlSafe('respFieldLabel', `${t.respLabel} <span class="req">*</span>`);
-    setHtmlSafe('workersFieldLabel', `${t.workersLabel} <span class="req" id="workersReq" style="display:${state.workType.includes('Ночные') ? 'inline' : 'none'}">*</span>`);
-    setTextSafe('carFieldLabel',  t.carLabel);
+    document.getElementById('step4Title').textContent = t.step4Title;
+    document.getElementById('step4Desc').textContent = t.step4Desc;
+    document.getElementById('passChainSub').textContent = t.passChainSub;
+    document.getElementById('respFieldLabel').innerHTML = `${t.respLabel} <span class="req">*</span>`;
+    document.getElementById('workersFieldLabel').innerHTML = `${t.workersLabel} <span class="req" id="workersReq" style="display:${state.workType.includes('Ночные') ? 'inline' : 'none'}">*</span>`;
+    document.getElementById('carFieldLabel').textContent = t.carLabel;
 
-    setTextSafe('myReqTitle',  t.myReqTitle);
-    setTextSafe('prevBtn',  t.prevBtn);
-    setTextSafe('nextBtn',  state.step === 4 ? t.submitBtn : t.nextBtn);
+    document.getElementById('myReqTitle').textContent = t.myReqTitle;
+    document.getElementById('prevBtn').textContent = t.prevBtn;
+    document.getElementById('nextBtn').textContent = state.step === 4 ? t.submitBtn : t.nextBtn;
 
     const isKk = currentLang === 'kk';
     const splashSub = document.getElementById('splashSubText');
@@ -384,64 +406,66 @@ function updateGateVisualState() {
 
   function updateHeaderAndSubmissionLock() {
     const t = I18N[currentLang] || I18N.ru;
-    const open = isSubmissionWindowOpen();
     const emActive = isEmergencyWindowActive();
+    const open = isSubmissionWindowOpen();
     const dot = document.getElementById('statusDot');
     const txt = document.getElementById('statusText');
-    const astana = getAstanaDate();
     const clockEl = document.getElementById('headerAstanaClock');
+
+    const astana = getAstanaDate();
     if (clockEl) {
-      clockEl.textContent = `${String(astana.getHours()).padStart(2, '0')}:${String(astana.getMinutes()).padStart(2, '0')} Астана`;
+      clockEl.textContent = `${String(astana.getHours()).padStart(2, '0')}:${String(astana.getMinutes()).padStart(2, '0')}`;
     }
 
-    if (dot) dot.classList.toggle('closed', !open);
-    if (txt) {
-      if (emActive) {
-        txt.textContent = `⚡ Экстренный прием (${formatRemainingEmergency()})`;
-      } else {
-        txt.textContent = open ? t.statusOpen : t.statusClosed;
-      }
+    if (open) {
+      dot.classList.remove('closed');
+      txt.textContent = emActive ? `⚡ Экстренный прием (${formatRemainingEmergency()})` : t.statusOpen;
+    } else {
+      dot.classList.add('closed');
+      txt.textContent = t.statusClosed;
     }
 
     const closedBlock = document.getElementById('closedHoursBlock');
     const activeBody = document.getElementById('wizardActiveBody');
     const emergencyBox = document.getElementById('adminEmergencyBox');
-    const emBanner = document.getElementById('emergencyActiveBanner');
-    const emCountdown = document.getElementById('emergencyCountdownText');
+    const emergencyBanner = document.getElementById('emergencyActiveBanner');
+    const emergencyText = document.getElementById('emergencyCountdownText');
     const closeEmBtn = document.getElementById('closeEmergencyBtn');
 
     const isAdminUser = Boolean(isApprover && userRole === "Администратор");
-    if (emergencyBox) emergencyBox.classList.toggle('hidden', !isAdminUser);
-
+    if (emergencyBox) {
+      emergencyBox.classList.toggle('hidden', !isAdminUser);
+    }
     const moreEmCard = document.getElementById('moreAdminEmergencyCard');
+    const moreEmPill = document.getElementById('moreEmergencyStatusPill');
+    const moreCloseBtn = document.getElementById('moreCloseEmergencyBtn');
     if (moreEmCard) {
       moreEmCard.classList.toggle('hidden', !isAdminUser);
-      const pill = document.getElementById('moreEmergencyStatusPill');
-      const closeMoreBtn = document.getElementById('moreCloseEmergencyBtn');
-      const openMoreBtn = document.getElementById('moreOpenEmergencyBtn');
-      if (pill) pill.textContent = emActive ? `⚡ Активно (${formatRemainingEmergency()})` : (open ? 'Открыто по графику' : 'Закрыто');
-      if (closeMoreBtn) closeMoreBtn.classList.toggle('hidden', !emActive);
-      if (openMoreBtn) openMoreBtn.textContent = emActive ? `Продлить на ${emergencyMinutes} мин` : `Открыть на ${emergencyMinutes} мин`;
+      if (isAdminUser) {
+        if (moreEmPill) {
+          moreEmPill.textContent = emActive ? `Активен (${formatRemainingEmergency()})` : "По расписанию";
+        }
+        if (moreCloseBtn) {
+          moreCloseBtn.classList.toggle('hidden', !emActive);
+        }
+      }
     }
-
-    if (emBanner) {
-      emBanner.classList.toggle('hidden', !emActive);
-      if (emActive && emCountdown) {
-        emCountdown.textContent = `⚡ Экстренный прием открыт (осталось ${formatRemainingEmergency()})`;
+    if (emergencyBanner) {
+      emergencyBanner.classList.toggle('hidden', !emActive);
+      if (emActive && emergencyText) {
+        emergencyText.textContent = `⚡ Экстренный прием открыт (осталось ${formatRemainingEmergency()})`;
       }
       if (closeEmBtn) {
-        closeEmBtn.classList.toggle('hidden', !isAdminUser);
+        closeEmBtn.classList.toggle('hidden', !(isApprover && userRole === "Администратор"));
       }
     }
 
-    if (closedBlock && activeBody) {
-      if (open) {
-        closedBlock.classList.add('hidden');
-        activeBody.classList.remove('hidden');
-      } else {
-        closedBlock.classList.remove('hidden');
-        activeBody.classList.add('hidden');
-      }
+    if (open) {
+      closedBlock.classList.add('hidden');
+      activeBody.classList.remove('hidden');
+    } else {
+      closedBlock.classList.remove('hidden');
+      activeBody.classList.add('hidden');
     }
   }
 
@@ -524,12 +548,12 @@ function updateGateVisualState() {
     const cardBox = document.getElementById('routerManualCard');
 
     if (manualSelect) {
+      hideSplashScreen();
       if (statusLabel) statusLabel.textContent = "Выберите нужный раздел ТРЦ «Жаннур»";
       if (cardBox) cardBox.classList.remove('hidden');
       return;
     }
 
-    // Если нет Telegram initData (открыто напрямую / без авторизации) — сразу переводим в портал арендатора
     if (!initDataRaw) {
       if (statusLabel) statusLabel.textContent = "Открываем портал арендатора...";
       navigateToPage('tenant.html');
@@ -740,6 +764,7 @@ function updateGateVisualState() {
     updateUserProfileBlock();
     if (showToast && !fromCache) haptic('light');
   }
+
   function switchView(view) {
     currentViewName = view;
     haptic('light');
@@ -2899,20 +2924,19 @@ function updateGateVisualState() {
 
     tg.requestContact(async function(sent, eventObj) {
       if (!sent) return;
-      const contactPayload = (eventObj && (eventObj.response || eventObj.contact || eventObj.phone_number))
-        ? (eventObj.response || JSON.stringify(eventObj))
-        : (tg.initData || initDataRaw || "");
+      const contactPayload = eventObj && eventObj.response ? eventObj.response : "";
+      if (!contactPayload) {
+        errBox.classList.remove('hidden');
+        errBox.textContent = "Telegram не передал подпись контакта.";
+        return;
+      }
 
       const btn = document.getElementById('verifyPhoneBtn');
-      if (btn) { btn.disabled = true; btn.textContent = "⏳ Проверяем номер..."; }
+      btn.disabled = true; btn.textContent = "⏳ Проверяем номер...";
       try {
         const res = await fetch(SCRIPT_URL, {
           method: 'POST',
-          body: JSON.stringify({
-            action: 'verify_tenant_phone',
-            contactResponse: contactPayload,
-            initData: tg.initData || initDataRaw
-          })
+          body: JSON.stringify({ action: 'verify_tenant_phone', contactResponse: contactPayload, initData: initDataRaw })
         });
         const data = await res.json();
         if (data.status === 'staff_authorized') {
@@ -3440,6 +3464,7 @@ function updateGateVisualState() {
       listEl.appendChild(item);
     });
   }
+
 
   window.addEventListener('load', () => setTimeout(hideSplashScreen, 150));
   window.addEventListener('error', () => hideSplashScreen());
