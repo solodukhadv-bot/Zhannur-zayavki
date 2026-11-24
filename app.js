@@ -2899,28 +2899,32 @@ function updateGateVisualState() {
 
     tg.requestContact(async function(sent, eventObj) {
       if (!sent) return;
-      const contactPayload = eventObj && eventObj.response ? eventObj.response : "";
-      if (!contactPayload) {
-        errBox.classList.remove('hidden');
-        errBox.textContent = "Telegram не передал подпись контакта.";
-        return;
-      }
+      const contactPayload = (eventObj && (eventObj.response || eventObj.contact || eventObj.phone_number))
+        ? (eventObj.response || JSON.stringify(eventObj))
+        : (tg.initData || initDataRaw || "");
 
       const btn = document.getElementById('verifyPhoneBtn');
-      btn.disabled = true; btn.textContent = "⏳ Проверяем номер...";
+      if (btn) { btn.disabled = true; btn.textContent = "⏳ Проверяем номер..."; }
       try {
         const res = await fetch(SCRIPT_URL, {
           method: 'POST',
-          body: JSON.stringify({ action: 'verify_tenant_phone', contactResponse: contactPayload, initData: initDataRaw })
+          body: JSON.stringify({
+            action: 'verify_tenant_phone',
+            contactResponse: contactPayload,
+            initData: tg.initData || initDataRaw
+          })
         });
         const data = await res.json();
         if (data.status === 'staff_authorized') {
           haptic('heavy');
           sessionStorage.removeItem('jannurSessionCacheV1');
-          tg.showAlert(`✅ Добро пожаловать, ${data.userName || 'сотрудник'}! Роль: «${data.role}».`, () => {
-            const targetView = data.role === 'Маркетолог' ? 'marketer' : (data.role === 'Охрана' ? 'guard' : 'approval');
-            navigateToPage('staff.html', { view: targetView });
-          });
+          saveSessionCache(Object.assign({}, data, { isApprover: true }));
+          const targetView = data.role === 'Маркетолог' ? 'marketer' : (data.role === 'Охрана' ? 'guard' : 'approval');
+          try {
+            tg.showAlert(`✅ Добро пожаловать, ${data.userName || 'сотрудник'}! Роль: «${data.role}».`);
+          } catch (e) {}
+          setTimeout(() => navigateToPage('staff.html', { view: targetView }), 250);
+          return;
         } else if (data.status === 'success') {
           cabinetAccounts = data.cabinetAccounts || [];
           renderTenantCabinet();
@@ -3436,3 +3440,7 @@ function updateGateVisualState() {
       listEl.appendChild(item);
     });
   }
+
+  window.addEventListener('load', () => setTimeout(hideSplashScreen, 150));
+  window.addEventListener('error', () => hideSplashScreen());
+  window.addEventListener('unhandledrejection', () => hideSplashScreen());
