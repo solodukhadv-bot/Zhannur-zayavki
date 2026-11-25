@@ -3904,17 +3904,32 @@
           renderGuardList();
         }
       } else {
+        // Обычный / авторизованный арендатор: жестко скрываем все разделы администрации
+        isApprover = false;
+        userRole = "";
+        userStaffName = "";
+        document.getElementById('adminDock').classList.add('hidden');
+        document.getElementById('guardDock').classList.add('hidden');
+        document.getElementById('marketerDock').classList.add('hidden');
+        document.getElementById('tenantDock').classList.remove('hidden');
+        document.getElementById('moreAdminEmergencyCard').classList.add('hidden');
         document.getElementById('tileLimits').classList.add('hidden');
         document.getElementById('tileAccess').classList.add('hidden');
         document.getElementById('tileAdminCab').classList.add('hidden');
         document.getElementById('tileBanners').classList.add('hidden');
         document.getElementById('tileActs').classList.add('hidden');
         document.getElementById('moreMenuGrid').classList.add('hidden');
+        document.getElementById('moreSubLimits').classList.add('hidden');
+        document.getElementById('moreSubAccess').classList.add('hidden');
+        document.getElementById('moreSubAdminCabinet').classList.add('hidden');
+        document.getElementById('moreSubBanners').classList.add('hidden');
+        document.getElementById('moreSubActs').classList.add('hidden');
+        document.getElementById('moreSubCabinet').classList.remove('hidden');
         const moreTitle = document.getElementById('moreSectionTitle');
-        if (moreTitle) moreTitle.textContent = "Личный кабинет";
-        if (!hasInitialAppLoaded && !showToast) {
+        if (moreTitle) moreTitle.textContent = currentLang === 'kk' ? "Жеке кабинет" : "Личный кабинет";
+        if (currentViewName === 'more') {
           switchMoreTab('cabinet');
-        } else if (!isInMoreTab) {
+        } else {
           renderTenantCabinet();
         }
         initTenantAdBannerCarousel();
@@ -3936,6 +3951,9 @@
   }
 
   function switchView(view) {
+    if (!isApprover && (view === 'approval' || view === 'guard' || view === 'marketer')) {
+      view = 'wizard';
+    }
     currentViewName = view;
     haptic('light');
 
@@ -3992,6 +4010,10 @@
   }
 
   function switchMoreTab(tab) {
+    const adminOnlyTabs = ['limits', 'access', 'adminCabinet', 'banners', 'acts'];
+    if (!isApprover && adminOnlyTabs.includes(tab)) {
+      tab = 'cabinet';
+    }
     haptic('light');
     document.getElementById('tileLimits').classList.toggle('active', tab === 'limits');
     document.getElementById('tileAccess').classList.toggle('active', tab === 'access');
@@ -4083,6 +4105,71 @@
     renderAdminRegistry();
   }
 
+
+  function buildApprovalStatusSummary(req) {
+    const st = String(req && req.status ? req.status : "На согласовании").trim();
+    const rej = String(req && req.rejectReason ? req.rejectReason : "").trim();
+    const low = st.toLowerCase();
+
+    if (low.includes("отклонено")) {
+      const byMatch = st.match(/\(([^)]+)\)/);
+      const who = byMatch ? byMatch[1] : "согласующим лицом";
+      return {
+        stage: "Отклонено",
+        reviewedBy: who,
+        pendingWith: "Заявка закрыта (отклонена)",
+        rejectReason: rej
+      };
+    }
+
+    if (low.includes("напрямую директором")) {
+      return {
+        stage: "Утверждено напрямую",
+        reviewedBy: "Директор",
+        pendingWith: "Никто — пропуск активен",
+        rejectReason: rej
+      };
+    }
+
+    if (low.includes("согласовано (директор") || low.includes("утверждено (директор")) {
+      return {
+        stage: "Этап 3 из 3 · Утверждено полностью",
+        reviewedBy: "Администратор → Инженер → Директор",
+        pendingWith: "Никто — пропуск активен",
+        rejectReason: rej
+      };
+    }
+
+    if (low.includes("ожидает директора")) {
+      const m = st.match(/согл\.?:\s*([^)]+)\)/i);
+      const prev = m ? m[1].trim() : "Администратор, Инженер";
+      return {
+        stage: "Этап 3 из 3 · На утверждении у Директора",
+        reviewedBy: prev,
+        pendingWith: "Директор",
+        rejectReason: rej
+      };
+    }
+
+    if (low.includes("ожидает инженера")) {
+      const m = st.match(/согл\.?:\s*([^)]+)\)/i);
+      const prev = m ? m[1].trim() : "Администратор";
+      return {
+        stage: "Этап 2 из 3 · На согласовании у Инженера",
+        reviewedBy: prev,
+        pendingWith: "Инженер → Директор",
+        rejectReason: rej
+      };
+    }
+
+    return {
+      stage: "Этап 1 из 3 · На согласовании у Администратора",
+      reviewedBy: "Пока никто не согласовал",
+      pendingWith: "Администратор → Инженер → Директор",
+      rejectReason: rej
+    };
+  }
+
   function renderAdminRegistry() {
     const sec = document.getElementById('adminRegistrySection');
     const host = document.getElementById('adminRegistryListContainer');
@@ -4113,14 +4200,19 @@
     }
 
     host.innerHTML = list.map(r => {
+      const info = buildApprovalStatusSummary(r);
       let chipClass = 'st-pending';
-      if (r.stageCode === 'approved') chipClass = 'st-approved';
-      else if (r.stageCode === 'rejected') chipClass = 'st-rejected';
-      else if (r.stageCode === 'engineer' || r.stageCode === 'director') chipClass = 'st-step';
+      if (r.stageCode === 'approved' || String(r.status || '').includes('✅')) chipClass = 'st-approved';
+      else if (r.stageCode === 'rejected' || String(r.status || '').includes('❌')) chipClass = 'st-rejected';
+      else if (r.stageCode === 'engineer' || r.stageCode === 'director' || String(r.status || '').includes('Ожидает')) chipClass = 'st-step';
 
-      const stageText = r.stageLabel || r.status || 'На согласовании';
-      const remText = r.remainingApprovers || (r.stageCode === 'approved' ? 'Никто' : 'Администратор → Инженер → Директор');
-      const engWarn = (r.engineerNotApproved && r.stageCode !== 'approved' && r.stageCode !== 'rejected')
+      const stageText = r.stageLabel || info.stage;
+      const reviewedText = r.reviewedBy || info.reviewedBy;
+      const remText = r.remainingApprovers || info.pendingWith;
+      const engNotApp = (r.engineerNotApproved !== undefined)
+        ? Boolean(r.engineerNotApproved)
+        : (chipClass !== 'st-approved' && chipClass !== 'st-rejected' && !String(r.status || '').includes('Ожидает Директора'));
+      const engWarn = (engNotApp && chipClass !== 'st-approved' && chipClass !== 'st-rejected')
         ? `<div style="margin-top:6px; padding:6px 9px; border-radius:9px; background:var(--amber-bg); color:var(--amber); font-size:11.5px; font-weight:700;">⚠️ Инженер ещё не согласовал эту заявку</div>`
         : '';
 
@@ -4135,9 +4227,11 @@
             ${r.workType} · ${r.startDate === r.endDate ? r.startDate : r.startDate + ' — ' + r.endDate} · ${r.workTime}
           </div>
           <div style="padding:8px 10px; border-radius:10px; background:var(--bg); border:1px solid var(--hairline); font-size:12px; line-height:1.45;">
-            <div><b>Текущий этап:</b> <span style="color:var(--ink);">${stageText}</span></div>
-            <div style="margin-top:2px;"><b>Кто ещё должен согласовать:</b> <span style="color:var(--brand); font-weight:700;">${remText}</span></div>
+            <div><b>Статус / этап:</b> <span style="color:var(--ink);">${stageText}</span></div>
+            <div style="margin-top:2px;"><b>Кем согласовано / рассмотрено:</b> <span style="color:var(--green); font-weight:700;">${reviewedText}</span></div>
+            <div style="margin-top:2px;"><b>У кого на рассмотрении:</b> <span style="color:var(--brand); font-weight:700;">${remText}</span></div>
           </div>
+          ${info.rejectReason ? `<div class="reject-reason-box"><b>Причина:</b> ${info.rejectReason}</div>` : ''}
           ${engWarn}
         </div>
       `;
@@ -4515,6 +4609,7 @@
       else if (isRejected) pillClass = "st-rejected";
       else if (st.includes("Ожидает")) pillClass = "st-step";
 
+      const info = buildApprovalStatusSummary(r);
       const card = document.createElement('div');
       card.className = 'req-card-modern';
       card.innerHTML = `
@@ -4536,6 +4631,11 @@
             <span class="req-meta-lbl">Срок действия</span>
             <span class="req-meta-val">с ${r.startDate} по ${r.endDate}</span>
           </div>
+        </div>
+        <div style="padding:8px 10px; border-radius:11px; background:var(--bg); border:1px solid var(--hairline); font-size:12px; line-height:1.45; margin-bottom:8px;">
+          <div><b>Этап:</b> <span style="color:var(--ink);">${r.stageLabel || info.stage}</span></div>
+          <div style="margin-top:2px;"><b>Кем рассмотрено / согласовано:</b> <span style="color:var(--green); font-weight:700;">${r.reviewedBy || info.reviewedBy}</span></div>
+          <div style="margin-top:2px;"><b>У кого на рассмотрении:</b> <span style="color:var(--brand); font-weight:700;">${r.remainingApprovers || info.pendingWith}</span></div>
         </div>
         ${isFinalValid ? `<button type="button" class="qr-btn" onclick="openQrPassModal(${r.rowIndex})">🎫 Открыть QR-пропуск для охраны</button>` : ''}
         ${!isFinalValid && !isRejected ? `<div style="font-size:11.5px; color:var(--blue); font-weight:600;">ℹ️ QR-пропуск появится после утверждения Директором.</div>` : ''}
