@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Zhannur Заявки — JANNUR Shopping Mall</title>
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ks6S0OprAK4-nmVj5rSxK0qMjARwCozxLqIlm_kGEkCULMXnnzdR3UeqwlZMMMfiydflG4fUQI76Y67boKrBky2pCLvIcZsIVDiarIn_KaLLsSsDPaa-Dt3eyOX_Up1RO7C65TPCBQBailw0SeANyQgUZ6Zl1jF3cpmprn9jdlhWTw1yuoJZL60leuoJ0fmv_QFUH85a5HcrPsg6bKQL3E-okUVodqvNLV6r33ykLDac64gOoIzxQ04hkFKlsVn-qfIZafqj3WyCbM1jEC3Y5pve9oJuMX92XtcX_F9XpxtLqxwzNLiuuSffV2QQ5OGVAWmpLiRZ_3CV0BNSDbChzA" charset="UTF-8"></script><script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=mbo5UgBn5Z74Uoiwgy3Jt-TBMgDdS0663RG4-pkv1zddf6M0zO9qQgZRX1VTUXseqNLDtfK8XwUL9tVWRS46wYZN8_JS4tjcwDxBafa7MOgOLztTNPaCG6jynzxYulX72bojFTifJ9xAEt3_2BZYpy4BUgyV-MZ64T02zHn04g_bJ7g_rkGm9B_TXwamFoPCYqd1JYSdfJyuUCTOeENaSCjTlF_do9vAzDQMcgXZxCMiuJdWKbhTlPMn_DMUzBj168DyauhKPO8JUgN_l7HoW9GYC-rRHJoW09ZhSTMiPMNhB3-UGTg1TV81OtFmfRt5pXJmaWr68w0B_2oNwUPjhTJohx35fjwGAJFRpM_J080" charset="UTF-8"></script><script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <style>
     :root {
@@ -4125,15 +4125,61 @@
 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNIb0lkUJHSGm5Wi6yzJgUM2jBZa_ORYkoNdT070gBrcrb4TnOWrURjbTdV-Er-j6r/exec";
-  const tg = window.Telegram.WebApp;
 
-  tg.ready();
-  tg.expand();
-  if (typeof tg.disableVerticalSwipes === 'function') {
-    tg.disableVerticalSwipes();
+  // Диагностика ошибок при запуске прямо на экране загрузки
+  window.onerror = function(msg, src, line) {
+    try {
+      const sub = document.getElementById('splashSubText');
+      if (sub) sub.textContent = `Ошибка (стр. ${line || '?'}): ${msg}`;
+    } catch (e) {}
+  };
+  window.addEventListener('unhandledrejection', function(ev) {
+    try {
+      const sub = document.getElementById('splashSubText');
+      const reason = ev && ev.reason ? (ev.reason.message || String(ev.reason)) : 'Неизвестная ошибка';
+      if (sub) sub.textContent = `Ошибка запуска: ${reason}`;
+    } catch (e) {}
+  });
+
+  // Аварийное снятие экрана загрузки — ставим самым первым, до любых вызовов API и localStorage
+  setTimeout(function() {
+    try {
+      const sp = document.getElementById('appSplashScreen');
+      if (sp && !sp.classList.contains('fade-out')) sp.classList.add('fade-out');
+    } catch (e) {}
+  }, 4000);
+
+  function safeStorageGet(key, fallback = "") {
+    try {
+      const val = window.localStorage ? window.localStorage.getItem(key) : null;
+      return val !== null ? val : fallback;
+    } catch (e) {
+      return fallback;
+    }
   }
-  tg.setHeaderColor('#F5F5F7');
-  tg.setBackgroundColor('#F5F5F7');
+  function safeStorageSet(key, val) {
+    try {
+      if (window.localStorage) window.localStorage.setItem(key, val);
+    } catch (e) {}
+  }
+
+  const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : {
+    initData: "",
+    initDataUnsafe: {},
+    ready: function() {},
+    expand: function() {},
+    setHeaderColor: function() {},
+    setBackgroundColor: function() {},
+    showAlert: function(m, cb) { try { alert(m); } catch (e) {} if (typeof cb === 'function') cb(); }
+  };
+
+  try {
+    if (typeof tg.ready === 'function') tg.ready();
+    if (typeof tg.expand === 'function') tg.expand();
+    if (typeof tg.disableVerticalSwipes === 'function') tg.disableVerticalSwipes();
+    if (typeof tg.setHeaderColor === 'function') tg.setHeaderColor('#F5F5F7');
+    if (typeof tg.setBackgroundColor === 'function') tg.setBackgroundColor('#F5F5F7');
+  } catch (e) {}
 
   document.addEventListener('gesturestart', e => e.preventDefault());
   document.addEventListener('gesturechange', e => e.preventDefault());
@@ -4220,7 +4266,7 @@
     }
   };
 
-  let currentLang = localStorage.getItem('jannurLang') || 'ru';
+  let currentLang = safeStorageGet('jannurLang', 'ru') || 'ru';
   let TENANTS_DB = {"1": ["Даниал ИП А1", "ИП Нурсултанова Shapki А2", "ТОО Bellas Pure парфюм А2/1", "Витайм аптека А3", "AlkorKazakhstanLtd ЛЭТУАЛЬ А4", "ИП Kelo Zhanna Kosmetic А5", "РТС Cosmart А6", "Биринши Lombard А7", "ИП Sandi А7/1", "Посуда Долголетия Fissman А8", "BBCorp Asyq toys А9", "TapTatti Retail А10", "Bizdin Et А11", "ИП Мино канцелярия А13", "Химчистка А14", "Гала-Косметик и К (быт. химия) А15", "ИП Khan fish А16", "Толганай ИП (сухофрукты) А17", "ИП Ayim А18", "MISKBAR ИП А19", "B-Rent Service (ломбард) А20", "KULINAR&CA. ИП Данабаев A21", "Тулеуов ИП Royal Coffee А22", "ИП Ернур (зебра) А23", "ИП Нади (оптика) А25", "REFORMA ИП (бижутерия) А27", "ИП Пернебаева А28", "Муздубаева Ш.Н. (вояж) ИП А31", "ИП SJ GROUP островок A36", "ТОО Скиф Трейд Смол", "Иманбаев (аквафор)", "Nur DORO (парфюм на разл) островок", "Абилов Руслан Эдигизович ИП", "Кучер Е.А. островок", "БРИТИШ АМЕРИКАН ТОБАККО островок", "Бельдеубаева ИП (кофе аппарат)", "ИП Атош островок", "ИП Яковенко островок", "ИП888", "ИП Куттыходжаева Балисмаил"], "2": ["Бэст Прайс Казахстан В1", "Белкин ИП (муж. одежда) В2", "Львова Валентина Николаевна В3", "Жетписбаев О.К. (муж. одежда) В4", "Авилов А.З. ИП (Lietta) В5", "Айрапетян К.Ж. ИП В6", "ИП Бекмухамбетова В7", "ИП Дильназ В8", "ИП Бауыржанов В9", "Щербинина И.Б. ИП (одежда) В10", "Артеменко Ирина Аркадьевна ИП В11", "Торговый дом «ЗОЛОТО МОСКВЫ» В12", "Аргента ТОО (юв. изд.) В13", "ДН Казахстан ТОО (юв. изд.) В14", "Рахимов ИП (COSSMO) В15", "Хамулло В.И. ИП В16", "Дюсенов Рамил Алемханович В17", "Дарын ИП В18", "Савицкая Лилия Темирбаевна В19", "ИП Дигимбаева В20", "Жакаева ИП В21", "Respect Retail Group В22", "ИП САТЫБАЛДИЕВ B24", "Адильханова ИП В25", "Аубакирова ИП В26", "Ермакова Е. А. ИП В27", "КАРИ КЗ ТОО В28", "Куанова Алия Жакеновна Отбасы банк"], "3": ["ТОО LPP Kazakhstan С1", "ИП Турушов С3", "ИП Нур-Али С4", "ИП Safa С5", "ИП Каженова С6", "ИП Болат С7", "ИП Баймагзумов С8", "ИП Омарова С9", "ИП Бекишева С10", "ИП Заришняк С14", "ИП Маркова С15", "ИП Береке2010 С15/1", "ИП Байжанова С16", "ИП Валиева С17", "ИП Бакишева С19", "ИП Жапар С24", "ТОО Калашникова С25", "ИП Asylai С26", "ИП Какетка С27", "ИП Данеля С28", "ИП АРАПАТ С29", "ИП Ержанова С30", "ИП Дина С31", "ИП Mәсілхан", "ИП Балыкова", "ИП Темирханова"], "4": ["Толенова ИП", "Анара ИП (Donix hub)", "ИП Айтжанова (Смак)", "ИП Firdaus", "Нуралы ИП (массаж. кресла)", "ИП Назарбекова (салон красоты)", "ТОО Маргарита", "ИП Проскурякова", "ИП Айка", "Maki-Maki", "ИП Кадырова", "ИП ALTUN", "ИП Нурпеисов"], "Улица и Банкоматы": ["АЛЕКСИЯ ИП", "Soul Food ИП", "Тойчу Кызы Аймончок ИП", "Толешова ИП", "Bereke Bank АО", "ALATAU BANK", "Народный банк Казахстана АО", "Cash Invest ТОО (терминал)", "Банк ЦентрКредит ДБ АО", "Филиал АО Каспи банк", "Каспи Магазин ТОО (Жаннур, постамат)", "Freedom Telecom Operations ТОО"]};
 
   const currentUser = tg.initDataUnsafe?.user || { id: 0 };
@@ -4294,7 +4340,7 @@
 
   function setLanguage(lang) {
     currentLang = lang;
-    localStorage.setItem('jannurLang', lang);
+    safeStorageSet('jannurLang', lang);
     document.getElementById('langRuBtn').classList.toggle('active', lang === 'ru');
     document.getElementById('langKkBtn').classList.toggle('active', lang === 'kk');
     applyTranslations();
@@ -4508,6 +4554,7 @@
   }
 
   window.addEventListener('DOMContentLoaded', async () => {
+    try {
     document.getElementById('langRuBtn').classList.toggle('active', currentLang === 'ru');
     document.getElementById('langKkBtn').classList.toggle('active', currentLang === 'kk');
     applyTranslations();
@@ -4526,16 +4573,18 @@
       document.getElementById('promoEndDate').value = today;
     }
 
-    const saved = JSON.parse(localStorage.getItem('jannurPassProfileV6') || '{}');
-    if (saved.responsible) document.getElementById('responsibleInput').value = saved.responsible;
-    if (saved.car) document.getElementById('carInput').value = saved.car;
-    if (saved.floor) {
-      selectFloor(saved.floor, false);
-      if (saved.organization) state.organization = saved.organization;
-      renderTenantList();
-    }
+    try {
+      const saved = JSON.parse(safeStorageGet('jannurPassProfileV6', '{}') || '{}');
+      if (saved && saved.responsible) document.getElementById('responsibleInput').value = saved.responsible;
+      if (saved && saved.car) document.getElementById('carInput').value = saved.car;
+      if (saved && saved.floor) {
+        selectFloor(saved.floor, false);
+        if (saved.organization) state.organization = saved.organization;
+        renderTenantList();
+      }
+    } catch (e) {}
 
-    const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
+    const savedMallLogo = safeStorageGet('jannurMallLogoDataUrl', '');
     if (savedMallLogo) {
       applyMallLogoSrc(savedMallLogo);
     }
@@ -4565,9 +4614,20 @@
     if (!navigator.onLine) {
       document.getElementById('offlineBanner')?.classList.remove('hidden');
     }
-    renderHomeSkeleton();
-    switchView('home');
-    await loadUserData(false);
+      renderHomeSkeleton();
+      switchView('home');
+    } catch (bootErr) {
+      console.error('Boot error:', bootErr);
+      try {
+        const sub = document.getElementById('splashSubText');
+        if (sub) sub.textContent = 'Ошибка инициализации: ' + (bootErr && bootErr.message ? bootErr.message : bootErr);
+      } catch (e) {}
+    }
+    try {
+      await loadUserData(false);
+    } finally {
+      hideSplashScreen();
+    }
   });
 
   async function loadUserData(showToast = false) {
@@ -4750,7 +4810,7 @@
 
       hasInitialAppLoaded = true;
       hideSplashScreen();
-      const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
+      const savedMallLogo = safeStorageGet('jannurMallLogoDataUrl', '');
     if (savedMallLogo) {
       applyMallLogoSrc(savedMallLogo);
     }
@@ -4799,7 +4859,7 @@
       renderMyPromosLists();
     }
 
-    const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
+    const savedMallLogo = safeStorageGet('jannurMallLogoDataUrl', '');
     if (savedMallLogo) applyMallLogoSrc(savedMallLogo);
     updateUserProfileBlock();
     updateHeaderAndSubmissionLock();
@@ -6252,7 +6312,7 @@
     haptic('medium');
 
     const car = document.getElementById('carInput').value.trim();
-    localStorage.setItem('jannurPassProfileV6', JSON.stringify({ floor: state.floor, organization: state.organization, responsible, car }));
+    safeStorageSet('jannurPassProfileV6', JSON.stringify({ floor: state.floor, organization: state.organization, responsible, car }));
 
     try {
       const res = await fetch(SCRIPT_URL, {
@@ -6580,7 +6640,7 @@
   function parseStructuredPromoDesc(raw) {
     const text = String(raw || '');
     const getField = (label) => {
-      const m = text.match(new RegExp(`${label}:\s*(.+)`));
+      const m = text.match(new RegExp(`${label}:\\s*(.+)`));
       return m ? m[1].trim() : '';
     };
     const title = getField('Название');
@@ -6838,7 +6898,7 @@
     });
     document.getElementById('marketerPromosTab').classList.toggle('hidden', tab !== 'promos');
     document.getElementById('marketerBannersTab').classList.toggle('hidden', tab !== 'banners');
-    const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
+    const savedMallLogo = safeStorageGet('jannurMallLogoDataUrl', '');
     if (savedMallLogo) {
       applyMallLogoSrc(savedMallLogo);
     }
@@ -7504,7 +7564,7 @@
             localStorage.setItem(`jannurCabinetCache_${currentUser.id || 0}`, JSON.stringify(cabinetAccounts));
           } catch (e) {}
           renderTenantCabinet();
-          const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
+          const savedMallLogo = safeStorageGet('jannurMallLogoDataUrl', '');
     if (savedMallLogo) {
       applyMallLogoSrc(savedMallLogo);
     }
@@ -8224,7 +8284,7 @@
       payment: document.getElementById('prefNotifPayment')?.checked !== false,
       announce: document.getElementById('prefNotifAnnounce')?.checked !== false
     };
-    localStorage.setItem('jannurNotifPrefsV44', JSON.stringify(prefs));
+    safeStorageSet('jannurNotifPrefsV44', JSON.stringify(prefs));
     renderNotifications();
     renderHomeDashboard();
     showToast('Настройки уведомлений сохранены');
