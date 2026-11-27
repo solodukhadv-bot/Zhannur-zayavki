@@ -1909,7 +1909,565 @@
     }
 
     .hidden { display: none !important; }
-  </style>
+  
+    /* ==================== JANNUR MINIMAL PREMIUM DESIGN SYSTEM (v44) ==================== */
+    :root {
+      --brand: #9E1B32;
+      --brand-hover: #841529;
+      --brand-soft: rgba(158, 27, 50, 0.08);
+      --brand-glow: rgba(158, 27, 50, 0.22);
+
+      --bg: #F7F7F8;
+      --ink: #111113;
+      --ink-secondary: #5C5C66;
+      --ink-muted: #8E8E98;
+
+      --surface: #FFFFFF;
+      --surface-subtle: #F1F1F3;
+      --hairline: rgba(17, 17, 19, 0.08);
+      --hairline-strong: rgba(17, 17, 19, 0.14);
+
+      --green: #15803D;
+      --green-bg: #DCFCE7;
+      --amber: #B45309;
+      --amber-bg: #FEF3C7;
+      --blue: #1D4ED8;
+      --blue-bg: #DBEAFE;
+      --red-bg: #FEE2E2;
+
+      --radius-xl: 16px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --shadow-card: 0 1px 3px rgba(17, 17, 19, 0.04), 0 1px 2px rgba(17, 17, 19, 0.02);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", Roboto, sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+    body::before { display: none !important; }
+
+    .app-viewport {
+      padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* Clean Solid Header */
+    .ios-header {
+      background: #FFFFFF;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-bottom: 1px solid var(--hairline);
+      padding: 12px 16px 10px;
+    }
+    .brand-wordmark { font-size: 16px; letter-spacing: 0.1em; }
+    .app-name-sub { font-size: 12px; color: var(--ink-secondary); }
+    .schedule-pill {
+      background: var(--bg);
+      border: 1px solid var(--hairline);
+      box-shadow: none;
+      font-size: 12px;
+      color: var(--ink-secondary);
+      padding: 4px 10px;
+    }
+
+    /* Offline Banner & Toast */
+    .offline-banner {
+      background: #111113;
+      color: #FFFFFF;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 8px 16px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .app-toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      z-index: 260;
+      background: #111113;
+      color: #FFFFFF;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 28px rgba(17, 17, 19, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.22s var(--spring);
+      max-width: calc(100vw - 32px);
+      text-align: center;
+    }
+    .app-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Unified Cards (Minimal Premium) */
+    .surface-card, .glass-card, .req-card-modern, .guard-card, .rent-bill-card, .closed-card, .empty-state-ios {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--hairline);
+      box-shadow: var(--shadow-card);
+    }
+    .cabinet-hero-card, .pass-ticket {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+    }
+    .pass-ticket .pass-top { border-bottom: 1px solid var(--hairline); }
+    .pass-ticket .pass-org { color: var(--ink); }
+    .pass-ticket .pass-lbl { color: var(--ink-muted); font-weight: 600; }
+    .pass-ticket .pass-val { color: var(--ink); }
+    .cabinet-hero-card .cabinet-badge {
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+
+    /* Linear-style Status Pills with Dot */
+    .status-chip {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-chip::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* Uniform Buttons & Inputs */
+    .btn-primary {
+      background: var(--brand);
+      color: #FFFFFF;
+      border-radius: 12px;
+      min-height: 46px;
+      font-size: 14.5px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--brand-glow);
+    }
+    .btn-primary:active { background: var(--brand-hover); transform: scale(0.98); }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--hairline-strong);
+      border-radius: 12px;
+      min-height: 46px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea {
+      border-radius: 12px;
+      border: 1px solid var(--hairline-strong);
+      background: var(--surface);
+      padding: 12px 14px;
+      font-size: 15px;
+      min-height: 46px;
+    }
+
+    /* Clean Fixed Bottom Navigation Bar (5 Tabs for Tenant) */
+    .floating-dock-wrapper {
+      bottom: 0;
+      padding: 0;
+      background: transparent;
+    }
+    .liquid-dock {
+      max-width: 520px;
+      border-radius: 0;
+      background: #FFFFFF;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border: none;
+      border-top: 1px solid var(--hairline);
+      box-shadow: 0 -2px 12px rgba(17, 17, 19, 0.04);
+      padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+      gap: 2px;
+    }
+    .dock-item {
+      border-radius: 12px;
+      padding: 6px 2px;
+      min-height: 48px;
+      color: var(--ink-muted);
+    }
+    .dock-item.active {
+      background: transparent;
+      box-shadow: none;
+      color: var(--brand);
+    }
+    .dock-label { font-size: 11px; font-weight: 600; }
+    .dock-create-btn {
+      flex: 0 0 56px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dock-create-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--brand);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--brand-glow);
+      transition: transform 0.16s var(--spring), background 0.16s;
+    }
+    .dock-create-btn:active .dock-create-circle {
+      transform: scale(0.92);
+      background: var(--brand-hover);
+    }
+
+    /* Dashboard (Главная) */
+    .dash-greeting-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-card);
+    }
+    .dash-hello {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .dash-shop-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--ink-secondary);
+    }
+    .dash-quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .dash-action-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--shadow-card);
+      transition: border-color 0.16s, transform 0.16s var(--spring);
+    }
+    .dash-action-card:active { transform: scale(0.97); }
+    .dash-action-card.primary-action {
+      border-color: rgba(158, 27, 50, 0.25);
+      background: linear-gradient(180deg, #FFFFFF 0%, #FDF8F9 100%);
+    }
+    .dash-action-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dash-action-icon.neutral {
+      background: var(--surface-subtle);
+      color: var(--ink);
+    }
+    .dash-action-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.25;
+    }
+    .dash-action-sub {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      line-height: 1.3;
+    }
+    .dash-stats-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .dash-stat-box {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 12px 10px;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: var(--shadow-card);
+    }
+    .dash-stat-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+    .dash-stat-lbl {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      margin-top: 4px;
+    }
+    .dash-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 0 10px;
+    }
+    .dash-section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+    }
+    .dash-link-btn {
+      background: none;
+      border: none;
+      color: var(--brand);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 2px;
+    }
+
+    /* Wizard Progress Bar (6-step & 3-step) */
+    .wizard-progress-wrap {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+    }
+    .wizard-progress-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      margin-bottom: 8px;
+    }
+    .wizard-progress-track {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--surface-subtle);
+      overflow: hidden;
+    }
+    .wizard-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--brand);
+      transition: width 0.25s var(--spring);
+    }
+    .draft-pill {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--green);
+      background: var(--green-bg);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    /* Timeline in Detail Sheet & Promo */
+    .approval-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 12px 0;
+      padding: 12px 14px;
+      background: var(--bg);
+      border-radius: 14px;
+      border: 1px solid var(--hairline);
+    }
+    .tl-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .tl-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--hairline-strong);
+      background: #FFFFFF;
+      color: var(--ink-muted);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .tl-step.done .tl-dot { background: var(--green); border-color: var(--green); color: #FFFFFF; }
+    .tl-step.active .tl-dot { background: var(--brand-soft); border-color: var(--brand); color: var(--brand); }
+    .tl-step.rejected .tl-dot { background: var(--brand); border-color: var(--brand); color: #FFFFFF; }
+
+    /* Notifications Center */
+    .notif-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: background 0.16s, border-color 0.16s;
+      box-shadow: var(--shadow-card);
+    }
+    .notif-card.unread {
+      background: #FFFDFD;
+      border-color: rgba(158, 27, 50, 0.24);
+    }
+    .notif-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--surface-subtle);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .notif-icon-box.cat-payment { background: var(--amber-bg); color: var(--amber); }
+    .notif-icon-box.cat-status { background: var(--blue-bg); color: var(--blue); }
+    .notif-icon-box.cat-reply { background: var(--red-bg); color: var(--brand); }
+    .notif-icon-box.cat-announce { background: var(--brand-soft); color: var(--brand); }
+    .notif-unread-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    /* Action Sheet Options */
+    .action-sheet-option {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.16s, transform 0.14s var(--spring);
+    }
+    .action-sheet-option:active { transform: scale(0.98); border-color: var(--brand); }
+
+    /* Profile List Rows */
+    .profile-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 13.5px;
+      gap: 12px;
+    }
+    .profile-info-row:last-child { border-bottom: none; }
+    .profile-info-lbl { color: var(--ink-secondary); }
+    .profile-info-val { color: var(--ink); font-weight: 600; text-align: right; }
+
+    /* Loading Skeletons */
+    .skeleton-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .sk-line {
+      height: 12px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #EFEFF2 25%, #E4E4E8 50%, #EFEFF2 75%);
+      background-size: 200% 100%;
+      animation: skShimmer 1.3s infinite linear;
+      margin-bottom: 10px;
+    }
+    @keyframes skShimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Review Summary Block (Stripe Style) */
+    .review-block {
+      background: var(--bg);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .review-block-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .review-block-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-muted);
+    }
+    .review-edit-btn {
+      background: none;
+      border: none;
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .success-orb {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--green-bg);
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+</style>
 </head>
 <body>
   <!-- Быстрый загрузочный экран -->
@@ -1921,6 +2479,12 @@
     <div class="splash-bar-track"><div class="splash-bar-fill"></div></div>
   </div>
 <div class="app-viewport">
+  <div id="offlineBanner" class="offline-banner hidden">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path><path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+    <span>Нет подключения к интернету</span>
+  </div>
+  <div id="appToast" class="app-toast"></div>
+
 
   <!-- ==================== КОМПАКТНАЯ ШАПКА iOS 26 ==================== -->
   <header class="ios-header">
@@ -1972,6 +2536,97 @@
         </div>
       </div>
       <span class="profile-role-badge" id="profileRightTag">Jannur ID</span>
+    </div>
+
+
+    <!-- ==================== ЭКРАН 0: ГЛАВНАЯ (DASHBOARD АРЕНДАТОРА) ==================== -->
+    <div id="homeView" class="view-section hidden">
+      <div class="dash-greeting-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+          <div style="min-width:0;">
+            <h1 class="dash-hello" id="dashGreetingTitle">Добрый день</h1>
+            <div class="dash-shop-row">
+              <span id="dashShopSubtitle" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">ТРЦ JANNUR · Кабинет арендатора</span>
+            </div>
+          </div>
+          <span class="profile-role-badge" id="dashAuthPill" onclick="switchView('more')" style="cursor:pointer;">Войти</span>
+        </div>
+      </div>
+
+      <!-- Быстрые действия -->
+      <div class="dash-quick-grid">
+        <button type="button" class="dash-action-card primary-action" onclick="startNewWorkRequest()">
+          <div class="dash-action-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+          </div>
+          <div>
+            <div class="dash-action-title" id="dashQuickWorkTitle">Создать заявку</div>
+            <div class="dash-action-sub" id="dashQuickWorkSub">Ввоз, вывоз, ночные работы</div>
+          </div>
+        </button>
+
+        <button type="button" class="dash-action-card" onclick="startNewPromoRequest()">
+          <div class="dash-action-icon neutral">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+          </div>
+          <div>
+            <div class="dash-action-title" id="dashQuickPromoTitle">Согласовать акцию</div>
+            <div class="dash-action-sub" id="dashQuickPromoSub">Публикация в соцсетях ТРЦ</div>
+          </div>
+        </button>
+      </div>
+
+      <!-- Сводка статусов -->
+      <div class="dash-stats-strip">
+        <div class="dash-stat-box" onclick="openRequestsWithFilter('in_progress')">
+          <div class="dash-stat-num" id="dashStatActive">0</div>
+          <div class="dash-stat-lbl">В работе</div>
+        </div>
+        <div class="dash-stat-box" onclick="openRequestsWithFilter('approved')">
+          <div class="dash-stat-num" style="color:var(--green);" id="dashStatApproved">0</div>
+          <div class="dash-stat-lbl">Одобрено</div>
+        </div>
+        <div class="dash-stat-box" onclick="switchView('notifications')">
+          <div class="dash-stat-num" style="color:var(--brand);" id="dashStatUnread">0</div>
+          <div class="dash-stat-lbl">Уведомления</div>
+        </div>
+      </div>
+
+      <!-- Последние заявки -->
+      <div class="dash-section-head">
+        <h2 class="dash-section-title" id="dashRecentReqTitle">Последние заявки</h2>
+        <button type="button" class="dash-link-btn" onclick="switchView('myRequests')">Все заявки →</button>
+      </div>
+      <div id="dashRecentRequestsList"></div>
+
+      <!-- Последние уведомления администрации -->
+      <div class="dash-section-head">
+        <h2 class="dash-section-title" id="dashRecentNotifTitle">Уведомления администрации</h2>
+        <button type="button" class="dash-link-btn" onclick="switchView('notifications')">Все →</button>
+      </div>
+      <div id="dashRecentNotifsList"></div>
+    </div>
+
+    <!-- ==================== ЭКРАН: ЦЕНТР УВЕДОМЛЕНИЙ ==================== -->
+    <div id="notificationsView" class="view-section hidden">
+      <div class="section-head-row">
+        <div>
+          <h2 class="section-title" id="notifScreenTitle">Уведомления</h2>
+          <div style="font-size:12.5px; color:var(--ink-secondary);" id="notifUnreadSummary">Объявления, оплата и статусы</div>
+        </div>
+        <button type="button" class="refresh-pill-btn" onclick="markAllNotificationsRead()">Прочитать все</button>
+      </div>
+
+      <div class="guard-filter-row" id="notifCategoryChips">
+        <button type="button" class="guard-chip active" onclick="setNotifFilter('all', this)">Все</button>
+        <button type="button" class="guard-chip" onclick="setNotifFilter('announce', this)">Объявления</button>
+        <button type="button" class="guard-chip" onclick="setNotifFilter('payment', this)">Оплата</button>
+        <button type="button" class="guard-chip" onclick="setNotifFilter('event', this)">Мероприятия</button>
+        <button type="button" class="guard-chip" onclick="setNotifFilter('status', this)">Заявки</button>
+        <button type="button" class="guard-chip" onclick="setNotifFilter('reply', this)">Ответы</button>
+      </div>
+
+      <div id="notificationsListContainer"></div>
     </div>
 
     <!-- ==================== ЭКРАН 1: ПОДПИСЬ / СОГЛАСОВАНИЕ ==================== -->
@@ -2110,10 +2765,11 @@
 
       <div id="myPermitsSection">
         <div class="guard-filter-row" id="myReqFilterChips">
-          <button type="button" class="guard-chip active" onclick="setMyReqFilter('all', this)">Все</button>
-          <button type="button" class="guard-chip" onclick="setMyReqFilter('approved', this)">Утвержденные</button>
-          <button type="button" class="guard-chip" onclick="setMyReqFilter('pending', this)">На согласовании</button>
-          <button type="button" class="guard-chip" onclick="setMyReqFilter('rejected', this)">Отклоненные</button>
+          <button type="button" class="guard-chip active" data-filter="all" onclick="setMyReqFilter('all', this)">Все</button>
+          <button type="button" class="guard-chip" data-filter="new" onclick="setMyReqFilter('new', this)">Новые</button>
+          <button type="button" class="guard-chip" data-filter="in_progress" onclick="setMyReqFilter('in_progress', this)">В работе</button>
+          <button type="button" class="guard-chip" data-filter="approved" onclick="setMyReqFilter('approved', this)">Выполненные</button>
+          <button type="button" class="guard-chip" data-filter="rejected" onclick="setMyReqFilter('rejected', this)">Отклонённые</button>
         </div>
         <div id="myRequestsList"></div>
       </div>
@@ -2123,13 +2779,15 @@
       </div>
     </div>
 
-    <!-- ==================== ЭКРАН 4: ПОДАТЬ ЗАЯВКУ (WIZARD) ==================== -->
+    <!-- ==================== ЭКРАН 4: ПОДАТЬ ЗАЯВКУ (6-ШАГОВЫЙ МАСТЕР) ==================== -->
     <div id="wizardView" class="view-section hidden">
       <div id="closedHoursBlock" class="closed-card hidden">
-        <div class="closed-icon">🕘</div>
+        <div class="closed-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
         <h2 class="card-title" id="closedTitleText" style="font-size:18px;">Прием новых заявок сейчас закрыт</h2>
         <p class="card-desc" id="closedDescText" style="margin-top:6px;">
-          Подача электронных заявок доступна строго по будням с <b>09:00 до 17:00</b>.
+          Подача электронных заявок доступна по будням с <b>09:00 до 17:00</b>.
         </p>
         <div class="closed-schedule-box" id="closedScheduleBox">
           <b>График работы сервиса:</b><br>
@@ -2142,8 +2800,8 @@
         </button>
 
         <div id="adminEmergencyBox" class="hidden" style="margin-top:14px; padding:12px; border-radius:14px; background:var(--bg); border:1px dashed var(--hairline-strong);">
-          <div style="font-weight:700; font-size:13px; color:var(--ink); margin-bottom:4px;">⚡ Экстренный прием для всех арендаторов</div>
-          <div style="font-size:11.5px; color:var(--ink-secondary); margin-bottom:10px;">Откроет форму подачи на выбранное время.</div>
+          <div style="font-weight:700; font-size:13px; color:var(--ink); margin-bottom:4px;">Экстренный прием для всех арендаторов</div>
+          <div style="font-size:12px; color:var(--ink-secondary); margin-bottom:10px;">Откроет форму подачи на выбранное время.</div>
           <div style="display:flex; gap:6px; margin-bottom:10px; justify-content:center;">
             <button type="button" class="preset-btn active" id="emDur15" onclick="selectEmergencyMinutes(15, this)">15 мин</button>
             <button type="button" class="preset-btn" id="emDur30" onclick="selectEmergencyMinutes(30, this)">30 мин</button>
@@ -2155,71 +2813,140 @@
         </div>
       </div>
 
+      <!-- Экран успешной отправки заявки -->
+      <div id="wizardSuccessScreen" class="surface-card hidden" style="text-align:center; padding:32px 20px;">
+        <div class="success-orb">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h2 class="card-title" style="font-size:19px;">Заявка отправлена</h2>
+        <p class="card-desc" id="wizardSuccessDesc" style="margin-top:6px;">
+          Заявка принята на согласование. После утверждения Директором в разделе «Заявки» появится QR-пропуск для охраны.
+        </p>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:16px;">
+          <button type="button" class="btn-primary" onclick="finishWizardSuccess('myRequests')">Открыть мои заявки</button>
+          <button type="button" class="btn-secondary" onclick="finishWizardSuccess('home')">На главную</button>
+        </div>
+      </div>
+
       <div id="wizardActiveBody">
-        <div id="emergencyActiveBanner" class="hidden" style="background:var(--amber-bg); color:var(--amber); border-radius:13px; padding:9px 12px; margin-bottom:12px; font-size:12px; font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:8px;">
-          <span id="emergencyCountdownText">⚡ Экстренный прием открыт (осталось 15:00)</span>
-          <button type="button" id="closeEmergencyBtn" class="hidden" onclick="disableAdminEmergencyOpen()" style="background:none; border:none; color:var(--amber); font-weight:800; text-decoration:underline; cursor:pointer; font-size:11.5px;">Закрыть</button>
+        <div id="emergencyActiveBanner" class="hidden" style="background:var(--amber-bg); color:var(--amber); border-radius:12px; padding:10px 12px; margin-bottom:12px; font-size:12.5px; font-weight:600; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <span id="emergencyCountdownText">Экстренный прием открыт (осталось 15:00)</span>
+          <button type="button" id="closeEmergencyBtn" class="hidden" onclick="disableAdminEmergencyOpen()" style="background:none; border:none; color:var(--amber); font-weight:700; text-decoration:underline; cursor:pointer; font-size:12px;">Закрыть</button>
         </div>
 
-        <div class="stepper">
-          <div class="step-item active" id="st1" onclick="goStep(1)">
-            <div class="step-circle">1</div>
-            <div class="step-label" id="st1Label">Этаж</div>
+        <!-- Прогресс заполнения (6 шагов) -->
+        <div class="wizard-progress-wrap">
+          <div class="wizard-progress-top">
+            <span id="wizardStepCounter">Шаг 1 из 6 · Категория работ</span>
+            <span class="draft-pill hidden" id="wizardDraftPill">Черновик сохранён</span>
           </div>
-          <div class="step-item" id="st2" onclick="goStep(2)">
-            <div class="step-circle">2</div>
-            <div class="step-label" id="st2Label">Ваше ИП</div>
-          </div>
-          <div class="step-item" id="st3" onclick="goStep(3)">
-            <div class="step-circle">3</div>
-            <div class="step-label" id="st3Label">Работы</div>
-          </div>
-          <div class="step-item" id="st4" onclick="goStep(4)">
-            <div class="step-circle">4</div>
-            <div class="step-label" id="st4Label">Пропуск</div>
+          <div class="wizard-progress-track">
+            <div class="wizard-progress-fill" id="wizardProgressFill" style="width:16.6%;"></div>
           </div>
         </div>
 
-        <!-- Шаг 1 -->
+        <!-- Шаг 1: Выбор категории работ -->
         <div class="surface-card" id="stepCard1">
-          <h2 class="card-title" id="step1Title">Выберите этаж</h2>
-          <p class="card-desc" id="step1Desc">Укажите этаж, на котором расположено ваше ИП или ТОО.</p>
-          <div class="floor-grid">
-            <div class="floor-tile" data-floor="1" onclick="selectFloor('1')">
+          <h2 class="card-title" id="step3Title">Выберите категорию работ</h2>
+          <p class="card-desc" id="step3Desc">Укажите, какие работы или перемещения планируются.</p>
+
+          <div class="work-grid">
+            <div class="work-tile" data-work="Ввоз товара" onclick="selectWork('Ввоз товара')">
+              <div class="work-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg></div>
+              <div>
+                <div class="work-info-title" id="wImportGoodsTitle">Ввоз товара</div>
+                <div class="work-info-sub">09:00–11:00 или вечернее окно этажа</div>
+              </div>
+            </div>
+            <div class="work-tile" data-work="Вывоз товара" onclick="selectWork('Вывоз товара')">
+              <div class="work-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
+              <div>
+                <div class="work-info-title" id="wExportGoodsTitle">Вывоз товара</div>
+                <div class="work-info-sub">09:00–11:00 или вечернее окно этажа</div>
+              </div>
+            </div>
+            <div class="work-tile" data-work="Ввоз и Вывоз товара" onclick="selectWork('Ввоз и Вывоз товара')">
+              <div class="work-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg></div>
+              <div>
+                <div class="work-info-title" id="wBothGoodsTitle">Ввоз и вывоз товара</div>
+                <div class="work-info-sub">09:00–11:00 или вечернее окно этажа</div>
+              </div>
+            </div>
+            <div class="work-tile" data-work="Ввоз оборудования" onclick="selectWork('Ввоз оборудования')">
+              <div class="work-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+              <div>
+                <div class="work-info-title" id="wImportEqTitle">Ввоз оборудования</div>
+                <div class="work-info-sub">09:00–11:00 или после закрытия ТРЦ</div>
+              </div>
+            </div>
+            <div class="work-tile" data-work="Вывоз оборудования" onclick="selectWork('Вывоз оборудования')">
+              <div class="work-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></div>
+              <div>
+                <div class="work-info-title" id="wExportEqTitle">Вывоз оборудования</div>
+                <div class="work-info-sub">09:00–11:00 или после закрытия ТРЦ</div>
+              </div>
+            </div>
+            <div class="work-tile" data-work="Ночные работы(ревизия,уборка)" onclick="selectWork('Ночные работы(ревизия,уборка)')">
+              <div class="work-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></div>
+              <div>
+                <div class="work-info-title" id="wNightTitle">Ночные работы (ревизия, уборка)</div>
+                <div class="work-info-sub">После 21:00 (2–3 эт.) / После 22:00 (1, 4 эт.)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Шаг 2: Описание задачи, сотрудники и ответственный -->
+        <div class="surface-card hidden" id="stepCard2">
+          <h2 class="card-title">Описание задачи и контакты</h2>
+          <p class="card-desc">Укажите ответственного и детали работ (при ночных работах обязательны ФИО всех сотрудников).</p>
+
+          <label class="field-label" id="respFieldLabel">ФИО, должность и телефон ответственного <span class="req">*</span></label>
+          <input type="text" id="responsibleInput" placeholder="Ахметов Ерлан, администратор, +7 701 000 00 00" oninput="saveWizardDraft()">
+
+          <label class="field-label" id="workersFieldLabel">Описание работ и ФИО сотрудников <span class="req" id="workersReq">*</span></label>
+          <textarea id="workersInput" placeholder="Опишите характер работ или перечислите ФИО задействованных сотрудников..." oninput="saveWizardDraft()"></textarea>
+
+          <label class="field-label" id="carFieldLabel">Госномер автомобиля (если требуется заезд)</label>
+          <input type="text" id="carInput" placeholder="Например: 123 ABC 01" oninput="saveWizardDraft(); updatePassPreview();">
+        </div>
+
+        <!-- Шаг 3: Место проведения работ (Этаж и ИП / ТОО) -->
+        <div class="surface-card hidden" id="stepCard3">
+          <h2 class="card-title" id="step1Title">Место проведения работ</h2>
+          <p class="card-desc" id="step1Desc">Выберите этаж и вашу организацию (ИП / ТОО).</p>
+
+          <div class="floor-grid" style="margin-bottom:14px;">
+            <div class="floor-tile" data-floor="1" onclick="selectFloor('1', false)">
               <span class="floor-num" id="fl1Name">1 этаж</span>
               <span class="floor-sub">Сектор А • Островки • Small</span>
             </div>
-            <div class="floor-tile" data-floor="2" onclick="selectFloor('2')">
+            <div class="floor-tile" data-floor="2" onclick="selectFloor('2', false)">
               <span class="floor-num" id="fl2Name">2 этаж</span>
               <span class="floor-sub">Сектор В • Одежда и ювелирные</span>
             </div>
-            <div class="floor-tile" data-floor="3" onclick="selectFloor('3')">
+            <div class="floor-tile" data-floor="3" onclick="selectFloor('3', false)">
               <span class="floor-num" id="fl3Name">3 этаж</span>
               <span class="floor-sub">Сектор С • Бутики 3 этажа</span>
             </div>
-            <div class="floor-tile" data-floor="4" onclick="selectFloor('4')">
+            <div class="floor-tile" data-floor="4" onclick="selectFloor('4', false)">
               <span class="floor-num" id="fl4Name">4 этаж</span>
               <span class="floor-sub">Фуд-корт • Салоны • Досуг</span>
             </div>
-            <div class="floor-tile" data-floor="Улица и Банкоматы" onclick="selectFloor('Улица и Банкоматы')">
+            <div class="floor-tile" data-floor="Улица и Банкоматы" onclick="selectFloor('Улица и Банкоматы', false)">
               <span class="floor-num" id="flStreetName">Улица / Банки</span>
               <span class="floor-sub">Банкоматы • Постаматы • Улица</span>
             </div>
-            <div class="floor-tile" data-floor="Подрядчик/новый арендатор" onclick="selectFloor('Подрядчик/новый арендатор')">
+            <div class="floor-tile" data-floor="Подрядчик/новый арендатор" onclick="selectFloor('Подрядчик/новый арендатор', false)">
               <span class="floor-num" id="flSubName">Подрядчик</span>
               <span class="floor-sub" id="flSubDesc">Новый арендатор</span>
             </div>
           </div>
-        </div>
-
-        <!-- Шаг 2 -->
-        <div class="surface-card hidden" id="stepCard2">
-          <h2 class="card-title" id="step2Title">Выберите ваше ИП / ТОО</h2>
-          <p class="card-desc" id="step2Desc">Найдите свою организацию в списке этажа или введите вручную.</p>
 
           <div id="tenantPickerBlock">
+            <label class="field-label" id="step2Title" style="margin-top:4px;">Ваше ИП / ТОО <span class="req">*</span></label>
             <div class="search-box">
-              <span class="search-icon">🔍</span>
+              <span class="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
               <input type="text" id="tenantSearch" placeholder="Поиск по названию ИП или ТОО..." oninput="renderTenantList()">
             </div>
             <div class="tenant-list" id="tenantList"></div>
@@ -2232,7 +2959,7 @@
 
           <div id="manualTenantBlock" class="hidden">
             <label class="field-label">Наименование ИП / ТОО <span class="req">*</span></label>
-            <input type="text" id="manualOrgInput" placeholder="Например: ИП Смагулов / ТОО Астана" oninput="state.organization = this.value">
+            <input type="text" id="manualOrgInput" placeholder="Например: ИП Смагулов / ТОО Астана" oninput="state.organization = this.value; saveWizardDraft();">
             <div id="backToListLink" style="margin-top:8px; text-align:right;">
               <span style="font-size:12.5px; color:var(--ink-secondary); cursor:pointer;" onclick="toggleManualTenant(false)">
                 ← Вернуться к списку ИП
@@ -2241,119 +2968,86 @@
           </div>
         </div>
 
-        <!-- Шаг 3 -->
-        <div class="surface-card hidden" id="stepCard3">
-          <h2 class="card-title" id="step3Title">Вид работ, время и срок</h2>
-          <p class="card-desc" id="step3Desc">Выберите тип заявки и разрешенное окно времени.</p>
+        <!-- Шаг 4: Прикрепление фотографий -->
+        <div class="surface-card hidden" id="stepCard4">
+          <h2 class="card-title">Прикрепите фотографии</h2>
+          <p class="card-desc">Необязательный шаг. Приложите фото оборудования, схемы размещения или места работ (до 5 фото).</p>
 
-          <div id="tenantPrivilegeBanner" class="hidden" style="background:var(--bg); border-radius:12px; padding:10px 12px; margin-bottom:12px; font-size:12.5px; color:var(--ink); font-weight:600;"></div>
-
-          <div class="work-grid">
-            <div class="work-tile" data-work="Ввоз товара" onclick="selectWork('Ввоз товара')">
-              <div class="work-icon">📦</div>
-              <div>
-                <div class="work-info-title" id="wImportGoodsTitle">Ввоз товара</div>
-                <div class="work-info-sub">09:00–11:00 или вечернее окно этажа</div>
-              </div>
+          <input type="file" id="reqPhotoInput" accept="image/*" multiple class="hidden" onchange="handleWorkPhotosSelected(event)">
+          <div class="upload-drop-zone" onclick="document.getElementById('reqPhotoInput').click()" style="padding:22px 14px;">
+            <div style="margin-bottom:6px; color:var(--brand);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
             </div>
-            <div class="work-tile" data-work="Вывоз товара" onclick="selectWork('Вывоз товара')">
-              <div class="work-icon">🚚</div>
-              <div>
-                <div class="work-info-title" id="wExportGoodsTitle">Вывоз товара</div>
-                <div class="work-info-sub">09:00–11:00 или вечернее окно этажа</div>
-              </div>
-            </div>
-            <div class="work-tile" data-work="Ввоз и Вывоз товара" onclick="selectWork('Ввоз и Вывоз товара')">
-              <div class="work-icon">🔄</div>
-              <div>
-                <div class="work-info-title" id="wBothGoodsTitle">Ввоз и вывоз товара</div>
-                <div class="work-info-sub">09:00–11:00 или вечернее окно этажа</div>
-              </div>
-            </div>
-            <div class="work-tile" data-work="Ввоз оборудования" onclick="selectWork('Ввоз оборудования')">
-              <div class="work-icon">🖥</div>
-              <div>
-                <div class="work-info-title" id="wImportEqTitle">Ввоз оборудования</div>
-                <div class="work-info-sub">09:00–11:00 или после закрытия ТЦ</div>
-              </div>
-            </div>
-            <div class="work-tile" data-work="Вывоз оборудования" onclick="selectWork('Вывоз оборудования')">
-              <div class="work-icon">📤</div>
-              <div>
-                <div class="work-info-title" id="wExportEqTitle">Вывоз оборудования</div>
-                <div class="work-info-sub">09:00–11:00 или после закрытия ТЦ</div>
-              </div>
-            </div>
-            <div class="work-tile" data-work="Ночные работы(ревизия,уборка)" onclick="selectWork('Ночные работы(ревизия,уборка)')">
-              <div class="work-icon">🌙</div>
-              <div>
-                <div class="work-info-title" id="wNightTitle">Ночные работы (ревизия, уборка)</div>
-                <div class="work-info-sub">После 21:00 (2–3 эт.) / После 22:00 (1, 4 эт.)</div>
-              </div>
-            </div>
+            <div>Выбрать фотографии с устройства</div>
+            <div style="font-size:11.5px; font-weight:400; color:var(--ink-muted); margin-top:3px;">JPG, PNG · автоматическое сжатие</div>
           </div>
+          <div class="act-photo-thumbs" id="reqPhotoPreviewGrid"></div>
+        </div>
 
-          <label class="field-label" id="timeFieldLabel">Время проведения работ <span class="req">*</span></label>
+        <!-- Шаг 5: Желаемая дата и время -->
+        <div class="surface-card hidden" id="stepCard5">
+          <h2 class="card-title">Дата и время проведения</h2>
+          <p class="card-desc">Выберите разрешённое временное окно и срок действия пропуска.</p>
+
+          <div id="tenantPrivilegeBanner" class="hidden" style="background:var(--brand-soft); border-radius:12px; padding:10px 12px; margin-bottom:12px; font-size:12.5px; color:var(--brand); font-weight:600;"></div>
+
+          <label class="field-label" id="timeFieldLabel" style="margin-top:0;">Время проведения работ <span class="req">*</span></label>
           <div class="time-slots-grid" id="timeSlotsGrid"></div>
 
-          <label class="field-label" id="durationFieldLabel">Срок действия заявки:</label>
+          <label class="field-label" id="durationFieldLabel">Срок действия заявки</label>
           <div class="preset-row" id="durationPresetsRow"></div>
 
           <div class="date-row">
             <div>
               <label class="field-label" id="startDateLabel" style="margin-top:4px;">Дата начала <span class="req">*</span></label>
-              <input type="date" id="startDate" onchange="applyDateRules()">
+              <input type="date" id="startDate" onchange="applyDateRules(); saveWizardDraft();">
             </div>
             <div>
               <label class="field-label" id="endDateLabel" style="margin-top:4px;">Дата окончания <span class="req">*</span></label>
-              <input type="date" id="endDate" onchange="updatePassPreview()">
+              <input type="date" id="endDate" onchange="updatePassPreview(); saveWizardDraft();">
             </div>
           </div>
-          <div id="dateRuleHint" style="font-size:11.5px; color:var(--ink-secondary); margin-top:5px;"></div>
+          <div id="dateRuleHint" style="font-size:12px; color:var(--ink-secondary); margin-top:6px;"></div>
         </div>
 
-        <!-- Шаг 4 -->
-        <div class="surface-card hidden" id="stepCard4">
-          <h2 class="card-title" id="step4Title">Подтверждение заявки</h2>
-          <p class="card-desc" id="step4Desc">Согласуют Администратор и Инженер, утверждает Директор.</p>
+        <!-- Шаг 6: Проверка информации и отправка -->
+        <div class="surface-card hidden" id="stepCard6">
+          <h2 class="card-title" id="step4Title">Проверка и отправка</h2>
+          <p class="card-desc" id="step4Desc">Проверьте данные перед отправкой. Цепочка согласования: Администратор → Инженер → Директор.</p>
 
-          <div class="pass-ticket">
-            <div class="pass-top">
-              <div>
-                <div style="font-weight:800; font-size:13px; letter-spacing:0.14em;">JANNUR PASS</div>
-                <div style="font-size:11px; opacity:0.7;" id="passChainSub">Согласование: Админ → Инженер → Директор</div>
-              </div>
-              <div class="pass-floor-badge" id="passFloorBadge">Этаж —</div>
+          <div class="review-block">
+            <div class="review-block-head">
+              <span class="review-block-title">Место и организация</span>
+              <button type="button" class="review-edit-btn" onclick="goStep(3)">Изменить</button>
             </div>
-            <div class="pass-org" id="passOrgText">Организация не выбрана</div>
-            <div class="pass-grid">
-              <div>
-                <div class="pass-lbl">ВИД РАБОТ</div>
-                <div class="pass-val" id="passWorkText">—</div>
-              </div>
-              <div>
-                <div class="pass-lbl">ВРЕМЯ</div>
-                <div class="pass-val" id="passTimeText">—</div>
-              </div>
-              <div>
-                <div class="pass-lbl">СРОК ДЕЙСТВИЯ</div>
-                <div class="pass-val" id="passDatesText">—</div>
-              </div>
-              <div>
-                <div class="pass-lbl">АВТОМОБИЛЬ</div>
-                <div class="pass-val" id="passCarText">Не указан</div>
-              </div>
+            <div style="font-weight:700; font-size:15px; color:var(--ink);" id="passOrgText">—</div>
+            <div style="font-size:13px; color:var(--ink-secondary); margin-top:2px;" id="passFloorBadge">Этаж —</div>
+          </div>
+
+          <div class="review-block">
+            <div class="review-block-head">
+              <span class="review-block-title">Работы и расписание</span>
+              <button type="button" class="review-edit-btn" onclick="goStep(5)">Изменить</button>
+            </div>
+            <div class="pass-grid" style="margin-top:4px;">
+              <div><div class="pass-lbl">Категория</div><div class="pass-val" id="passWorkText">—</div></div>
+              <div><div class="pass-lbl">Время</div><div class="pass-val" id="passTimeText">—</div></div>
+              <div><div class="pass-lbl">Период</div><div class="pass-val" id="passDatesText">—</div></div>
+              <div><div class="pass-lbl">Автомобиль</div><div class="pass-val" id="passCarText">Не указан</div></div>
             </div>
           </div>
 
-          <label class="field-label" id="respFieldLabel">ФИО, должность и телефон ответственного <span class="req">*</span></label>
-          <input type="text" id="responsibleInput" placeholder="Например: Ахметов Ерлан, администратор, +7 701 000 00 00">
+          <div class="review-block">
+            <div class="review-block-head">
+              <span class="review-block-title">Ответственный и детали</span>
+              <button type="button" class="review-edit-btn" onclick="goStep(2)">Изменить</button>
+            </div>
+            <div style="font-size:13.5px; font-weight:600; color:var(--ink);" id="reviewRespText">—</div>
+            <div style="font-size:13px; color:var(--ink-secondary); margin-top:4px;" id="reviewWorkersText">—</div>
+            <div style="font-size:12.5px; color:var(--brand); font-weight:600; margin-top:6px;" id="reviewPhotosText">Фотографии не прикреплены</div>
+          </div>
 
-          <label class="field-label" id="workersFieldLabel">ФИО всех сотрудников <span class="req" id="workersReq">*</span></label>
-          <textarea id="workersInput" placeholder="При ночных работах (ревизия, уборка) обязательно укажите ФИО всех задействованных сотрудников."></textarea>
-
-          <label class="field-label" id="carFieldLabel">Госномер автомобиля (если известен)</label>
-          <input type="text" id="carInput" placeholder="Например: 123 ABC 01" oninput="updatePassPreview()">
+          <div id="wizardSubmitErrorBox" class="hidden reject-reason-box" style="margin-top:10px;"></div>
         </div>
 
         <div class="wizard-step-bar" id="wizardBottomBar">
@@ -2363,91 +3057,143 @@
       </div>
     </div>
 
-    <!-- ==================== ЭКРАН: АКЦИИ В СОЦСЕТИ ТРЦ (ДЛЯ ВСЕХ АРЕНДАТОРОВ) ==================== -->
+    <!-- ==================== ЭКРАН: СОГЛАСОВАНИЕ АКЦИЙ (3 ШАГА) ==================== -->
     <div id="promoView" class="view-section hidden">
       <div class="section-head-row">
         <div>
-          <h2 class="section-title">Акция в соцсети ТРЦ</h2>
-          <div style="font-size:12px; color:var(--ink-secondary);">Доступно всем арендаторам ТРЦ «Жаннур»</div>
+          <h2 class="section-title">Согласование акций</h2>
+          <div style="font-size:12.5px; color:var(--ink-secondary);">Размещение рекламных акций в соцсетях ТРЦ</div>
         </div>
         <button type="button" class="refresh-pill-btn" onclick="loadUserData(true)">↻ Обновить</button>
       </div>
 
-      <div class="surface-card" style="border: 1px solid rgba(200, 37, 63, 0.22);">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
-          <h3 class="card-title" style="margin:0;">📣 Подать акцию маркетологу</h3>
-          <span class="profile-role-badge" id="promoAuthStatusBadge">Все арендаторы</span>
+      <!-- Экран успешной отправки акции -->
+      <div id="promoSuccessScreen" class="surface-card hidden" style="text-align:center; padding:30px 20px;">
+        <div class="success-orb">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
-        <p class="card-desc">
-          Укажите даты проведения, опишите суть акции и прикрепите фото или видео — маркетолог разместит публикацию в соцсетях ТРЦ.
-        </p>
-
-        <!-- Если арендатор авторизован в кабинете — выбор из привязанных бутиков -->
-        <div id="promoVerifiedOrgBlock" class="hidden">
-          <label class="field-label">Ваш бутик (подтвержден в кабинете)</label>
-          <select id="promoOrgSelect"></select>
-          <div style="text-align:right; margin-top:5px;">
-            <span style="font-size:11.5px; color:var(--ink-secondary); cursor:pointer; text-decoration:underline;" onclick="togglePromoManualOrgPicker(true)">
-              Выбрать другой бутик / этаж
-            </span>
-          </div>
+        <h3 class="card-title" style="font-size:18px;">Акция отправлена на согласование</h3>
+        <p class="card-desc">Маркетолог ТРЦ рассмотрит заявку. Статус и комментарии появятся в разделе «Заявки → Акции».</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button type="button" class="btn-primary" onclick="finishPromoSuccess('myRequests')">Посмотреть статус акции</button>
+          <button type="button" class="btn-secondary" onclick="finishPromoSuccess('new')">Отправить ещё одну акцию</button>
         </div>
-
-        <!-- Если арендатор не авторизован — выбор Этажа и ИП/ТОО -->
-        <div id="promoPublicOrgBlock">
-          <div class="date-row">
-            <div>
-              <label class="field-label">Этаж <span class="req">*</span></label>
-              <select id="promoFloorSelect" onchange="populatePromoOrgDropdown()">
-                <option value="1">1 этаж</option>
-                <option value="2">2 этаж</option>
-                <option value="3">3 этаж</option>
-                <option value="4">4 этаж</option>
-                <option value="Улица и Банкоматы">Улица / Банки</option>
-                <option value="Подрядчик/новый арендатор">Новый арендатор</option>
-              </select>
-            </div>
-            <div>
-              <label class="field-label">Бутик (ИП / ТОО) <span class="req">*</span></label>
-              <select id="promoPublicOrgSelect" onchange="onPromoPublicOrgChange()"></select>
-            </div>
-          </div>
-          <div id="promoManualOrgWrap" class="hidden" style="margin-top:6px;">
-            <input type="text" id="promoManualOrgInput" placeholder="Введите название вашего ИП / ТОО...">
-          </div>
-          <label class="field-label">Контактный телефон для связи с маркетологом</label>
-          <input type="text" id="promoContactPhoneInput" placeholder="Например: +7 701 555 44 33">
-        </div>
-
-        <div class="date-row">
-          <div>
-            <label class="field-label">Дата начала акции <span class="req">*</span></label>
-            <input type="date" id="promoStartDate">
-          </div>
-          <div>
-            <label class="field-label">Дата окончания <span class="req">*</span></label>
-            <input type="date" id="promoEndDate">
-          </div>
-        </div>
-
-        <label class="field-label">Суть акции <span class="req">*</span></label>
-        <textarea id="promoDescriptionInput" placeholder="Например: Скидка 20% на весь ассортимент кофе и выпечки для сотрудников и гостей ТРЦ..."></textarea>
-
-        <label class="field-label">Фото или видео для публикации</label>
-        <input type="file" id="promoMediaFilesInput" accept="image/*,video/*" multiple class="hidden" onchange="handlePromoFilesSelected(this)">
-        <div class="upload-drop-zone" onclick="document.getElementById('promoMediaFilesInput').click()">
-          📷 Прикрепить фото или видео
-        </div>
-        <div class="media-pill-list" id="promoSelectedFilesList"></div>
-
-        <button type="button" class="btn-primary" style="width:100%; margin-top:14px;" id="submitPromoBtn" onclick="submitTenantPromoToMarketer()">
-          Отправить маркетологу →
-        </button>
       </div>
 
-      <!-- Живая история и статусы отправленных акций арендатора -->
-      <div class="section-head-row" style="margin-top:16px;">
-        <h3 class="card-title" style="margin:0;">Мои отправленные акции (<span id="myPromosInlineCount">0</span>)</h3>
+      <div id="promoWizardWrap">
+        <div id="promoReworkBanner" class="hidden" style="background:var(--amber-bg); color:var(--amber); border-radius:12px; padding:10px 12px; margin-bottom:10px; font-size:12.5px; font-weight:600;">
+          Режим доработки акции после замечаний администрации
+        </div>
+
+        <div class="wizard-progress-wrap">
+          <div class="wizard-progress-top">
+            <span id="promoStepCounter">Шаг 1 из 3 · Описание и условия</span>
+            <span class="profile-role-badge" id="promoAuthStatusBadge" style="padding:2px 8px;">Акция</span>
+          </div>
+          <div class="wizard-progress-track">
+            <div class="wizard-progress-fill" id="promoProgressFill" style="width:33.3%;"></div>
+          </div>
+        </div>
+
+        <!-- Шаг 1 акции -->
+        <div class="surface-card" id="promoStepCard1">
+          <h3 class="card-title">Основные данные акции</h3>
+          <p class="card-desc">Укажите название, выгоду для посетителей и условия проведения.</p>
+
+          <label class="field-label">Название акции <span class="req">*</span></label>
+          <input type="text" id="promoTitleInput" placeholder="Например: Весенняя распродажа коллекции">
+
+          <label class="field-label">Размер скидки или выгоды <span class="req">*</span></label>
+          <input type="text" id="promoDiscountInput" placeholder="Например: Скидка 20% или 1+1=3">
+
+          <label class="field-label">Описание акции <span class="req">*</span></label>
+          <textarea id="promoDescriptionInput" placeholder="Кратко расскажите о предложении для гостей ТРЦ..."></textarea>
+
+          <label class="field-label">Условия проведения</label>
+          <textarea id="promoConditionsInput" style="min-height:60px;" placeholder="Например: При покупке от 15 000 ₸, не суммируется с другими скидками"></textarea>
+        </div>
+
+        <!-- Шаг 2 акции -->
+        <div class="surface-card hidden" id="promoStepCard2">
+          <h3 class="card-title">Сроки и рекламный макет</h3>
+          <p class="card-desc">Выберите даты проведения, магазин и прикрепите макет или фото/видео.</p>
+
+          <div id="promoVerifiedOrgBlock" class="hidden">
+            <label class="field-label" style="margin-top:0;">Ваш магазин</label>
+            <select id="promoOrgSelect"></select>
+            <div style="text-align:right; margin-top:5px;">
+              <span style="font-size:12px; color:var(--ink-secondary); cursor:pointer; text-decoration:underline;" onclick="togglePromoManualOrgPicker(true)">
+                Выбрать другой бутик
+              </span>
+            </div>
+          </div>
+
+          <div id="promoPublicOrgBlock">
+            <div class="date-row">
+              <div>
+                <label class="field-label" style="margin-top:0;">Этаж <span class="req">*</span></label>
+                <select id="promoFloorSelect" onchange="populatePromoOrgDropdown()">
+                  <option value="1">1 этаж</option>
+                  <option value="2">2 этаж</option>
+                  <option value="3">3 этаж</option>
+                  <option value="4">4 этаж</option>
+                  <option value="Улица и Банкоматы">Улица / Банки</option>
+                  <option value="Подрядчик/новый арендатор">Новый арендатор</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label" style="margin-top:0;">Бутик (ИП / ТОО) <span class="req">*</span></label>
+                <select id="promoPublicOrgSelect" onchange="onPromoPublicOrgChange()"></select>
+              </div>
+            </div>
+            <div id="promoManualOrgWrap" class="hidden" style="margin-top:6px;">
+              <input type="text" id="promoManualOrgInput" placeholder="Введите название вашего ИП / ТОО...">
+            </div>
+            <label class="field-label">Контактный телефон для связи</label>
+            <input type="text" id="promoContactPhoneInput" placeholder="+7 701 555 44 33">
+          </div>
+
+          <div class="date-row">
+            <div>
+              <label class="field-label">Дата начала <span class="req">*</span></label>
+              <input type="date" id="promoStartDate">
+            </div>
+            <div>
+              <label class="field-label">Дата завершения <span class="req">*</span></label>
+              <input type="date" id="promoEndDate">
+            </div>
+          </div>
+
+          <label class="field-label">Рекламный макет, фото или видео</label>
+          <input type="file" id="promoMediaFilesInput" accept="image/*,video/*" multiple class="hidden" onchange="handlePromoFilesSelected(this)">
+          <div class="upload-drop-zone" onclick="document.getElementById('promoMediaFilesInput').click()">
+            Загрузить макет, фото или видео
+          </div>
+          <div class="media-pill-list" id="promoSelectedFilesList"></div>
+        </div>
+
+        <!-- Шаг 3 акции -->
+        <div class="surface-card hidden" id="promoStepCard3">
+          <h3 class="card-title">Комментарий и отправка</h3>
+          <p class="card-desc">Добавьте пожелания для администрации и проверьте параметры акции.</p>
+
+          <div class="review-block" id="promoReviewSummary"></div>
+
+          <label class="field-label">Комментарий для администрации</label>
+          <textarea id="promoCommentInput" style="min-height:64px;" placeholder="Пожелания по дате публикации, отметке Instagram-аккаунта..."></textarea>
+
+          <div id="promoSubmitErrorBox" class="hidden reject-reason-box" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="wizard-step-bar">
+          <button type="button" class="btn-secondary hidden" id="promoPrevBtn" onclick="promoPrevStep()">← Назад</button>
+          <button type="button" class="btn-primary" id="submitPromoBtn" onclick="promoNextStep()">Далее →</button>
+        </div>
+      </div>
+
+      <!-- История отправленных акций -->
+      <div class="dash-section-head" style="margin-top:22px;">
+        <h3 class="dash-section-title">Мои акции (<span id="myPromosInlineCount">0</span>)</h3>
       </div>
       <div id="myPromosInlineList"></div>
     </div>
@@ -2925,60 +3671,87 @@
         </div>
       </div>
 
-      <!-- Подраздел 5.4: Личный кабинет (Верификация по номеру телефона) -->
+      <!-- Подраздел 5.4: Профиль арендатора -->
       <div id="moreSubCabinet">
         <div id="cabinetUnverifiedState">
-          <div class="cabinet-hero-card">
-            <span class="cabinet-badge">🔐 JANNUR • ВХОД ПО НОМЕРУ</span>
-            <h3 style="font-weight:800; font-size:19px; margin:10px 0 6px; color:#FFFFFF;">
-              Личный кабинет и авторизация
-            </h3>
-            <p style="font-size:12.5px; opacity:0.82; line-height:1.45; margin:0;">
-              Подтвердите свой номер телефона через Telegram: руководители бутиков получат доступ к счетам аренды, а сотрудники ТРЦ — автоматический переход в свой рабочий раздел.
-            </p>
-          </div>
-
           <div class="surface-card">
-            <h3 class="card-title">Подтверждение через Telegram</h3>
+            <span class="profile-role-badge" style="display:inline-block; margin-bottom:10px;">Авторизация арендатора</span>
+            <h3 class="card-title" style="font-size:18px;">Подтвердите номер телефона</h3>
             <p class="card-desc">
-              Нажмите кнопку ниже — Telegram безопасно передаст ваш верифицированный номер телефона.
+              Войдите по номеру из договора аренды — система запомнит ваш профиль, автоматически подставит бутик в заявки и откроет доступ к счетам за аренду.
             </p>
             <button type="button" class="btn-primary" style="width:100%;" id="verifyPhoneBtn" onclick="requestTenantPhoneVerification()">
-              📱 Подтвердить номер телефона
+              Подтвердить номер через Telegram
             </button>
             <div id="cabinetVerifyErrorBox" class="hidden reject-reason-box" style="margin-top:12px;"></div>
           </div>
         </div>
 
         <div id="cabinetVerifiedState" class="hidden">
-          <div class="cabinet-hero-card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="cabinet-badge">✓ НОМЕР ПОДТВЕРЖДЕН</span>
-              <button type="button" onclick="loadUserData(true)" style="background:rgba(255,255,255,0.14); border:none; color:#fff; padding:5px 10px; border-radius:999px; font-size:11.5px; font-weight:700; cursor:pointer;">
-                ↻ Обновить
-              </button>
+          <div class="surface-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span class="status-chip st-approved">Профиль подтверждён</span>
+              <button type="button" class="refresh-pill-btn" onclick="loadUserData(true)">↻ Обновить</button>
             </div>
-            <div style="font-weight:800; font-size:17px; margin-top:8px;" id="cabVerifiedPhoneText">+7 (700) 000-00-00</div>
-            <div style="font-size:11.5px; opacity:0.75; margin-top:2px;">Сюда поступают уведомления о счетах за аренду</div>
+            <div class="profile-info-row">
+              <span class="profile-info-lbl">Имя</span>
+              <span class="profile-info-val" id="profUserName">—</span>
+            </div>
+            <div class="profile-info-row">
+              <span class="profile-info-lbl">Магазин</span>
+              <span class="profile-info-val" id="profShopName">—</span>
+            </div>
+            <div class="profile-info-row">
+              <span class="profile-info-lbl">Этаж и бутик</span>
+              <span class="profile-info-val" id="profFloorBoutique">—</span>
+            </div>
+            <div class="profile-info-row">
+              <span class="profile-info-lbl">Телефон</span>
+              <span class="profile-info-val" id="cabVerifiedPhoneText">—</span>
+            </div>
           </div>
 
           <div id="cabinetAccountsList"></div>
+        </div>
 
-          <div class="surface-card" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-            <div>
-              <div style="font-weight:700; font-size:14px; color:var(--ink);">📣 Разместить акцию в соцсетях</div>
-              <div style="font-size:12px; color:var(--ink-secondary); margin-top:2px;">Отправьте фото, видео и даты акции маркетологу</div>
-            </div>
-            <button type="button" class="btn-primary" style="flex:0 0 auto; padding:10px 14px; font-size:13px;" onclick="switchView('promo')">
-              Открыть →
-            </button>
+        <!-- Контакты администрации ТРЦ -->
+        <div class="surface-card">
+          <h3 class="card-title" style="font-size:15.5px; margin-bottom:8px;">Контакты администрации ТРЦ</h3>
+          <div class="profile-info-row">
+            <span class="profile-info-lbl">Торговый центр</span>
+            <span class="profile-info-val">ТРЦ «Жаннур», г. Астана</span>
           </div>
+          <div class="profile-info-row">
+            <span class="profile-info-lbl">Приём заявок</span>
+            <span class="profile-info-val">Пн–Пт, 09:00–17:00</span>
+          </div>
+          <div class="profile-info-row">
+            <span class="profile-info-lbl">Служба аренды</span>
+            <span class="profile-info-val">Администрация ТРЦ</span>
+          </div>
+        </div>
 
-          <div style="text-align:center; margin-top:8px;">
-            <button type="button" class="btn-secondary" style="font-size:12.5px; padding:10px 14px;" onclick="unlinkMyCabinetDevice()">
-              Выйти / Отвязать это устройство
-            </button>
-          </div>
+        <!-- Настройки уведомлений -->
+        <div class="surface-card">
+          <h3 class="card-title" style="font-size:15.5px; margin-bottom:4px;">Настройки уведомлений</h3>
+          <label class="gate-switch-row" style="margin-top:6px; border-top:none; padding-top:4px;">
+            <span style="font-size:13.5px; font-weight:500;">Статусы заявок и акций</span>
+            <span class="ios-switch"><input type="checkbox" id="prefNotifStatus" checked onchange="saveNotifPrefs()"><span class="ios-slider"></span></span>
+          </label>
+          <label class="gate-switch-row" style="margin-top:4px;">
+            <span style="font-size:13.5px; font-weight:500;">Напоминания об оплате</span>
+            <span class="ios-switch"><input type="checkbox" id="prefNotifPayment" checked onchange="saveNotifPrefs()"><span class="ios-slider"></span></span>
+          </label>
+          <label class="gate-switch-row" style="margin-top:4px;">
+            <span style="font-size:13.5px; font-weight:500;">Объявления и мероприятия</span>
+            <span class="ios-switch"><input type="checkbox" id="prefNotifAnnounce" checked onchange="saveNotifPrefs()"><span class="ios-slider"></span></span>
+          </label>
+        </div>
+
+        <div id="profileLogoutWrap" class="hidden" style="margin-top:6px;">
+          <button type="button" class="btn-secondary" style="width:100%; color:var(--brand); border-color:rgba(158,27,50,0.25);" onclick="unlinkMyCabinetDevice()">
+            Выйти из аккаунта
+          </button>
         </div>
       </div>
     </div>
@@ -3111,29 +3884,16 @@
       </button>
     </nav>
 
-    <!-- Навигация для Арендаторов (4 раздела: Заявка, Акция, Мои, Кабинет) -->
+    <!-- Навигация для Арендаторов (5 вкладок: Главная, Заявки, +, Уведомления, Профиль) -->
     <nav class="liquid-dock" id="tenantDock" aria-label="Навигация арендатора">
-      <button type="button" class="dock-item active" data-view="wizard" onclick="switchView('wizard')">
+      <button type="button" class="dock-item active" data-view="home" onclick="switchView('home')">
         <span class="dock-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="4"></rect>
-            <line x1="12" y1="8" x2="12" y2="16"></line>
-            <line x1="8" y1="12" x2="16" y2="12"></line>
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
         </span>
-        <span class="dock-label" id="tDockNewLbl">Заявка</span>
-      </button>
-
-      <button type="button" class="dock-item" data-view="promo" onclick="switchView('promo')">
-        <span class="dock-icon-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-          <span class="dock-badge zero" id="myPromosDockBadge">0</span>
-        </span>
-        <span class="dock-label" id="tDockPromoLbl">Акция</span>
+        <span class="dock-label" id="tDockHomeLbl">Главная</span>
       </button>
 
       <button type="button" class="dock-item" data-view="myRequests" onclick="switchView('myRequests')">
@@ -3146,7 +3906,27 @@
           </svg>
           <span class="dock-badge zero" id="myReqBadge">0</span>
         </span>
-        <span class="dock-label" id="tDockMyLbl">Мои</span>
+        <span class="dock-label" id="tDockMyLbl">Заявки</span>
+      </button>
+
+      <button type="button" class="dock-item dock-create-btn" data-view="create" onclick="openCreateActionSheet()" aria-label="Создать">
+        <span class="dock-create-circle">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </span>
+      </button>
+
+      <button type="button" class="dock-item" data-view="notifications" onclick="switchView('notifications')">
+        <span class="dock-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="dock-badge zero" id="notifDockBadge">0</span>
+        </span>
+        <span class="dock-label" id="tDockNotifLbl">Уведомления</span>
       </button>
 
       <button type="button" class="dock-item" data-view="more" onclick="switchView('more')">
@@ -3156,7 +3936,7 @@
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </span>
-        <span class="dock-label" id="tDockCabLbl">Кабинет</span>
+        <span class="dock-label" id="tDockCabLbl">Профиль</span>
       </button>
     </nav>
 
@@ -3297,6 +4077,47 @@
         <button type="button" class="btn-secondary" onclick="closePromoRejectModal()">Отмена</button>
         <button type="button" class="btn-primary" id="confirmPromoRejectBtn" onclick="confirmPromoReject()">Отклонить с причиной</button>
       </div>
+    </div>
+  </div>
+
+
+  <!-- 5. Выбор действия по кнопке «Создать» -->
+  <div class="modal-backdrop hidden" id="createActionModal" onclick="if(event.target===this) closeCreateActionSheet()">
+    <div class="modal-sheet">
+      <div class="sheet-grabber"></div>
+      <h3 class="card-title" style="margin-bottom:4px;">Что вы хотите создать?</h3>
+      <p class="card-desc" style="margin-bottom:14px;">Выберите нужный тип обращения в администрацию ТРЦ.</p>
+
+      <button type="button" class="action-sheet-option" onclick="closeCreateActionSheet(); startNewWorkRequest();">
+        <div class="dash-action-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        </div>
+        <div>
+          <div style="font-size:15px; font-weight:700; color:var(--ink);">Создать заявку на проведение работ</div>
+          <div style="font-size:12.5px; color:var(--ink-secondary); margin-top:2px;">Ввоз/вывоз товара, оборудования, ночные работы</div>
+        </div>
+      </button>
+
+      <button type="button" class="action-sheet-option" onclick="closeCreateActionSheet(); startNewPromoRequest();">
+        <div class="dash-action-icon neutral">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        </div>
+        <div>
+          <div style="font-size:15px; font-weight:700; color:var(--ink);">Отправить акцию на согласование</div>
+          <div style="font-size:12.5px; color:var(--ink-secondary); margin-top:2px;">Публикация скидок и спецпредложений в соцсетях ТРЦ</div>
+        </div>
+      </button>
+
+      <button type="button" class="btn-secondary" style="width:100%; margin-top:4px;" onclick="closeCreateActionSheet()">Отмена</button>
+    </div>
+  </div>
+
+  <!-- 6. Подробная карточка заявки (Detail Sheet) -->
+  <div class="modal-backdrop hidden" id="requestDetailModal" onclick="if(event.target===this) closeRequestDetailModal()">
+    <div class="modal-sheet" style="max-height:88dvh; overflow-y:auto;">
+      <div class="sheet-grabber"></div>
+      <div id="requestDetailBody"></div>
+      <button type="button" class="btn-secondary" style="width:100%; margin-top:12px;" onclick="closeRequestDetailModal()">Закрыть</button>
     </div>
   </div>
 
@@ -3480,108 +4301,63 @@
     haptic('light');
   }
 
+  function setTxtSafe(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+  function setHtmlSafe(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = val;
+  }
+
   function applyTranslations() {
     const t = I18N[currentLang] || I18N.ru;
-    document.getElementById('headerAppNameText').textContent = t.appName;
-    document.getElementById('fabCreateText').textContent = t.fabCreate;
-    document.getElementById('tDockNewLbl').textContent = t.dockNew;
-    if (document.getElementById('tDockPromoLbl')) document.getElementById('tDockPromoLbl').textContent = t.dockPromo;
-    document.getElementById('tDockMyLbl').textContent = t.dockMy;
-    document.getElementById('tDockCabLbl').textContent = t.dockCab;
-
-    document.getElementById('closedTitleText').textContent = t.closedTitle;
-    document.getElementById('closedDescText').innerHTML = t.closedDesc;
-    document.getElementById('closedScheduleBox').innerHTML = t.closedSchedule;
-    document.getElementById('closedViewMyBtn').textContent = t.viewMyBtn;
-
-    document.getElementById('st1Label').textContent = t.st1;
-    document.getElementById('st2Label').textContent = t.st2;
-    document.getElementById('st3Label').textContent = t.st3;
-    document.getElementById('st4Label').textContent = t.st4;
-
-    document.getElementById('step1Title').textContent = t.step1Title;
-    document.getElementById('step1Desc').textContent = t.step1Desc;
-    document.getElementById('fl1Name').textContent = t.fl1;
-    document.getElementById('fl2Name').textContent = t.fl2;
-    document.getElementById('fl3Name').textContent = t.fl3;
-    document.getElementById('fl4Name').textContent = t.fl4;
-    document.getElementById('flStreetName').textContent = t.flStreet;
-    document.getElementById('flSubName').textContent = t.flSub;
-    document.getElementById('flSubDesc').textContent = t.flSubDesc;
-
-    document.getElementById('step2Title').textContent = t.step2Title;
-    document.getElementById('step2Desc').textContent = t.step2Desc;
-
-    document.getElementById('step3Title').textContent = t.step3Title;
-    document.getElementById('step3Desc').textContent = t.step3Desc;
-    document.getElementById('wImportGoodsTitle').textContent = t.wImportGoods;
-    document.getElementById('wExportGoodsTitle').textContent = t.wExportGoods;
-    document.getElementById('wBothGoodsTitle').textContent = t.wBothGoods;
-    document.getElementById('wImportEqTitle').textContent = t.wImportEq;
-    document.getElementById('wExportEqTitle').textContent = t.wExportEq;
-    document.getElementById('wNightTitle').textContent = t.wNight;
-
-    document.getElementById('timeFieldLabel').innerHTML = `${t.timeLabel} <span class="req">*</span>`;
-    document.getElementById('durationFieldLabel').textContent = t.durationLabel;
-    document.getElementById('startDateLabel').innerHTML = `${t.startDateLabel} <span class="req">*</span>`;
-    document.getElementById('endDateLabel').innerHTML = `${t.endDateLabel} <span class="req">*</span>`;
-
-    document.getElementById('step4Title').textContent = t.step4Title;
-    document.getElementById('step4Desc').textContent = t.step4Desc;
-    document.getElementById('passChainSub').textContent = t.passChainSub;
-    document.getElementById('respFieldLabel').innerHTML = `${t.respLabel} <span class="req">*</span>`;
-    document.getElementById('workersFieldLabel').innerHTML = `${t.workersLabel} <span class="req" id="workersReq" style="display:${state.workType.includes('Ночные') ? 'inline' : 'none'}">*</span>`;
-    document.getElementById('carFieldLabel').textContent = t.carLabel;
-
-    document.getElementById('myReqTitle').textContent = t.myReqTitle;
-    document.getElementById('prevBtn').textContent = t.prevBtn;
-    document.getElementById('nextBtn').textContent = state.step === 4 ? t.submitBtn : t.nextBtn;
-
     const isKk = currentLang === 'kk';
-    const splashSub = document.getElementById('splashSubText');
-    if (splashSub) splashSub.textContent = isKk ? "Жүктелуде..." : "Загрузка...";
+    setTxtSafe('headerAppNameText', t.appName);
+    setTxtSafe('fabCreateText', t.fabCreate);
+    setTxtSafe('tDockHomeLbl', isKk ? 'Басты' : 'Главная');
+    setTxtSafe('tDockMyLbl', isKk ? 'Өтінімдер' : 'Заявки');
+    setTxtSafe('tDockNotifLbl', isKk ? 'Хабарлама' : 'Уведомления');
+    setTxtSafe('tDockCabLbl', isKk ? 'Профиль' : 'Профиль');
 
-    const mySubPermits = document.getElementById('mySubPermitsBtn');
-    if (mySubPermits) {
-      const cnt = document.getElementById('myPermitsTabCnt')?.textContent || '0';
-      mySubPermits.innerHTML = `${isKk ? 'Рұқсаттамалар' : 'Пропуска'} (<span id="myPermitsTabCnt">${cnt}</span>)`;
-    }
-    const mySubPromos = document.getElementById('mySubPromosBtn');
-    if (mySubPromos) {
-      const cnt = document.getElementById('myPromosTabCnt')?.textContent || '0';
-      mySubPromos.innerHTML = `${isKk ? 'Акциялар' : 'Акции'} (<span id="myPromosTabCnt">${cnt}</span>)`;
-    }
+    setTxtSafe('closedTitleText', t.closedTitle);
+    setHtmlSafe('closedDescText', t.closedDesc);
+    setHtmlSafe('closedScheduleBox', t.closedSchedule);
+    setTxtSafe('closedViewMyBtn', t.viewMyBtn);
 
-    const promoHeading = document.querySelector('#promoView .section-title');
-    if (promoHeading) promoHeading.textContent = isKk ? "СО Әлеуметтік желісіндегі акция" : "Акция в соцсети ТРЦ";
-    const promoSubHead = document.querySelector('#promoView .section-title + div');
-    if (promoSubHead) promoSubHead.textContent = isKk ? "«Жаннур» СОО барлық жалға алушыларына қолжетімді" : "Доступно всем арендаторам ТРЦ «Жаннур»";
-    const promoCardTitle = document.querySelector('#promoView .card-title');
-    if (promoCardTitle) promoCardTitle.textContent = isKk ? "📣 Маркетологқа акция жіберу" : "📣 Подать акцию маркетологу";
-    const promoCardDesc = document.querySelector('#promoView .card-desc');
-    if (promoCardDesc) promoCardDesc.textContent = isKk
-      ? "Өткізу күндерін көрсетіңіз, акция мәнін жазып, фото немесе видео тіркеңіз — маркетолог СОО әлеуметтік желілеріне жариялайды."
-      : "Укажите даты проведения, опишите суть акции и прикрепите фото или видео — маркетолог разместит публикацию в соцсетях ТРЦ.";
-    const submitPromoBtn = document.getElementById('submitPromoBtn');
-    if (submitPromoBtn && !submitPromoBtn.disabled) {
-      submitPromoBtn.textContent = isKk ? "Маркетологқа жіберу →" : "Отправить маркетологу →";
-    }
+    setTxtSafe('fl1Name', t.fl1);
+    setTxtSafe('fl2Name', t.fl2);
+    setTxtSafe('fl3Name', t.fl3);
+    setTxtSafe('fl4Name', t.fl4);
+    setTxtSafe('flStreetName', t.flStreet);
+    setTxtSafe('flSubName', t.flSub);
+    setTxtSafe('flSubDesc', t.flSubDesc);
+
+    setTxtSafe('wImportGoodsTitle', t.wImportGoods);
+    setTxtSafe('wExportGoodsTitle', t.wExportGoods);
+    setTxtSafe('wBothGoodsTitle', t.wBothGoods);
+    setTxtSafe('wImportEqTitle', t.wImportEq);
+    setTxtSafe('wExportEqTitle', t.wExportEq);
+    setTxtSafe('wNightTitle', t.wNight);
+
+    setHtmlSafe('timeFieldLabel', `${t.timeLabel} <span class="req">*</span>`);
+    setTxtSafe('durationFieldLabel', t.durationLabel);
+    setHtmlSafe('startDateLabel', `${t.startDateLabel} <span class="req">*</span>`);
+    setHtmlSafe('endDateLabel', `${t.endDateLabel} <span class="req">*</span>`);
+
+    setHtmlSafe('respFieldLabel', `${t.respLabel} <span class="req">*</span>`);
+    setHtmlSafe('workersFieldLabel', `${t.workersLabel} <span class="req" id="workersReq" style="display:${state.workType.includes('Ночные') ? 'inline' : 'none'}">*</span>`);
+    setTxtSafe('carFieldLabel', t.carLabel);
+
+    setTxtSafe('myReqTitle', t.myReqTitle);
+    setTxtSafe('prevBtn', t.prevBtn);
+    setTxtSafe('nextBtn', state.step === 6 ? t.submitBtn : t.nextBtn);
+    setTxtSafe('splashSubText', isKk ? "Жүктелуде..." : "Загрузка...");
 
     const moreTitle = document.getElementById('moreSectionTitle');
     if (moreTitle && !isApprover) {
-      moreTitle.textContent = isKk ? "Жеке кабинет" : "Личный кабинет";
+      moreTitle.textContent = isKk ? "Профиль" : "Профиль";
     }
-    const cabHeroTitle = document.querySelector('#cabinetUnverifiedState h3');
-    if (cabHeroTitle) cabHeroTitle.textContent = isKk ? "Жеке кабинет және авторизация" : "Личный кабинет и авторизация";
-    const cabHeroDesc = document.querySelector('#cabinetUnverifiedState p');
-    if (cabHeroDesc) cabHeroDesc.textContent = isKk
-      ? "Telegram арқылы телефон нөміріңізді растаңыз: бутик басшылары жалдау шоттарына қол жеткізеді, ал СОО қызметкерлері өз жұмыс бөліміне өтеді."
-      : "Подтвердите свой номер телефона через Telegram: руководители бутиков получат доступ к счетам аренды, а сотрудники ТРЦ — автоматический переход в свой рабочий раздел.";
-    const verifyPhoneBtn = document.getElementById('verifyPhoneBtn');
-    if (verifyPhoneBtn && !verifyPhoneBtn.disabled) {
-      verifyPhoneBtn.textContent = isKk ? "📱 Телефон нөмірін растау" : "📱 Подтвердить номер телефона";
-    }
-
     updateHeaderAndSubmissionLock();
     updateGateVisualState();
   }
@@ -3776,7 +4552,21 @@
         renderTenantCabinet();
       }
     } catch (e) {}
-    switchView('wizard');
+    loadNotifPrefs();
+    restoreWizardDraft();
+    window.addEventListener('online', () => {
+      document.getElementById('offlineBanner')?.classList.add('hidden');
+      showToast('Подключение восстановлено');
+      loadUserData(false);
+    });
+    window.addEventListener('offline', () => {
+      document.getElementById('offlineBanner')?.classList.remove('hidden');
+    });
+    if (!navigator.onLine) {
+      document.getElementById('offlineBanner')?.classList.remove('hidden');
+    }
+    renderHomeSkeleton();
+    switchView('home');
     await loadUserData(false);
   });
 
@@ -3784,9 +4574,11 @@
     if (!initDataRaw) {
       hasInitialAppLoaded = true;
       hideSplashScreen();
-      if (!isApprover && currentViewName !== 'wizard' && currentViewName !== 'promo' && currentViewName !== 'myRequests' && currentViewName !== 'more') {
-        switchView('wizard');
+      if (!isApprover && !['home', 'wizard', 'promo', 'myRequests', 'notifications', 'more'].includes(currentViewName)) {
+        switchView('home');
       }
+      renderHomeDashboard();
+      renderNotifications();
       initTenantAdBannerCarousel();
       return;
     }
@@ -3822,6 +4614,8 @@
 
       renderMyRequests();
       renderMyPromosLists();
+      renderNotifications();
+      renderHomeDashboard();
       if (!isInMoreTab) {
         renderTenantCabinet();
       }
@@ -3942,7 +4736,7 @@
         document.getElementById('moreSubActs').classList.add('hidden');
         document.getElementById('moreSubCabinet').classList.remove('hidden');
         const moreTitle = document.getElementById('moreSectionTitle');
-        if (moreTitle) moreTitle.textContent = currentLang === 'kk' ? "Жеке кабинет" : "Личный кабинет";
+        if (moreTitle) moreTitle.textContent = currentLang === 'kk' ? "Профиль" : "Профиль";
         try {
           localStorage.setItem(`jannurCabinetCache_${currentUser.id || 0}`, JSON.stringify(cabinetAccounts || []));
         } catch (e) {}
@@ -3971,44 +4765,42 @@
 
   function switchView(view) {
     if (!isApprover && (view === 'approval' || view === 'guard' || view === 'marketer')) {
-      view = 'wizard';
+      view = 'home';
     }
     currentViewName = view;
     haptic('light');
 
-    // Подсветка активной вкладки в плавающем доке
     const activeDock = (isApprover && userRole !== "Охрана")
-      ? document.getElementById('adminDock')
+      ? (userRole === "Маркетолог" ? document.getElementById('marketerDock') : document.getElementById('adminDock'))
       : (userRole === "Охрана" ? document.getElementById('guardDock') : document.getElementById('tenantDock'));
 
-    activeDock.querySelectorAll('.dock-item').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.view === view);
-    });
+    if (activeDock) {
+      activeDock.querySelectorAll('.dock-item').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === view);
+      });
+    }
 
-    // Скрываем кнопку "+ Подать заявку", когда пользователь уже на экране подачи или в посте охраны
     const fabRow = document.getElementById('floatingFabRow');
     if (fabRow) {
-      const hideFab = (view === 'wizard') || (view === 'promo') || (view === 'more') || (userRole === "Охрана") || (userRole === "Маркетолог");
+      // У арендатора кнопка создания встроена в центр нижней навигации — плавающий FAB только для Руководства
+      const hideFab = (!isApprover) || (view === 'wizard') || (view === 'promo') || (view === 'more') || (userRole === "Охрана") || (userRole === "Маркетолог");
       fabRow.classList.toggle('hidden', hideFab);
     }
 
-    document.getElementById('approvalView').classList.toggle('hidden', view !== 'approval');
-    document.getElementById('guardView').classList.toggle('hidden', view !== 'guard');
-    document.getElementById('myRequestsView').classList.toggle('hidden', view !== 'myRequests');
-    document.getElementById('wizardView').classList.toggle('hidden', view !== 'wizard');
-    document.getElementById('promoView').classList.toggle('hidden', view !== 'promo');
-    document.getElementById('marketerView').classList.toggle('hidden', view !== 'marketer');
-    document.getElementById('moreView').classList.toggle('hidden', view !== 'more');
+    ['homeView', 'notificationsView', 'approvalView', 'guardView', 'myRequestsView', 'wizardView', 'promoView', 'marketerView', 'moreView'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('hidden', id !== `${view}View`);
+    });
 
+    if (view === 'home') renderHomeDashboard();
+    if (view === 'notifications') renderNotifications();
     if (view === 'promo') {
       setupPromoFormOrgBlocks();
       renderMyPromosLists();
     }
 
     const savedMallLogo = localStorage.getItem('jannurMallLogoDataUrl');
-    if (savedMallLogo) {
-      applyMallLogoSrc(savedMallLogo);
-    }
+    if (savedMallLogo) applyMallLogoSrc(savedMallLogo);
     updateUserProfileBlock();
     updateHeaderAndSubmissionLock();
 
@@ -4026,6 +4818,7 @@
         renderAdminCabinetList();
       }
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function switchMoreTab(tab) {
@@ -4582,9 +5375,23 @@
   function setMyReqFilter(mode, btn) {
     myReqFilterMode = mode;
     haptic('light');
-    document.querySelectorAll('#myReqFilterChips .guard-chip').forEach(c => c.classList.remove('active'));
-    if (btn) btn.classList.add('active');
+    document.querySelectorAll('#myReqFilterChips .guard-chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.filter === mode || c === btn);
+    });
     renderMyRequests();
+  }
+
+  function classifyRequestStatus(r) {
+    const st = String(r.status || "На согласовании");
+    const low = st.toLowerCase();
+    if (low.includes("отклонено")) return { key: 'rejected', label: 'Отклонена', cls: 'st-rejected' };
+    if (st.includes("Согласовано (Директор") || st.includes("Согласовано напрямую Директором")) {
+      return { key: 'approved', label: 'Выполнена', cls: 'st-approved' };
+    }
+    if (low.includes("ожидает инженера") || low.includes("ожидает директора")) {
+      return { key: 'in_progress', label: 'В работе', cls: 'st-step' };
+    }
+    return { key: 'new', label: 'Новая', cls: 'st-pending' };
   }
 
   function renderMyRequests() {
@@ -4592,26 +5399,24 @@
     if (!container) return;
 
     const filtered = (myRequests || []).filter(r => {
-      const st = String(r.status || "");
-      const isApp = st.includes("Согласовано (Директор") || st.includes("Согласовано напрямую Директором");
-      const isRej = st.includes("Отклонено");
-      if (myReqFilterMode === 'approved') return isApp;
-      if (myReqFilterMode === 'rejected') return isRej;
-      if (myReqFilterMode === 'pending') return !isApp && !isRej;
-      return true;
+      const cat = classifyRequestStatus(r).key;
+      if (myReqFilterMode === 'all') return true;
+      if (myReqFilterMode === 'pending') return cat === 'new' || cat === 'in_progress';
+      return cat === myReqFilterMode;
     });
 
     if (filtered.length === 0) {
       container.innerHTML = `
         <div class="empty-state-ios">
           <div class="empty-check-orb" style="background:var(--surface-subtle); color:var(--ink-secondary); box-shadow:none;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
             </svg>
           </div>
-          <div class="empty-state-title">Заявок пока нет</div>
-          <div class="empty-state-sub">Нажмите кнопку «+ Подать заявку» внизу экрана, чтобы оформить пропуск.</div>
+          <div class="empty-state-title">Заявок в этой категории нет</div>
+          <div class="empty-state-sub">Создайте новую заявку на проведение работ или выберите другой фильтр.</div>
+          <button type="button" class="btn-primary" style="margin-top:14px; padding:10px 18px;" onclick="startNewWorkRequest()">Создать заявку</button>
         </div>
       `;
       return;
@@ -4619,50 +5424,98 @@
 
     container.innerHTML = "";
     filtered.forEach(r => {
-      const st = String(r.status || "На согласовании");
-      const isFinalValid = st.includes("Согласовано (Директор") || st.includes("Согласовано напрямую Директором");
-      const isRejected = st.includes("Отклонено");
+      const stInfo = classifyRequestStatus(r);
+      const isFinalValid = stInfo.key === 'approved';
+      const createdLine = r.createdAt ? `Создана ${r.createdAt}` : `Период: ${r.startDate}`;
+      const descShort = (r.nightDetails && r.nightDetails !== '-') ? r.nightDetails : `${r.workTime} · с ${r.startDate} по ${r.endDate}`;
 
-      let pillClass = "st-pending";
-      if (isFinalValid) pillClass = "st-approved";
-      else if (isRejected) pillClass = "st-rejected";
-      else if (st.includes("Ожидает")) pillClass = "st-step";
-
-      const info = buildApprovalStatusSummary(r);
       const card = document.createElement('div');
       card.className = 'req-card-modern';
+      card.style.cursor = 'pointer';
+      card.onclick = (e) => {
+        if (e.target.closest('button')) return;
+        openRequestDetailModal(r.rowIndex);
+      };
       card.innerHTML = `
         <div class="req-card-top">
-          <span class="req-num-tag">№${r.rowIndex} · ${r.floor} эт.</span>
-          <span class="status-chip ${pillClass}">${st}</span>
+          <span class="req-num-tag">#${r.rowIndex} · ${r.floor} эт.</span>
+          <span class="status-chip ${stInfo.cls}">${stInfo.label}</span>
         </div>
-        <div class="req-org-name">${r.organization}</div>
-        <div class="req-meta-grid">
-          <div class="req-meta-cell">
-            <span class="req-meta-lbl">Вид работ</span>
-            <span class="req-meta-val">${r.workType}</span>
-          </div>
-          <div class="req-meta-cell">
-            <span class="req-meta-lbl">Время</span>
-            <span class="req-meta-val">${r.workTime}</span>
-          </div>
-          <div class="req-meta-cell" style="grid-column: span 2;">
-            <span class="req-meta-lbl">Срок действия</span>
-            <span class="req-meta-val">с ${r.startDate} по ${r.endDate}</span>
-          </div>
+        <div class="req-org-name" style="margin-bottom:4px;">${r.workType}</div>
+        <div style="font-size:13px; color:var(--ink-secondary); margin-bottom:8px;">
+          ${r.organization} · ${createdLine}
         </div>
-        <div style="padding:8px 10px; border-radius:11px; background:var(--bg); border:1px solid var(--hairline); font-size:12px; line-height:1.45; margin-bottom:8px;">
-          <div><b>Этап:</b> <span style="color:var(--ink);">${r.stageLabel || info.stage}</span></div>
-          <div style="margin-top:2px;"><b>Кем рассмотрено / согласовано:</b> <span style="color:var(--green); font-weight:700;">${r.reviewedBy || info.reviewedBy}</span></div>
-          <div style="margin-top:2px;"><b>У кого на рассмотрении:</b> <span style="color:var(--brand); font-weight:700;">${r.remainingApprovers || info.pendingWith}</span></div>
+        <div style="font-size:13px; color:var(--ink); background:var(--bg); padding:9px 11px; border-radius:10px; margin-bottom:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          ${descShort}
         </div>
-        ${isFinalValid ? `<button type="button" class="qr-btn" onclick="openQrPassModal(${r.rowIndex})">🎫 Открыть QR-пропуск для охраны</button>` : ''}
-        ${!isFinalValid && !isRejected ? `<div style="font-size:11.5px; color:var(--blue); font-weight:600;">ℹ️ QR-пропуск появится после утверждения Директором.</div>` : ''}
-        ${r.rejectReason ? `<div class="reject-reason-box"><b>Причина:</b> ${r.rejectReason}</div>` : ''}
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <span style="font-size:12px; color:var(--ink-secondary); font-weight:500;">${r.stageLabel || r.status}</span>
+          <span style="font-size:12.5px; color:var(--brand); font-weight:600;">Подробнее →</span>
+        </div>
+        ${isFinalValid ? `<button type="button" class="qr-btn" style="margin-top:10px;" onclick="openQrPassModal(${r.rowIndex})">Показать QR-пропуск</button>` : ''}
+        ${r.rejectReason ? `<div class="reject-reason-box"><b>Замечание:</b> ${r.rejectReason}</div>` : ''}
       `;
       container.appendChild(card);
     });
   }
+
+  function openRequestDetailModal(rowIndex) {
+    const r = (myRequests || []).find(item => item.rowIndex === rowIndex) || (allRequestsRegistry || []).find(item => item.rowIndex === rowIndex);
+    if (!r) return;
+    haptic('light');
+    const stInfo = classifyRequestStatus(r);
+    const low = String(r.status || "").toLowerCase();
+    const isRejected = stInfo.key === 'rejected';
+    const isApproved = stInfo.key === 'approved';
+    const adminDone = isApproved || low.includes("ожидает инженера") || low.includes("ожидает директора");
+    const engDone = isApproved || low.includes("ожидает директора");
+
+    const photosHtml = (r.photos && r.photos.length > 0)
+      ? `<div style="margin-top:10px;"><div class="review-block-title" style="margin-bottom:6px;">Прикреплённые фото (${r.photos.length})</div><div class="media-pill-list">${r.photos.map(p => `<a class="media-file-chip" href="${p.url}" target="_blank" rel="noopener">Открыть фото ↗</a>`).join('')}</div></div>`
+      : '';
+
+    document.getElementById('requestDetailBody').innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+        <span class="req-num-tag">Заявка #${r.rowIndex}</span>
+        <span class="status-chip ${stInfo.cls}">${stInfo.label}</span>
+      </div>
+      <h3 class="card-title" style="font-size:18px; margin-bottom:2px;">${r.workType}</h3>
+      <div style="font-size:13px; color:var(--ink-secondary); margin-bottom:12px;">${r.organization} · ${r.floor} этаж</div>
+
+      <div class="approval-timeline">
+        <div class="tl-step ${adminDone ? 'done' : (isRejected ? 'rejected' : 'active')}">
+          <div class="tl-dot">${adminDone ? '✓' : '1'}</div>
+          <div><div style="font-weight:600; color:var(--ink);">Администратор</div><div style="font-size:12px; color:var(--ink-secondary);">${adminDone ? 'Согласовано' : (isRejected ? 'Рассмотрено' : 'Ожидает рассмотрения')}</div></div>
+        </div>
+        <div class="tl-step ${engDone ? 'done' : (adminDone && !isRejected ? 'active' : '')}">
+          <div class="tl-dot">${engDone ? '✓' : '2'}</div>
+          <div><div style="font-weight:600; color:var(--ink);">Инженер</div><div style="font-size:12px; color:var(--ink-secondary);">${engDone ? 'Согласовано' : (adminDone && !isRejected ? 'На проверке' : 'Ожидание этапа')}</div></div>
+        </div>
+        <div class="tl-step ${isApproved ? 'done' : (engDone && !isRejected ? 'active' : '')}">
+          <div class="tl-dot">${isApproved ? '✓' : '3'}</div>
+          <div><div style="font-weight:600; color:var(--ink);">Директор</div><div style="font-size:12px; color:var(--ink-secondary);">${isApproved ? 'Утверждено · Пропуск активен' : (engDone && !isRejected ? 'Ожидает утверждения' : 'Ожидание этапа')}</div></div>
+        </div>
+      </div>
+
+      <div class="review-block">
+        <div class="profile-info-row"><span class="profile-info-lbl">Период</span><span class="profile-info-val">с ${r.startDate} по ${r.endDate}</span></div>
+        <div class="profile-info-row"><span class="profile-info-lbl">Время</span><span class="profile-info-val">${r.workTime}</span></div>
+        <div class="profile-info-row"><span class="profile-info-lbl">Ответственный</span><span class="profile-info-val">${r.responsible || '—'}</span></div>
+        <div class="profile-info-row"><span class="profile-info-lbl">Автомобиль</span><span class="profile-info-val">${r.carNumber || 'Не указан'}</span></div>
+        <div class="profile-info-row"><span class="profile-info-lbl">Описание / ФИО</span><span class="profile-info-val" style="max-width:60%;">${r.nightDetails || '—'}</span></div>
+      </div>
+
+      ${photosHtml}
+      ${r.rejectReason ? `<div class="reject-reason-box" style="margin-top:10px;"><b>Причина отклонения:</b> ${r.rejectReason}</div>` : ''}
+      ${isApproved ? `<button type="button" class="btn-primary" style="width:100%; margin-top:12px;" onclick="closeRequestDetailModal(); openQrPassModal(${r.rowIndex});">Показать QR-пропуск</button>` : ''}
+    `;
+    document.getElementById('requestDetailModal').classList.remove('hidden');
+  }
+
+  function closeRequestDetailModal() {
+    document.getElementById('requestDetailModal').classList.add('hidden');
+  }
+
 
   /* ==================== QR-ПРОПУСК И СКАНЕР КПП ==================== */
   function openQrPassModal(rowIndex) {
@@ -5030,45 +5883,192 @@
     return tenantRules[org] || { maxDays: 7, customTime: "", exclusiveTime: false };
   }
 
-  function goStep(n) {
-    if (!isSubmissionWindowOpen()) { updateHeaderAndSubmissionLock(); return; }
-    if (n > 1 && !state.floor) return tg.showAlert("Сначала выберите этаж");
-    if (n > 2 && !state.organization.trim()) return tg.showAlert("Выберите или введите ваше ИП / ТОО");
-    if (n > 3 && !state.workType) return tg.showAlert("Выберите вид работ");
+  let selectedWorkPhotos = [];
+  const WIZARD_STEP_TITLES = [
+    '',
+    'Категория работ',
+    'Описание и контакты',
+    'Место проведения',
+    'Фотографии',
+    'Дата и время',
+    'Проверка и отправка'
+  ];
 
-    const t = I18N[currentLang] || I18N.ru;
-    state.step = n;
-    for (let i = 1; i <= 4; i++) {
-      document.getElementById(`stepCard${i}`).classList.toggle('hidden', i !== n);
-      const st = document.getElementById(`st${i}`);
-      st.classList.toggle('active', i === n);
-      st.classList.toggle('done', i < n);
+  function startNewWorkRequest() {
+    document.getElementById('wizardSuccessScreen')?.classList.add('hidden');
+    document.getElementById('wizardActiveBody')?.classList.remove('hidden');
+    document.getElementById('wizardSubmitErrorBox')?.classList.add('hidden');
+    if (cabinetAccounts && cabinetAccounts.length > 0 && !state.organization) {
+      selectFloor(String(cabinetAccounts[0].floor || '1'), false);
+      state.organization = cabinetAccounts[0].organization || '';
+      renderTenantList();
     }
+    switchView('wizard');
+    goStep(state.step || 1, true);
+  }
 
-    document.getElementById('prevBtn').classList.toggle('hidden', n === 1);
-    document.getElementById('nextBtn').textContent = n === 4 ? t.submitBtn : t.nextBtn;
-    if (n === 3) { updatePrivilegeBanner(); renderTimeSlots(); applyDateRules(); }
-    if (n === 4) updatePassPreview();
+  function saveWizardDraft() {
+    try {
+      const draft = {
+        step: state.step,
+        workType: state.workType,
+        floor: state.floor,
+        organization: state.organization,
+        workTime: state.workTime,
+        responsible: document.getElementById('responsibleInput')?.value || '',
+        workers: document.getElementById('workersInput')?.value || '',
+        car: document.getElementById('carInput')?.value || '',
+        startDate: document.getElementById('startDate')?.value || '',
+        endDate: document.getElementById('endDate')?.value || ''
+      };
+      localStorage.setItem('jannurDraftWorkV44', JSON.stringify(draft));
+      const pill = document.getElementById('wizardDraftPill');
+      if (pill) {
+        pill.classList.remove('hidden');
+        clearTimeout(window._draftPillTimer);
+        window._draftPillTimer = setTimeout(() => pill.classList.add('hidden'), 2200);
+      }
+    } catch (e) {}
+  }
+
+  function restoreWizardDraft() {
+    try {
+      const raw = localStorage.getItem('jannurDraftWorkV44');
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d.workType) {
+        state.workType = d.workType;
+        document.querySelectorAll('.work-tile').forEach(el => el.classList.toggle('selected', el.dataset.work === d.workType));
+      }
+      if (d.floor) selectFloor(d.floor, false);
+      if (d.organization) {
+        state.organization = d.organization;
+        const mEl = document.getElementById('manualOrgInput');
+        if (mEl && state.isManualOrg) mEl.value = d.organization;
+        renderTenantList();
+      }
+      if (d.workTime) state.workTime = d.workTime;
+      if (d.responsible && document.getElementById('responsibleInput')) document.getElementById('responsibleInput').value = d.responsible;
+      if (d.workers && document.getElementById('workersInput')) document.getElementById('workersInput').value = d.workers;
+      if (d.car && document.getElementById('carInput')) document.getElementById('carInput').value = d.car;
+      if (d.startDate && document.getElementById('startDate')) document.getElementById('startDate').value = d.startDate;
+      if (d.endDate && document.getElementById('endDate')) document.getElementById('endDate').value = d.endDate;
+    } catch (e) {}
+  }
+
+  function clearWizardDraft() {
+    try { localStorage.removeItem('jannurDraftWorkV44'); } catch (e) {}
+    selectedWorkPhotos = [];
+    renderWorkPhotoThumbs();
+    state.step = 1;
+    state.workType = '';
+    document.querySelectorAll('.work-tile').forEach(el => el.classList.remove('selected'));
+    if (document.getElementById('workersInput')) document.getElementById('workersInput').value = '';
+  }
+
+  async function handleWorkPhotosSelected(evt) {
+    const files = Array.from(evt.target.files || []);
+    if (!files.length) return;
+    const remaining = Math.max(0, 5 - selectedWorkPhotos.length);
+    for (const file of files.slice(0, remaining)) {
+      try {
+        const compressed = await compressImageToBase64(file, 1100, 0.78);
+        selectedWorkPhotos.push({ name: file.name || `photo_${Date.now()}.jpg`, dataUrl: compressed });
+      } catch (e) {}
+    }
+    evt.target.value = "";
+    renderWorkPhotoThumbs();
     haptic('light');
   }
 
-  function prevStep() { if (state.step > 1) goStep(state.step - 1); }
+  function removeWorkPhoto(idx) {
+    selectedWorkPhotos.splice(idx, 1);
+    renderWorkPhotoThumbs();
+    haptic('light');
+  }
+
+  function renderWorkPhotoThumbs() {
+    const grid = document.getElementById('reqPhotoPreviewGrid');
+    if (!grid) return;
+    if (!selectedWorkPhotos.length) { grid.innerHTML = ""; return; }
+    grid.innerHTML = selectedWorkPhotos.map((p, i) => `
+      <div class="act-photo-thumb-item">
+        <img src="${p.dataUrl}" alt="Фото ${i + 1}">
+        <button type="button" class="act-photo-del" onclick="removeWorkPhoto(${i})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function goStep(n, skipValidation = false) {
+    if (!isSubmissionWindowOpen()) { updateHeaderAndSubmissionLock(); return; }
+    if (!skipValidation) {
+      if (n > 1 && !state.workType) return showToast("Сначала выберите категорию работ");
+      if (n > 2) {
+        const resp = (document.getElementById('responsibleInput')?.value || "").trim();
+        const wrk = (document.getElementById('workersInput')?.value || "").trim();
+        if (!resp) return showToast("Укажите ФИО и телефон ответственного");
+        if (state.workType.includes("Ночные") && !wrk) return showToast("Для ночных работ укажите ФИО всех сотрудников");
+      }
+      if (n > 3 && (!state.floor || !state.organization.trim())) return showToast("Выберите этаж и ваше ИП / ТОО");
+    }
+
+    const t = I18N[currentLang] || I18N.ru;
+    state.step = n;
+    for (let i = 1; i <= 6; i++) {
+      const card = document.getElementById(`stepCard${i}`);
+      if (card) card.classList.toggle('hidden', i !== n);
+    }
+
+    const pct = Math.round((n / 6) * 100);
+    const fill = document.getElementById('wizardProgressFill');
+    if (fill) fill.style.width = `${pct}%`;
+    const counter = document.getElementById('wizardStepCounter');
+    if (counter) counter.textContent = `Шаг ${n} из 6 · ${WIZARD_STEP_TITLES[n] || ''}`;
+
+    document.getElementById('prevBtn').classList.toggle('hidden', n === 1);
+    const nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) {
+      nextBtn.textContent = n === 6 ? t.submitBtn : (n === 4 && selectedWorkPhotos.length === 0 ? 'Пропустить →' : t.nextBtn);
+    }
+    if (n === 5) { updatePrivilegeBanner(); renderTimeSlots(); applyDateRules(); }
+    if (n === 6) updatePassPreview();
+    saveWizardDraft();
+    haptic('light');
+  }
+
+  function prevStep() { if (state.step > 1) goStep(state.step - 1, true); }
 
   function nextStep() {
-    if (!isSubmissionWindowOpen()) return tg.showAlert("Прием заявок возможен только по будням с 09:00 до 17:00.");
+    if (!isSubmissionWindowOpen()) return showToast("Прием заявок открыт по будням с 09:00 до 17:00");
     if (state.step === 1) {
-      if (!state.floor) return tg.showAlert("Выберите этаж");
+      if (!state.workType) return showToast("Выберите категорию работ");
       goStep(2);
     } else if (state.step === 2) {
-      if (!state.organization.trim()) return tg.showAlert("Выберите или введите наименование ИП / ТОО");
+      const resp = (document.getElementById('responsibleInput')?.value || "").trim();
+      const wrk = (document.getElementById('workersInput')?.value || "").trim();
+      if (!resp) return showToast("Укажите ФИО и телефон ответственного");
+      if (state.workType.includes("Ночные") && !wrk) return showToast("Укажите ФИО всех сотрудников");
       goStep(3);
     } else if (state.step === 3) {
-      if (!state.workType) return tg.showAlert("Выберите вид работ");
-      if (!state.workTime) return tg.showAlert("Выберите время проведения работ");
+      if (!state.floor) return showToast("Выберите этаж");
+      if (!state.organization.trim()) return showToast("Выберите или введите ваше ИП / ТОО");
       goStep(4);
     } else if (state.step === 4) {
+      goStep(5);
+    } else if (state.step === 5) {
+      if (!state.workTime) return showToast("Выберите время проведения работ");
+      goStep(6);
+    } else if (state.step === 6) {
       submitRequest();
     }
+  }
+
+  function finishWizardSuccess(targetView) {
+    document.getElementById('wizardSuccessScreen')?.classList.add('hidden');
+    document.getElementById('wizardActiveBody')?.classList.remove('hidden');
+    clearWizardDraft();
+    goStep(1, true);
+    switchView(targetView || 'home');
   }
 
   function selectFloor(fl, autoAdvance = true) {
@@ -5081,7 +6081,7 @@
     document.getElementById('backToListLink').classList.toggle('hidden', isContractor);
     if (!isContractor) { document.getElementById('tenantSearch').value = ""; renderTenantList(); }
     renderTimeSlots();
-    if (autoAdvance) { haptic('medium'); setTimeout(() => goStep(2), 180); }
+    saveWizardDraft();
   }
 
   function renderTenantList() {
@@ -5228,14 +6228,23 @@
     const e = document.getElementById('endDate').value;
     document.getElementById('passDatesText').textContent = s === e ? s : `${s} — ${e}`;
     document.getElementById('passCarText').textContent = document.getElementById('carInput').value.trim() || "Не указан";
+    const rr = document.getElementById('reviewRespText');
+    if (rr) rr.textContent = document.getElementById('responsibleInput')?.value.trim() || "—";
+    const rw = document.getElementById('reviewWorkersText');
+    if (rw) rw.textContent = document.getElementById('workersInput')?.value.trim() || "Без дополнительного описания";
+    const rp = document.getElementById('reviewPhotosText');
+    if (rp) rp.textContent = selectedWorkPhotos.length > 0 ? `Прикреплено фотографий: ${selectedWorkPhotos.length}` : "Фотографии не прикреплены";
   }
 
   async function submitRequest() {
-    if (!isSubmissionWindowOpen()) return tg.showAlert("Прием заявок возможен только по будням с 09:00 до 17:00.");
+    if (!isSubmissionWindowOpen()) return showToast("Прием заявок возможен только по будням с 09:00 до 17:00");
     const responsible = document.getElementById('responsibleInput').value.trim();
     const workers = document.getElementById('workersInput').value.trim();
-    if (!responsible) return tg.showAlert("Укажите ФИО, должность и телефон ответственного");
-    if (state.workType.includes("Ночные") && !workers) return tg.showAlert("Укажите ФИО всех сотрудников");
+    if (!responsible) return showToast("Укажите ФИО, должность и телефон ответственного");
+    if (state.workType.includes("Ночные") && !workers) return showToast("Укажите ФИО всех сотрудников");
+
+    const errBox = document.getElementById('wizardSubmitErrorBox');
+    if (errBox) errBox.classList.add('hidden');
 
     const btn = document.getElementById('nextBtn');
     btn.disabled = true;
@@ -5258,6 +6267,7 @@
           carNumber: car,
           nightDetails: workers,
           responsible: responsible,
+          photos: selectedWorkPhotos,
           emergencyWindowClaim: isEmergencyWindowActive(),
           initData: initDataRaw,
           tgUser: currentUser.id ? `${currentUser.first_name || ''} (@${currentUser.username || currentUser.id})` : "Web",
@@ -5268,16 +6278,33 @@
       if (result.status === "closed") {
         btn.disabled = false;
         applyTranslations();
-        return tg.showAlert(result.message || "Прием заявок закрыт.");
+        if (errBox) {
+          errBox.textContent = result.message || "Прием заявок закрыт.";
+          errBox.classList.remove('hidden');
+        }
+        return;
+      }
+      if (result.status !== "success") {
+        throw new Error(result.message || "Не удалось отправить заявку");
       }
       await loadUserData(false);
       btn.disabled = false;
       applyTranslations();
-      tg.showAlert("✅ Заявка отправлена! Станет действительной после утверждения Директором.", () => switchView('myRequests'));
+      haptic('heavy');
+      const descEl = document.getElementById('wizardSuccessDesc');
+      if (descEl) {
+        descEl.textContent = `Заявка #${result.rowIndex || ''} принята на согласование. После утверждения Директором в разделе «Заявки» появится QR-пропуск.`;
+      }
+      document.getElementById('wizardActiveBody')?.classList.add('hidden');
+      document.getElementById('wizardSuccessScreen')?.classList.remove('hidden');
+      clearWizardDraft();
     } catch (err) {
-      tg.showAlert("Ошибка сети.");
       btn.disabled = false;
       applyTranslations();
+      if (errBox) {
+        errBox.innerHTML = `<b>Ошибка отправки:</b> ${err.message || 'Проверьте интернет-соединение'}. Все введённые данные сохранены — нажмите «Отправить» ещё раз.`;
+        errBox.classList.remove('hidden');
+      }
     }
   }
 
@@ -5519,10 +6546,128 @@
     manualWrap.classList.toggle('hidden', sel.value !== "__manual__");
   }
 
+  let promoWizardStep = 1;
+  const PROMO_STEP_TITLES = ['', 'Описание и условия', 'Сроки и рекламный макет', 'Комментарий и отправка'];
+
+  function startNewPromoRequest(reworkData = null) {
+    document.getElementById('promoSuccessScreen')?.classList.add('hidden');
+    document.getElementById('promoWizardWrap')?.classList.remove('hidden');
+    document.getElementById('promoSubmitErrorBox')?.classList.add('hidden');
+    const rwBanner = document.getElementById('promoReworkBanner');
+
+    if (reworkData) {
+      if (rwBanner) rwBanner.classList.remove('hidden');
+      const parsed = parseStructuredPromoDesc(reworkData.description || '');
+      document.getElementById('promoTitleInput').value = parsed.title || '';
+      document.getElementById('promoDiscountInput').value = parsed.discount || '';
+      document.getElementById('promoDescriptionInput').value = parsed.body || reworkData.description || '';
+      document.getElementById('promoConditionsInput').value = parsed.conditions || '';
+      document.getElementById('promoCommentInput').value = parsed.comment || '';
+      if (reworkData.startDate && /^\d{4}-\d{2}-\d{2}$/.test(reworkData.startDate)) {
+        document.getElementById('promoStartDate').value = reworkData.startDate;
+      }
+      if (reworkData.endDate && /^\d{4}-\d{2}-\d{2}$/.test(reworkData.endDate)) {
+        document.getElementById('promoEndDate').value = reworkData.endDate;
+      }
+    } else {
+      if (rwBanner) rwBanner.classList.add('hidden');
+    }
+
+    switchView('promo');
+    promoGoStep(1);
+  }
+
+  function parseStructuredPromoDesc(raw) {
+    const text = String(raw || '');
+    const getField = (label) => {
+      const m = text.match(new RegExp(`${label}:\s*(.+)`));
+      return m ? m[1].trim() : '';
+    };
+    const title = getField('Название');
+    const discount = getField('Выгода');
+    const conditions = getField('Условия');
+    const comment = getField('Комментарий');
+    const bodyMatch = text.match(/Описание:\s*([\s\S]*?)(?:
+Условия:|
+Комментарий:|$)/);
+    const body = bodyMatch ? bodyMatch[1].trim() : (title ? '' : text);
+    return { title, discount, conditions, comment, body };
+  }
+
+  function promoGoStep(n) {
+    promoWizardStep = n;
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById(`promoStepCard${i}`)?.classList.toggle('hidden', i !== n);
+    }
+    const pct = Math.round((n / 3) * 100);
+    const fill = document.getElementById('promoProgressFill');
+    if (fill) fill.style.width = `${pct}%`;
+    const cnt = document.getElementById('promoStepCounter');
+    if (cnt) cnt.textContent = `Шаг ${n} из 3 · ${PROMO_STEP_TITLES[n] || ''}`;
+    document.getElementById('promoPrevBtn')?.classList.toggle('hidden', n === 1);
+    const btn = document.getElementById('submitPromoBtn');
+    if (btn && !btn.disabled) {
+      btn.textContent = n === 3 ? 'Отправить на согласование ✓' : 'Далее →';
+    }
+    if (n === 3) {
+      const rev = document.getElementById('promoReviewSummary');
+      if (rev) {
+        const title = document.getElementById('promoTitleInput')?.value.trim() || '—';
+        const disc = document.getElementById('promoDiscountInput')?.value.trim() || '—';
+        const sd = document.getElementById('promoStartDate')?.value || '—';
+        const ed = document.getElementById('promoEndDate')?.value || '—';
+        rev.innerHTML = `
+          <div style="font-weight:700; font-size:15px; color:var(--ink);">${title}</div>
+          <div style="font-size:13px; color:var(--brand); font-weight:600; margin-top:2px;">Выгода: ${disc}</div>
+          <div style="font-size:12.5px; color:var(--ink-secondary); margin-top:4px;">Сроки: с ${sd} по ${ed} · Файлов: ${selectedPromoMedia.length}</div>
+        `;
+      }
+    }
+    haptic('light');
+  }
+
+  function promoPrevStep() {
+    if (promoWizardStep > 1) promoGoStep(promoWizardStep - 1);
+  }
+
+  function promoNextStep() {
+    if (promoWizardStep === 1) {
+      const title = document.getElementById('promoTitleInput')?.value.trim();
+      const disc = document.getElementById('promoDiscountInput')?.value.trim();
+      const desc = document.getElementById('promoDescriptionInput')?.value.trim();
+      if (!title) return showToast("Введите название акции");
+      if (!disc) return showToast("Укажите размер скидки или выгоды");
+      if (!desc) return showToast("Добавьте описание акции");
+      promoGoStep(2);
+    } else if (promoWizardStep === 2) {
+      const sd = document.getElementById('promoStartDate')?.value;
+      const ed = document.getElementById('promoEndDate')?.value;
+      if (!sd || !ed) return showToast("Укажите даты начала и завершения акции");
+      promoGoStep(3);
+    } else {
+      submitTenantPromoToMarketer();
+    }
+  }
+
+  function finishPromoSuccess(mode) {
+    document.getElementById('promoSuccessScreen')?.classList.add('hidden');
+    document.getElementById('promoWizardWrap')?.classList.remove('hidden');
+    if (mode === 'myRequests') {
+      switchView('myRequests');
+      switchMyRequestsSubTab('promos');
+    } else {
+      startNewPromoRequest(null);
+    }
+  }
+
   async function submitTenantPromoToMarketer() {
+    const title = document.getElementById('promoTitleInput')?.value.trim() || "";
+    const discount = document.getElementById('promoDiscountInput')?.value.trim() || "";
+    const rawDesc = document.getElementById('promoDescriptionInput')?.value.trim() || "";
+    const conditions = document.getElementById('promoConditionsInput')?.value.trim() || "";
+    const comment = document.getElementById('promoCommentInput')?.value.trim() || "";
     const startDate = document.getElementById('promoStartDate').value;
     const endDate = document.getElementById('promoEndDate').value;
-    const description = document.getElementById('promoDescriptionInput').value.trim();
     const contactPhone = (document.getElementById('promoContactPhoneInput')?.value || "").trim();
 
     const isVerified = cabinetAccounts && cabinetAccounts.length > 0 && !forcePromoManualPicker;
@@ -5541,13 +6686,24 @@
         : selVal;
     }
 
-    if (!floor || !org) return tg.showAlert("Выберите этаж и наименование вашего ИП / ТОО");
-    if (!startDate || !endDate) return tg.showAlert("Укажите даты проведения акции");
-    if (!description) return tg.showAlert("Опишите суть акции");
+    if (!floor || !org) return showToast("Выберите этаж и ваш магазин");
+    if (!startDate || !endDate) return showToast("Укажите даты проведения акции");
+    if (!rawDesc) return showToast("Опишите суть акции");
+
+    const structuredLines = [];
+    if (title) structuredLines.push(`Название: ${title}`);
+    if (discount) structuredLines.push(`Выгода: ${discount}`);
+    structuredLines.push(`Описание: ${rawDesc}`);
+    if (conditions) structuredLines.push(`Условия: ${conditions}`);
+    if (comment) structuredLines.push(`Комментарий: ${comment}`);
+    const description = structuredLines.join("\n");
+
+    const errBox = document.getElementById('promoSubmitErrorBox');
+    if (errBox) errBox.classList.add('hidden');
 
     const btn = document.getElementById('submitPromoBtn');
     btn.disabled = true;
-    btn.textContent = "⏳ Отправляем материалы...";
+    btn.textContent = "Отправляем...";
     haptic('medium');
 
     try {
@@ -5567,26 +6723,34 @@
       });
       const data = await res.json();
       if (data.status === 'success') {
-        document.getElementById('promoDescriptionInput').value = "";
+        ['promoTitleInput', 'promoDiscountInput', 'promoDescriptionInput', 'promoConditionsInput', 'promoCommentInput'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = "";
+        });
         selectedPromoMedia = [];
         renderSelectedPromoFiles();
         if (data.myPromos) {
           myPromos = data.myPromos;
-          setBadgeCount('myPromosDockBadge', myPromos.length);
           setBadgeCount('myReqBadge', myRequests.length + myPromos.length);
           if (document.getElementById('myPromosTabCnt')) document.getElementById('myPromosTabCnt').textContent = myPromos.length;
           renderMyPromosLists();
+          renderNotifications();
+          renderHomeDashboard();
         }
         haptic('heavy');
-        tg.showAlert("✅ Акция отправлена маркетологу! Статус заявки будет обновляться здесь автоматически.");
+        document.getElementById('promoWizardWrap')?.classList.add('hidden');
+        document.getElementById('promoSuccessScreen')?.classList.remove('hidden');
       } else {
-        tg.showAlert(data.message || "Ошибка отправки акции");
+        throw new Error(data.message || "Ошибка отправки акции");
       }
     } catch (e) {
-      tg.showAlert("Не удалось загрузить файлы (" + (e && e.message ? e.message : "проверьте размер файлов или права Google Drive") + ").");
+      if (errBox) {
+        errBox.textContent = e.message || "Не удалось отправить акцию. Проверьте сеть и повторите.";
+        errBox.classList.remove('hidden');
+      }
     } finally {
       btn.disabled = false;
-      btn.textContent = "Отправить маркетологу →";
+      btn.textContent = promoWizardStep === 3 ? "Отправить на согласование ✓" : "Далее →";
     }
   }
 
@@ -5597,6 +6761,12 @@
     document.getElementById('myPermitsSection').classList.toggle('hidden', sub !== 'permits');
     document.getElementById('myPromosSection').classList.toggle('hidden', sub !== 'promos');
     if (sub === 'promos') renderMyPromosLists();
+  }
+
+  function reworkPromoByRow(rowIndex) {
+    const p = (myPromos || []).find(x => x.rowIndex === rowIndex);
+    if (!p) return;
+    startNewPromoRequest(p);
   }
 
   function renderMyPromosLists() {
@@ -5611,9 +6781,8 @@
       if (!myPromos || myPromos.length === 0) {
         box.innerHTML = `
           <div class="empty-state-ios" style="padding:26px 18px;">
-            <div class="empty-check-orb" style="background:var(--surface-subtle); color:var(--ink-secondary); box-shadow:none;">📣</div>
             <div class="empty-state-title">Акций пока нет</div>
-            <div class="empty-state-sub">Отправленные вами акции и их актуальный статус появятся здесь.</div>
+            <div class="empty-state-sub">Отправьте рекламную акцию, чтобы отслеживать этапы согласования здесь.</div>
           </div>
         `;
         return;
@@ -5622,30 +6791,45 @@
       box.innerHTML = "";
       myPromos.forEach(p => {
         let stCls = "st-pending";
-        if (p.status.includes("Опубликовано")) stCls = "st-approved";
-        else if (p.status.includes("Отклонено")) stCls = "st-rejected";
-        else if (p.status.includes("Взято")) stCls = "st-step";
+        let stText = "На рассмотрении";
+        let stepNum = 1;
+        const isRejected = p.status.includes("Отклонено");
+        const isPublished = p.status.includes("Опубликовано");
+        if (isPublished) { stCls = "st-approved"; stText = "Опубликовано"; stepNum = 3; }
+        else if (isRejected) { stCls = "st-rejected"; stText = "Возвращена на доработку"; stepNum = 2; }
+        else if (p.status.includes("Взято")) { stCls = "st-step"; stText = "В работе у маркетолога"; stepNum = 2; }
 
+        const parsed = parseStructuredPromoDesc(p.description || '');
         const card = document.createElement('div');
         card.className = 'req-card-modern';
         card.innerHTML = `
           <div class="req-card-top">
-            <span class="req-num-tag">Акция №${p.rowIndex} · ${p.floor} эт.</span>
-            <span class="status-chip ${stCls}">${p.status}</span>
+            <span class="req-num-tag">Акция #${p.rowIndex} · ${p.floor} эт.</span>
+            <span class="status-chip ${stCls}">${stText}</span>
           </div>
-          <div class="req-org-name">${p.organization}</div>
-          <div style="font-size:12px; font-weight:600; color:var(--ink-secondary); margin-bottom:6px;">
-            📅 Период: с ${p.startDate} по ${p.endDate} · Файлов: ${(p.media || []).length}
+          <div class="req-org-name" style="margin-bottom:4px;">${parsed.title || p.organization}</div>
+          ${parsed.discount ? `<div style="font-size:13px; font-weight:600; color:var(--brand); margin-bottom:4px;">${parsed.discount}</div>` : ''}
+          <div style="font-size:12.5px; color:var(--ink-secondary); margin-bottom:8px;">
+            Период: с ${p.startDate} по ${p.endDate} · Файлов: ${(p.media || []).length}
           </div>
-          <div style="font-size:13px; color:var(--ink); background:var(--bg); padding:9px 11px; border-radius:11px;">
-            ${p.description}
+          <div style="font-size:13px; color:var(--ink); background:var(--bg); padding:10px 12px; border-radius:10px; white-space:pre-line;">
+            ${parsed.body || p.description}
           </div>
-          ${p.rejectReason ? `<div class="reject-reason-box"><b>Причина отклонения:</b> ${p.rejectReason}</div>` : ''}
+          <div style="display:flex; gap:6px; margin-top:10px; font-size:11.5px; color:var(--ink-secondary);">
+            <span style="color:${stepNum >= 1 ? 'var(--green)' : 'var(--ink-muted)'}; font-weight:600;">1. Отправлена</span>
+            <span>→</span>
+            <span style="color:${stepNum >= 2 ? (isRejected ? 'var(--brand)' : 'var(--green)') : 'var(--ink-muted)'}; font-weight:600;">2. Проверка</span>
+            <span>→</span>
+            <span style="color:${isPublished ? 'var(--green)' : 'var(--ink-muted)'}; font-weight:600;">3. Публикация</span>
+          </div>
+          ${p.rejectReason ? `<div class="reject-reason-box"><b>Комментарий администрации:</b> ${p.rejectReason}</div>` : ''}
+          ${isRejected ? `<button type="button" class="btn-secondary" style="width:100%; margin-top:10px; color:var(--brand); border-color:rgba(158,27,50,0.3);" onclick="reworkPromoByRow(${p.rowIndex})">Доработать и отправить повторно</button>` : ''}
         `;
         box.appendChild(card);
       });
     });
   }
+
 
   /* ==================== РАБОЧЕЕ ПРОСТРАНСТВО МАРКЕТОЛОГА И КОНСТРУКТОР БАННЕРОВ ==================== */
   function switchMarketerTab(tab) {
@@ -6227,14 +7411,20 @@
     if (!cabinetAccounts || cabinetAccounts.length === 0) {
       unverifiedEl.classList.remove('hidden');
       verifiedEl.classList.add('hidden');
+      document.getElementById('profileLogoutWrap')?.classList.add('hidden');
       if (tileCab && isApprover) tileCab.classList.remove('hidden');
       return;
     }
 
     unverifiedEl.classList.add('hidden');
     verifiedEl.classList.remove('hidden');
+    document.getElementById('profileLogoutWrap')?.classList.remove('hidden');
     if (tileCab) tileCab.classList.add('hidden');
-    document.getElementById('cabVerifiedPhoneText').textContent = cabinetAccounts[0].phonePretty || "Телефон подтвержден";
+    const tgFull = `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim() || 'Арендатор';
+    setTxtSafe('profUserName', tgFull);
+    setTxtSafe('profShopName', cabinetAccounts[0].organization || '—');
+    setTxtSafe('profFloorBoutique', `${cabinetAccounts[0].floor || '—'} этаж`);
+    setTxtSafe('cabVerifiedPhoneText', cabinetAccounts[0].phonePretty || "Телефон подтверждён");
 
     const promoOrgSel = document.getElementById('promoOrgSelect');
     if (promoOrgSel) {
@@ -6892,6 +8082,312 @@
       `;
       listEl.appendChild(item);
     });
+  }
+
+
+  /* ==================== UX v44: DASHBOARD, NOTIFICATIONS, ACTION SHEET, TOAST ==================== */
+  let notifCategoryFilter = 'all';
+  let readNotifIds = new Set();
+  try {
+    readNotifIds = new Set(JSON.parse(localStorage.getItem(`jannurReadNotifs_${currentUser.id || 0}`) || '[]'));
+  } catch (e) {}
+
+  function showToast(msg) {
+    const el = document.getElementById('appToast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+  }
+
+  function openCreateActionSheet() {
+    haptic('medium');
+    document.getElementById('createActionModal')?.classList.remove('hidden');
+  }
+  function closeCreateActionSheet() {
+    document.getElementById('createActionModal')?.classList.add('hidden');
+  }
+
+  function openRequestsWithFilter(filterKey) {
+    switchView('myRequests');
+    switchMyRequestsSubTab('permits');
+    const chip = document.querySelector(`#myReqFilterChips .guard-chip[data-filter="${filterKey}"]`);
+    setMyReqFilter(filterKey, chip);
+  }
+
+  function renderHomeSkeleton() {
+    const reqBox = document.getElementById('dashRecentRequestsList');
+    if (reqBox && !hasInitialAppLoaded) {
+      reqBox.innerHTML = `
+        <div class="skeleton-card"><div class="sk-line" style="width:40%;"></div><div class="sk-line" style="width:85%;"></div><div class="sk-line" style="width:60%; margin-bottom:0;"></div></div>
+      `;
+    }
+  }
+
+  function getGreetingByHour() {
+    const h = getAstanaDate().getHours();
+    if (h >= 5 && h < 12) return "Доброе утро";
+    if (h >= 12 && h < 18) return "Добрый день";
+    return "Добрый вечер";
+  }
+
+  function renderHomeDashboard() {
+    const name = (currentUser.first_name || "").trim();
+    setTxtSafe('dashGreetingTitle', name ? `${getGreetingByHour()}, ${name}` : getGreetingByHour());
+
+    const authPill = document.getElementById('dashAuthPill');
+    if (cabinetAccounts && cabinetAccounts.length > 0) {
+      setTxtSafe('dashShopSubtitle', `${cabinetAccounts[0].organization} · ${cabinetAccounts[0].floor} этаж`);
+      if (authPill) authPill.textContent = "Профиль ✓";
+    } else if (state.organization) {
+      setTxtSafe('dashShopSubtitle', `${state.organization} · ${state.floor || 'ТРЦ JANNUR'}`);
+      if (authPill) authPill.textContent = "Войти";
+    } else {
+      setTxtSafe('dashShopSubtitle', "ТРЦ «Жаннур» · Подтвердите номер в профиле");
+      if (authPill) authPill.textContent = "Войти";
+    }
+
+    const activeCount = (myRequests || []).filter(r => {
+      const k = classifyRequestStatus(r).key;
+      return k === 'new' || k === 'in_progress';
+    }).length;
+    const approvedCount = (myRequests || []).filter(r => classifyRequestStatus(r).key === 'approved').length;
+    const notifs = buildNotificationsList();
+    const unreadCount = notifs.filter(n => !readNotifIds.has(n.id)).length;
+
+    setTxtSafe('dashStatActive', activeCount);
+    setTxtSafe('dashStatApproved', approvedCount);
+    setTxtSafe('dashStatUnread', unreadCount);
+    setBadgeCount('notifDockBadge', unreadCount);
+
+    // Последние заявки (до 3)
+    const reqBox = document.getElementById('dashRecentRequestsList');
+    if (reqBox) {
+      const recent = (myRequests || []).slice(0, 3);
+      if (recent.length === 0) {
+        reqBox.innerHTML = `
+          <div class="empty-state-ios" style="padding:24px 16px;">
+            <div class="empty-state-title" style="font-size:15px;">У вас пока нет заявок</div>
+            <div class="empty-state-sub">Создайте заявку на ввоз/вывоз или ночные работы за 1 минуту.</div>
+          </div>
+        `;
+      } else {
+        reqBox.innerHTML = "";
+        recent.forEach(r => {
+          const stInfo = classifyRequestStatus(r);
+          const card = document.createElement('div');
+          card.className = 'req-card-modern';
+          card.style.cursor = 'pointer';
+          card.style.padding = '14px';
+          card.onclick = (e) => {
+            if (e.target.closest('button')) return;
+            openRequestDetailModal(r.rowIndex);
+          };
+          card.innerHTML = `
+            <div class="req-card-top" style="margin-bottom:6px;">
+              <span class="req-num-tag">#${r.rowIndex}</span>
+              <span class="status-chip ${stInfo.cls}">${stInfo.label}</span>
+            </div>
+            <div style="font-weight:700; font-size:15px; color:var(--ink);">${r.workType}</div>
+            <div style="font-size:12.5px; color:var(--ink-secondary); margin-top:3px;">${r.startDate} · ${r.workTime}</div>
+            ${stInfo.key === 'approved' ? `<button type="button" class="qr-btn" style="margin-top:10px; padding:9px;" onclick="openQrPassModal(${r.rowIndex})">Показать QR-пропуск</button>` : ''}
+          `;
+          reqBox.appendChild(card);
+        });
+      }
+    }
+
+    // Последние уведомления (до 2)
+    const notifBox = document.getElementById('dashRecentNotifsList');
+    if (notifBox) {
+      const topNotifs = notifs.slice(0, 2);
+      if (topNotifs.length === 0) {
+        notifBox.innerHTML = `<div class="surface-card" style="font-size:13px; color:var(--ink-secondary); text-align:center;">Новых уведомлений от администрации нет.</div>`;
+      } else {
+        notifBox.innerHTML = "";
+        topNotifs.forEach(n => notifBox.appendChild(createNotificationCardEl(n)));
+      }
+    }
+  }
+
+  function loadNotifPrefs() {
+    try {
+      const p = JSON.parse(localStorage.getItem('jannurNotifPrefsV44') || '{}');
+      if (typeof p.status === 'boolean' && document.getElementById('prefNotifStatus')) document.getElementById('prefNotifStatus').checked = p.status;
+      if (typeof p.payment === 'boolean' && document.getElementById('prefNotifPayment')) document.getElementById('prefNotifPayment').checked = p.payment;
+      if (typeof p.announce === 'boolean' && document.getElementById('prefNotifAnnounce')) document.getElementById('prefNotifAnnounce').checked = p.announce;
+    } catch (e) {}
+  }
+
+  function saveNotifPrefs() {
+    const prefs = {
+      status: document.getElementById('prefNotifStatus')?.checked !== false,
+      payment: document.getElementById('prefNotifPayment')?.checked !== false,
+      announce: document.getElementById('prefNotifAnnounce')?.checked !== false
+    };
+    localStorage.setItem('jannurNotifPrefsV44', JSON.stringify(prefs));
+    renderNotifications();
+    renderHomeDashboard();
+    showToast('Настройки уведомлений сохранены');
+  }
+
+  function buildNotificationsList() {
+    const list = [];
+    const prefStatus = document.getElementById('prefNotifStatus')?.checked !== false;
+    const prefPayment = document.getElementById('prefNotifPayment')?.checked !== false;
+    const prefAnnounce = document.getElementById('prefNotifAnnounce')?.checked !== false;
+
+    // 1. Напоминания об оплате (из cabinetAccounts)
+    if (prefPayment && Array.isArray(cabinetAccounts)) {
+      cabinetAccounts.forEach(acc => {
+        const st = String(acc.payStatus || '');
+        if (st && st !== 'Оплачено' && acc.rentAmount) {
+          list.push({
+            id: `pay_${acc.organization}_${acc.rentPeriod}_${acc.rentAmount}`,
+            category: 'payment',
+            categoryLabel: 'Оплата аренды',
+            title: `Счёт за аренду · ${acc.organization}`,
+            body: `Сумма к оплате: ${acc.rentAmount}${acc.dueDate ? ' (' + acc.dueDate + ')' : ''}. Статус: ${st}.`,
+            date: acc.rentPeriod || 'Актуально',
+            action: () => switchView('more')
+          });
+        }
+      });
+    }
+
+    // 2. Обновления статусов заявок и замечания
+    if (prefStatus && Array.isArray(myRequests)) {
+      myRequests.slice(0, 15).forEach(r => {
+        const stInfo = classifyRequestStatus(r);
+        const isReply = Boolean(r.rejectReason);
+        list.push({
+          id: `req_${r.rowIndex}_${r.status}`,
+          category: isReply ? 'reply' : 'status',
+          categoryLabel: isReply ? 'Замечание администрации' : 'Статус заявки',
+          title: `Заявка #${r.rowIndex}: ${stInfo.label}`,
+          body: isReply ? `Причина: ${r.rejectReason}` : `${r.workType} (${r.startDate}) — ${r.stageLabel || r.status}`,
+          date: r.createdAt || r.startDate || '',
+          action: () => openRequestDetailModal(r.rowIndex)
+        });
+      });
+    }
+
+    // 3. Ответы и статусы по акциям
+    if (prefStatus && Array.isArray(myPromos)) {
+      myPromos.slice(0, 10).forEach(p => {
+        const isRej = p.status.includes('Отклонено');
+        list.push({
+          id: `promo_${p.rowIndex}_${p.status}`,
+          category: isRej ? 'reply' : 'status',
+          categoryLabel: isRej ? 'Доработка акции' : 'Согласование акции',
+          title: `Акция #${p.rowIndex}: ${p.status}`,
+          body: p.rejectReason ? `Замечание: ${p.rejectReason}` : `${p.organization} · с ${p.startDate} по ${p.endDate}`,
+          date: p.startDate || '',
+          action: () => { switchView('myRequests'); switchMyRequestsSubTab('promos'); }
+        });
+      });
+    }
+
+    // 4. Объявления и мероприятия ТРЦ (из активных баннеров)
+    if (prefAnnounce && Array.isArray(bannersList)) {
+      bannersList.filter(b => b.active).forEach(b => {
+        const isEvent = /мероприят|праздник|акци|скидк|event/i.test(`${b.title} ${b.subtitle}`);
+        list.push({
+          id: `banner_${b.rowIndex}_${b.title}`,
+          category: isEvent ? 'event' : 'announce',
+          categoryLabel: isEvent ? 'Мероприятие ТРЦ' : 'Объявление администрации',
+          title: b.title || 'Информационное сообщение ТРЦ',
+          body: b.subtitle || 'Актуальное предложение для арендаторов ТРЦ «Жаннур».',
+          date: b.createdAt || 'ТРЦ JANNUR',
+          action: () => {
+            if (b.linkUrl === '#promo') startNewPromoRequest();
+            else if (b.linkUrl && typeof tg.openLink === 'function') tg.openLink(b.linkUrl);
+          }
+        });
+      });
+    }
+
+    return list;
+  }
+
+  function setNotifFilter(cat, btn) {
+    notifCategoryFilter = cat;
+    haptic('light');
+    document.querySelectorAll('#notifCategoryChips .guard-chip').forEach(c => c.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderNotifications();
+  }
+
+  function markNotificationRead(id) {
+    readNotifIds.add(id);
+    try {
+      localStorage.setItem(`jannurReadNotifs_${currentUser.id || 0}`, JSON.stringify(Array.from(readNotifIds)));
+    } catch (e) {}
+    renderNotifications();
+    renderHomeDashboard();
+  }
+
+  function markAllNotificationsRead() {
+    buildNotificationsList().forEach(n => readNotifIds.add(n.id));
+    try {
+      localStorage.setItem(`jannurReadNotifs_${currentUser.id || 0}`, JSON.stringify(Array.from(readNotifIds)));
+    } catch (e) {}
+    renderNotifications();
+    renderHomeDashboard();
+    showToast('Все уведомления отмечены прочитанными');
+  }
+
+  function createNotificationCardEl(n) {
+    const isUnread = !readNotifIds.has(n.id);
+    const card = document.createElement('div');
+    card.className = `notif-card ${isUnread ? 'unread' : ''}`;
+    card.onclick = () => {
+      markNotificationRead(n.id);
+      if (typeof n.action === 'function') n.action();
+    };
+    const iconSvg = n.category === 'payment'
+      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>'
+      : (n.category === 'reply'
+        ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>'
+        : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path></svg>');
+    card.innerHTML = `
+      <div class="notif-icon-box cat-${n.category}">${iconSvg}</div>
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:2px;">
+          <span style="font-size:11px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.03em;">${n.categoryLabel}</span>
+          <span style="font-size:11px; color:var(--ink-muted);">${n.date}</span>
+        </div>
+        <div style="font-size:14px; font-weight:700; color:var(--ink); line-height:1.3;">${n.title}</div>
+        <div style="font-size:13px; color:var(--ink-secondary); margin-top:3px; line-height:1.4;">${n.body}</div>
+      </div>
+      ${isUnread ? '<span class="notif-unread-dot" title="Непрочитанное"></span>' : ''}
+    `;
+    return card;
+  }
+
+  function renderNotifications() {
+    const all = buildNotificationsList();
+    const unread = all.filter(n => !readNotifIds.has(n.id)).length;
+    setBadgeCount('notifDockBadge', unread);
+    setTxtSafe('notifUnreadSummary', unread > 0 ? `Непрочитанных: ${unread}` : 'Все уведомления прочитаны');
+
+    const box = document.getElementById('notificationsListContainer');
+    if (!box) return;
+    const filtered = notifCategoryFilter === 'all' ? all : all.filter(n => n.category === notifCategoryFilter);
+
+    if (filtered.length === 0) {
+      box.innerHTML = `
+        <div class="empty-state-ios">
+          <div class="empty-state-title">Уведомлений нет</div>
+          <div class="empty-state-sub">Здесь появятся объявления администрации, напоминания об оплате и статусы заявок.</div>
+        </div>
+      `;
+      return;
+    }
+
+    box.innerHTML = "";
+    filtered.forEach(n => box.appendChild(createNotificationCardEl(n)));
   }
 
 </script>
