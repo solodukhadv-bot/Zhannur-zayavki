@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Zhannur Заявки — JANNUR Shopping Mall</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ks6S0OprAK4-nmVj5rSxK0qMjARwCozxLqIlm_kGEkCULMXnnzdR3UeqwlZMMMfiydflG4fUQI76Y67boKrBky2pCLvIcZsIVDiarIn_KaLLsSsDPaa-Dt3eyOX_Up1RO7C65TPCBQBailw0SeANyQgUZ6Zl1jF3cpmprn9jdlhWTw1yuoJZL60leuoJ0fmv_QFUH85a5HcrPsg6bKQL3E-okUVodqvNLV6r33ykLDac64gOoIzxQ04hkFKlsVn-qfIZafqj3WyCbM1jEC3Y5pve9oJuMX92XtcX_F9XpxtLqxwzNLiuuSffV2QQ5OGVAWmpLiRZ_3CV0BNSDbChzA" charset="UTF-8"></script><script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <style>
     :root {
@@ -6587,9 +6587,7 @@
     const discount = getField('Выгода');
     const conditions = getField('Условия');
     const comment = getField('Комментарий');
-    const bodyMatch = text.match(/Описание:\s*([\s\S]*?)(?:
-Условия:|
-Комментарий:|$)/);
+    const bodyMatch = text.match(/Описание:\s*([\s\S]*?)(?:\nУсловия:|\nКомментарий:|$)/);
     const body = bodyMatch ? bodyMatch[1].trim() : (title ? '' : text);
     return { title, discount, conditions, comment, body };
   }
